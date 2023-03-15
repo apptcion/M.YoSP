@@ -15,8 +15,7 @@
 					},
 					success : function(e){
 						if(e == "1"){ //통과
-							
-							location.href="/yosp/"
+							history.go(-1);
 						
 						}else if(e == "0"){ //아이디가 존재하지만 비밀번호가 다름
 						

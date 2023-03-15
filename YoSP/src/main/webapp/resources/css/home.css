@@ -33,6 +33,11 @@ body {
 	width : 100%;
 }
 
+#head a{
+	text-decoration: none;
+	color : black;
+}
+
 .HeadList{
 	float : left;
 	margin : 0;
@@ -47,6 +52,7 @@ body {
 	top : -0.5vh;
 	left : 86vw;
 }
+
 
 #menu a{
 	text-decoration: none;

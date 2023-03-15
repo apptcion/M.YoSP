@@ -17,7 +17,7 @@
 	<div class="MainPage">
 		<div id="head">
 			<ul>
-				<li class="HeadList" id="logo"><a><img src="<c:url value='/resources/img/logo.png'/>" style="width : 200px; height : 50px;">Your Special Planner</a></li>
+				<li class="HeadList" id="logo"><a href="/yosp/"><img src="<c:url value='/resources/img/logo.png'/>" style="width : 200px; height : 50px;">Your Special Planner</a></li>
 				<div id="menu">
 					<a href="warning"><li class="HeadList"> <h4>여행후기</h4>  </li></a>
 					<a href="explain"><li class="HeadList"> <h4> YoSP </h4> </li></a>
@@ -29,9 +29,9 @@
 					
 						<%} %>
 					</h4></li>
-				</div>
-			</ul>
-		</div>
+					</div>
+				</ul>
+			</div>
 		<div class="Content">
 			<div class="Background">
 				<video muted autoplay loop>
@@ -118,7 +118,7 @@
 								<div class="cols" id="HowToUse">
 									<h5>이용방법</h5><br><hr><br>
 									<ul>
-										<li><a>자세한 이용방법</a>									
+										<li><a href="explain">자세한 이용방법</a>									
 									</ul>
 								</div>
 								<div class="cols" id="FeedBack">

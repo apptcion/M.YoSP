@@ -175,7 +175,13 @@ public class HomeController {
 		HttpSession session = request.getSession();
 		
 		session.invalidate();
-		return "redirect:/";
+		  if (request.getHeader("Referer") != null) {
+			    return "redirect:" + request.getHeader("Referer");
+			  } else {
+			    return "redirect:/";
+			  }
+
+
 	}
 	
 	////////////////////////////이메일 전송////////////////////////////////////////////////
@@ -291,7 +297,16 @@ public class HomeController {
 		return pw;
 	}
 
-
+////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	@RequestMapping("/explain")
+	public String explain() throws Exception{
+		
+		logger.info("/explain");
+		
+		return "explain";
+	}
 
 
 

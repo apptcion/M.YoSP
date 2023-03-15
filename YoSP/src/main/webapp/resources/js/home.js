@@ -32,6 +32,7 @@
 			},500);
 			$("#head").css("background" , "white");
 			$("#menu a").css("color","black")
+			$("#head").css("box-shadow","0px 1px 20px");
 			ScenesIndex++;
             	if(jQuery('#Scene' + ScenesIndex + '>div').attr("class").includes('steps')){
            			setTimeout(function(){
@@ -74,6 +75,7 @@
 				if(ScenesIndex == 1){ 
 					$("#head").css("background" , "none");
 					$("#menu a").css("color", "white");
+					$("#head").css("box-shadow","none");
 				}
 			}if(ScenesIndex == 4){
 				$('#T').removeClass('fade-in-box');

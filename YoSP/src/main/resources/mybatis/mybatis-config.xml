@@ -5,6 +5,6 @@
 <configuration>
  	<typeAliases>
  		<typeAlias alias="memberVO" type="com.portfolio.vo.memberVO" />
+ 		<typeAlias alias="boardVO" type="com.portfolio.vo.boardVO"></typeAlias>
  	</typeAliases>
- 	
 </configuration>
