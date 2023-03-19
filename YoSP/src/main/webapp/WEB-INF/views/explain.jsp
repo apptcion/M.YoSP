@@ -97,7 +97,7 @@
 							<ol>
 								<br>
 								<li><a href="/yosp/planner">여행 일정</a></li>
-								<li><a href="">여행 리뷰</a></li>
+								<li><a href="board">여행 리뷰</a></li>
 							</ol>
 						</li><br>
 						<li><a href="/yosp/explain">YoSP 설명</a></li>

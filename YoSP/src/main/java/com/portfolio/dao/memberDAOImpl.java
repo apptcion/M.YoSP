@@ -21,7 +21,7 @@ public class memberDAOImpl implements memberDAO{
 		memberVO vo2 = new memberVO();
 		int isAppear = idCheck(vo);
 		if(isAppear == 1) {
-			vo2 = sqlsession.selectOne("memberDAO.select",vo.getId());
+			vo2 = sqlsession.selectOne("member.select",vo.getId());
 		}else {
 			vo2.setId("isNotAppear");
 		}
@@ -31,20 +31,20 @@ public class memberDAOImpl implements memberDAO{
 
 	@Override
 	public int idCheck(memberVO vo) throws Exception {
-		int result = sqlsession.selectOne("memberDAO.idCheck",vo.getId());
+		int result = sqlsession.selectOne("member.idCheck",vo.getId());
 		return result;
 	}
 
 
 	@Override
 	public void joinMemberShip(memberVO vo) throws Exception {
-		sqlsession.insert("memberDAO.insert",vo);
+		sqlsession.insert("member.insert",vo);
 	}
 
 
 	@Override
 	public void decessionMemberShip(memberVO vo) throws Exception {
-		sqlsession.delete("memberDAO.delete", vo);
+		sqlsession.delete("member.delete", vo);
 		
 	}
 	

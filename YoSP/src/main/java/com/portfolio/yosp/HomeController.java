@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.portfolio.dao.boardDAOImpl;
 import com.portfolio.dao.memberDAOImpl;
 import com.portfolio.mail.CreateRandKey;
 import com.portfolio.vo.memberVO;
@@ -31,7 +32,12 @@ import com.portfolio.vo.memberVO;
 public class HomeController {
 	
 	@Autowired
-	memberDAOImpl dao;
+	memberDAOImpl memberDAO;
+	
+	
+	@Autowired
+	boardDAOImpl boardDAO;
+	
 	
 	private Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -64,7 +70,7 @@ public class HomeController {
 		logger.info("isPass");
 		
 		String password = request.getParameter("password");
-		vo = dao.select(vo);
+		vo = memberDAO.select(vo);
 		if(vo.getId().equals("isNotAppear")) {
 			return "-1";
 		}else if(vo.getPassword().equals(password)){
@@ -110,7 +116,7 @@ public class HomeController {
 		
 		logger.info("joinMemberShip");
 		
-		dao.joinMemberShip(vo);
+		memberDAO.joinMemberShip(vo);
 	}
 	
 	////////////////////////////아이디 사용중인지 확인////////////////////////////////////
@@ -121,7 +127,7 @@ public class HomeController {
 		
 		logger.info("isUsing");
 		
-		int result  = dao.idCheck(vo);
+		int result  = memberDAO.idCheck(vo);
 		if(result == 1) {
 			return "0";
 		}else {
@@ -157,7 +163,7 @@ public class HomeController {
 		
 		logger.info("/doSecession");
 		
-		dao.decessionMemberShip(vo);
+		memberDAO.decessionMemberShip(vo);
 		
 		HttpSession session = request.getSession();
 		
@@ -195,7 +201,7 @@ public class HomeController {
 		String id = vo.getId();
 		String email = vo.getEmail();
 		
-		vo = dao.select(vo);
+		vo = memberDAO.select(vo);
 		
 		if(id.equals(vo.getId()) && email.equals(vo.getEmail())) {
 			CreateRandKey key = new CreateRandKey();
@@ -278,7 +284,7 @@ public class HomeController {
 		logger.info("equalsIaM");
 		
 		String email = vo.getEmail();
-		vo = dao.select(vo);
+		vo = memberDAO.select(vo);
 		if(email.equals(vo.getEmail())) {
 			return "1";
 		}
@@ -293,7 +299,7 @@ public class HomeController {
 		
 		logger.info("find");
 		
-		String pw = dao.select(vo).getPassword();
+		String pw = memberDAO.select(vo).getPassword();
 		return pw;
 	}
 
@@ -308,6 +314,16 @@ public class HomeController {
 		return "explain";
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	@RequestMapping("/board")
+	public String board() throws Exception{
+		
+		logger.info("/board");
+		
+		boardDAO.selectAll();
+		return "board";
+	}
 
 
 

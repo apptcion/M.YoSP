@@ -7,4 +7,8 @@
  		<typeAlias alias="memberVO" type="com.portfolio.vo.memberVO" />
  		<typeAlias alias="boardVO" type="com.portfolio.vo.boardVO"></typeAlias>
  	</typeAliases>
+ 	   <mappers>
+        <mapper resource="mybatis/mapper/memberMapper.xml"/>
+        <mapper resource="mybatis/mapper/boardMapper.xml"/>
+    </mappers>
 </configuration>

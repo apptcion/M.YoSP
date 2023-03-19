@@ -19,7 +19,7 @@
 			<ul>
 				<li class="HeadList" id="logo"><a href="/yosp/"><img src="<c:url value='/resources/img/logo.png'/>" style="width : 200px; height : 50px;">Your Special Planner</a></li>
 				<div id="menu">
-					<a href="warning"><li class="HeadList"> <h4>여행후기</h4>  </li></a>
+					<a href="board"><li class="HeadList"> <h4>여행후기</h4>  </li></a>
 					<a href="explain"><li class="HeadList"> <h4> YoSP </h4> </li></a>
 					<li class="HeadList"><h4>
 						<%if(id==null){ %>
@@ -139,7 +139,7 @@
 								<div class="cols" id="review">
 									<h5>여행후기</h5><br><hr><br>
 									<ul>
-										<li><a>&nbsp;&nbsp;여행리뷰 보기</a></li>							
+										<li><a href="board">&nbsp;&nbsp;여행리뷰 보기</a></li>							
 									</ul>
 								</div>
 							</footer>
