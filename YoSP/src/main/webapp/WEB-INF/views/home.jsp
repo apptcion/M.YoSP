@@ -118,13 +118,13 @@
 								<div class="cols" id="HowToUse">
 									<h5>이용방법</h5><br><hr><br>
 									<ul>
-										<li><a href="explain">자세한 이용방법</a>									
+										<li><a href="explain">&nbsp;자세한 이용방법</a>									
 									</ul>
 								</div>
-								<div class="cols" id="FeedBack">
-									<h5>피드백 신청</h5><br><hr><br>
+								<div class="cols" id="ToUse">
+									<h5>사이트 사용</h5><br><hr><br>
 									<ul>
-										<li><a>피드백 신청하기</a>									
+										<li><a>&nbsp;&nbsp;&nbsp;계획하러 가기</a>									
 									</ul>
 								</div>
 								<div class="cols" id="Membership">
@@ -139,7 +139,7 @@
 								<div class="cols" id="review">
 									<h5>여행후기</h5><br><hr><br>
 									<ul>
-										<li><a>여행리뷰 보기</a></li>							
+										<li><a>&nbsp;&nbsp;여행리뷰 보기</a></li>							
 									</ul>
 								</div>
 							</footer>

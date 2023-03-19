@@ -72,6 +72,18 @@
 	text-decoration : underline;
 }
 
+#arrow{
+	position: absolute;
+    left: 49vw; 
+    top: 80vh; 
+    content: '';
+    width: 5vh; /* 사이즈 */
+    height: 5vh; /* 사이즈 */
+    border-top: solid 3px #d3d3d3; /* 선 두께 */
+    border-right:solid 3px #d3d3d3; /* 선 두께 */
+    transform: rotate(135deg); /* 각도 */
+}
+
 
 
 

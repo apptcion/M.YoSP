@@ -382,7 +382,7 @@ video {
 	left : 21vw;
 }
 
-#Scene5 #FeedBack{
+#Scene5 #ToUse{
 	position : absolute;
 	top : 5vh;
 	left : 36vw;
@@ -410,11 +410,6 @@ video {
 	height : 2vh;
 	margin : 2px;
 	color : gray;
-}
-
-#Scene5 footer Membership ul li{
-	position : absolute;
-	left : 1vh;
 }
 
 #Scene5 footer .cols ul li a{
