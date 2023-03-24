@@ -2,6 +2,7 @@ package com.portfolio.dao;
 
 import java.util.List;
 
+
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
@@ -19,10 +20,13 @@ public class boardDAOImpl implements boardDAO{
 	@Override
 	public List<boardVO> selectAll() throws Exception{
 		
-		System.out.println(sqlsession.selectList("board.selectAll").get(0));
-		System.out.println(sqlsession.selectList("board.selectAll").get(1));
-		 return null;
+		System.out.println("?");
+		List<boardVO> vo = sqlsession.selectList("board.selectAll");
+		System.out.println("????????????");
+		 return vo;
 	 };
 	
-	
+	public String test() {
+		return "test";
+	}
 }

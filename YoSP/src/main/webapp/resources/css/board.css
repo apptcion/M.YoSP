@@ -1,0 +1,170 @@
+body{
+	overflow-x : hidden;
+}
+
+#head{
+	background : white;
+}
+
+
+#menu a{
+	color: black;
+}
+
+footer{
+	top : 100vh;
+	left : 0px;
+	height : 38vh !important;
+}
+
+
+
+#content{
+	position : absolute;
+	top : 65px;
+	left : 20vw;
+	width : 80vw;
+	margin : 0px;
+	padding : 0px;
+	height : 100vh;
+	background-color : #F5F5F5;
+	
+	
+}
+
+#content #search{
+	position : absolute;
+	top : 3vh;
+	left : 5vw;
+	
+	
+	height : 3vh;
+	width : 50vw;
+}
+
+#content #search #searchInput{
+	position : absolute;
+	
+	border : solid 1px black;
+	border-radius : 20px 0px 0px 20px /20px 0px 0px 20px;
+	
+	height : 3vh;
+	width : 45vw;
+	background : white;
+	
+	text-align : center;
+}
+
+#content #search #searchInput:focus{
+	border : solid 1px black;
+}
+
+#content #search #doSearch{
+	position : absolute;
+	left :45vw;
+	border : solid 1px black;
+	border-radius : 0px 20px 20px 0px / 0px 20px 20px 0px;
+	
+	height : 3.34vh;
+	width : 5vw;
+	background-color : black;
+	color : white;
+}
+
+
+#content #filter {
+	position : absolute;
+	top : 12vh;
+	left : 6vw;
+	
+	
+	height : 7vh;
+	width : 48vw;
+	
+	border-top : solid 1px black;
+	border-bottom : solid 1px black;
+
+	margin : 0px;
+	padding : 0px;
+		
+	}
+	
+#filter-menus {
+	
+	width: 48vw; margin: 0px; list-style: none; padding: 0; text-align: center; font-size: 0; display: table;
+
+}
+
+#filter-menus > li {
+	
+	width: 12vw; height: 7vh; display: table-cell; vertical-align: middle; text-align: center; font-size: 14px;margin : 0px;
+
+}
+
+#filter-menus > li > a {
+	
+	 display: table-cell;
+	 vertical-align: middle; 
+	 width: 14vw; 
+	 height: 7vh;
+	 text-decoration: none; 
+	 color: black;
+	 margin : 0px;
+	 padding : 0px;
+}
+
+/* #menubar-menus li를 position: relative 처리를 하는 경우에 아래 hover 상태 처리를 주석 처리 할 것. */
+#filter-menus li:hover {
+
+	background: #FFF;
+
+}
+
+#filter-menus > li > div {
+
+	position: absolute;
+	background: white; 
+	color: black;
+	left: 0; 
+	width: 48vw; 
+	top: 7vh;
+	padding: 50px 0;
+	display : none;
+	z-index: 10;
+	border-bottom : solid 1px black;
+}
+
+
+#list{
+	position : absolute;
+	top : 20vh;
+	left: 6vw;
+	
+	height : 60vh;
+	width : 48vw;
+	
+	background : white;
+}
+
+
+#insert button{
+	background : #d3d3d3;
+	border : none;
+	
+	position : absolute;
+	top : 82vh;
+	left : 50vw;
+	
+	height : 35px;
+	width : 70px;
+	
+	color : white;
+}
+
+#table{
+	margin : 0px;
+}
+
+.table thead>tr{
+	
+}

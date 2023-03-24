@@ -8,30 +8,12 @@
 	<title>여행 플래너  - 요셉</title>
     <link href="<c:url value="/resources/css/home.css" />" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/> 
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="resources/js/jquery-3.6.4.min.js"></script>
  	<script src="${path}/resources/js/home.js"></script>
 </head>
 <body>
-	<% session = request.getSession();%>
-	<% String id =  (String)session.getAttribute("id");%>
 	<div class="MainPage">
-		<div id="head">
-			<ul>
-				<li class="HeadList" id="logo"><a href="/yosp/"><img src="<c:url value='/resources/img/logo.png'/>" style="width : 200px; height : 50px;">Your Special Planner</a></li>
-				<div id="menu">
-					<a href="board"><li class="HeadList"> <h4>여행후기</h4>  </li></a>
-					<a href="explain"><li class="HeadList"> <h4> YoSP </h4> </li></a>
-					<li class="HeadList"><h4>
-						<%if(id==null){ %>
-							<a href="login">로그인</a> 
-						<%}else{ %>
-							<a href="logout"><%out.println(id+"님"); %></a>
-					
-						<%} %>
-					</h4></li>
-					</div>
-				</ul>
-			</div>
+		<%@include file="../views/includes/header.jsp" %>
 		<div class="Content">
 			<div class="Background">
 				<video muted autoplay loop>
@@ -114,35 +96,7 @@
     							</a>
     							</fieldset>
     						</div>
-							<footer>
-								<div class="cols" id="HowToUse">
-									<h5>이용방법</h5><br><hr><br>
-									<ul>
-										<li><a href="explain">&nbsp;자세한 이용방법</a>									
-									</ul>
-								</div>
-								<div class="cols" id="ToUse">
-									<h5>사이트 사용</h5><br><hr><br>
-									<ul>
-										<li><a>&nbsp;&nbsp;&nbsp;계획하러 가기</a>									
-									</ul>
-								</div>
-								<div class="cols" id="Membership">
-									<h5>회원 정보</h5><br><hr><br>
-									<ul>
-										<li><a href="login">로그인하러 가기</a></li>
-										<li><a href="join">회원가입하러 가기</a></li>
-										<li><a href="secession">회원탈퇴하러 가기</a></li>
-										<li><a href="FindPW">비밀번호 찾기</a>								
-									</ul>
-								</div>
-								<div class="cols" id="review">
-									<h5>여행후기</h5><br><hr><br>
-									<ul>
-										<li><a href="board">&nbsp;&nbsp;여행리뷰 보기</a></li>							
-									</ul>
-								</div>
-							</footer>
+							<%@include file="../views/includes/footer.jsp" %>
 						</div></li>
 					</ul>
 				</div>

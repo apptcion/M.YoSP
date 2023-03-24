@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 <title>회원가입</title>
 <link href="<c:url value="/resources/css/join.css" />" rel="stylesheet">
-<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="resources/js/jquery-3.6.4.min.js"></script>
  	<script src="${path}/resources/js/join.js"></script>
 <script>
 			

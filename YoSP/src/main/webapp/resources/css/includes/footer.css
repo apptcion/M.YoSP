@@ -1,0 +1,58 @@
+footer{
+	position : absolute; 
+	height : 35vh;
+	width : 100vw;
+	background : black;
+	padding : 0px;
+	margin : 0px;
+	
+}
+
+footer h5{
+	color : white;
+	position : absolute;
+	top : -2vh;
+	left : 4.75vw;
+}
+
+footer .cols ul li{
+	list-style : none;
+	float : left;
+	color : white;
+	height : 2vh;
+	margin : 2px;
+	color : gray;
+}
+
+footer .cols ul li a{
+	text-decoration : none;
+	color : gray;
+}
+
+
+.cols{
+	width : 13vw;
+	height : 33vh;
+}
+#HowToUse{
+	position : absolute;
+	top : 5vh;
+	left : 21vw;
+}
+
+ #ToUse{
+	position : absolute;
+	top : 5vh;
+	left : 36vw;
+}
+
+#Membership{
+	position : absolute;
+	top : 5vh;
+	left : 51vw;
+}
+#review{
+	position : absolute;
+	top : 5vh;
+	left : 66vw;
+}

@@ -11,7 +11,7 @@
 	
 	<link href="<c:url value="/resources/css/findpw.css" />" rel="stylesheet">
 	
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="resources/js/jquery-3.6.4.min.js"></script>
  	<script src="${path}/resources/js/findpw.js"></script>
  	<script>
  	

@@ -317,23 +317,56 @@ public class HomeController {
 	///////////////////////////////////////////////////////////////////////////////////////
 	
 	@RequestMapping("/board")
-	public String board() throws Exception{
+	public String board(Model model) throws Exception{
 		
 		logger.info("/board");
-		
 		boardDAO.selectAll();
+		
+		model.addAttribute("list",boardDAO.selectAll());
 		return "board";
 	}
 
 
+/*	@RequestMapping("/test")
+	public String test() throws Exception{
+		
+		logger.info("/test");
+		
+		return "test";
+	}
+*/
+
+	/////////////////////////////////////////////////////////////////////////////////////////
 
 
+	@RequestMapping("/insert")
+	@ResponseBody
+	public String insert() throws Exception{
+		return "";
+	}
 
-
-
-
-
-
-
+	@RequestMapping("/selectOne")
+	@ResponseBody
+	public String selectOne() throws Exception{
+		return "";
+	}
+	
+	@RequestMapping("/selectList")
+	@ResponseBody
+	public String selectList() throws Exception{
+		return "";
+	}
+	
+	@RequestMapping("/delete")
+	@ResponseBody
+	public String delete() throws Exception{
+		return "";
+	}
+	
+	@RequestMapping("/update")
+	@ResponseBody
+	public String update() throws Exception{
+		return "";
+	}
 
 }

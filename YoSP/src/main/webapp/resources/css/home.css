@@ -34,7 +34,6 @@ body {
 }
 
 #head a{
-	text-decoration: none;
 	color : black;
 }
 
@@ -114,7 +113,7 @@ video {
 	
 }
 
-#ScenesList li{
+#ScenesList>li{
 	list-style : none;
 	width : 100%;
 	height : 100vh;
@@ -362,60 +361,6 @@ video {
 }
 
 
-#Scene5 footer{
-	position : absolute; 
-	top : 65vh;
-	height : 35vh;
-	width : 100vw;
-	background : black;
-	
-}
-
-#Scene5 .cols{
-	width : 13vw;
-	height : 33vh;
-}
-
-#Scene5 #HowToUse{
-	position : absolute;
-	top : 5vh;
-	left : 21vw;
-}
-
-#Scene5 #ToUse{
-	position : absolute;
-	top : 5vh;
-	left : 36vw;
-}
-
-#Scene5 #Membership{
-	position : absolute;
-	top : 5vh;
-	left : 51vw;
-}
-#Scene5 #review{
-	position : absolute;
-	top : 5vh;
-	left : 66vw;
-}
-#Scene5 footer h5{
-	color : white;
-	position : absolute;
-	top : -2vh;
-	left : 4.75vw;
-}
-
-#Scene5 footer .cols ul li{
-	color : white;
-	height : 2vh;
-	margin : 2px;
-	color : gray;
-}
-
-#Scene5 footer .cols ul li a{
-	text-decoration : none;
-	color : gray;
-}
 
 
 .travel{
