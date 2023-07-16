@@ -1,0 +1,697 @@
+body {
+	margin : 0;
+	padding : 0;
+	height : 100vh;
+}
+
+
+.MainPage{
+	padding : 0;
+	margin : 0;
+	width : 100%;
+	height : 100%;
+}
+
+
+.Content{
+	position : fixed;
+	width : 100%;
+	height : 100%;
+	margin : 0;
+	padding : 0;
+}
+
+#head #menu a{
+	color : white;
+}
+
+
+footer{
+	position : absolute;
+	top : 65vh;
+}
+
+.Background {
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: -1;
+
+}
+video {
+  width: 100%;
+  height : 100%;
+  object-fit : cover;
+}
+
+
+.SceneContainer{
+	position : absolute;
+	top : 0;
+	height : 500vh;
+	width : 100%;
+}
+
+.SceneOutput{
+	position : absolute;
+	height : 100vh;
+	top : 0;
+	width : 100%;
+	
+}
+#ScenesList{
+	position : absolute;
+	list-style : none;
+	padding : 0;
+	margin : 0;
+	height : 500vh;
+	width : 100%;
+	top:0px;
+	
+}
+
+#ScenesList>li{
+	list-style : none;
+	width : 100%;
+	height : 100vh;
+}
+
+.Scenes{
+	width : 100%;
+	height : 100vh;
+	margin : 0;
+}
+
+
+
+
+
+
+
+
+
+
+#Scene1{
+	position :absolute;
+	top : 0px;
+	left : 0px;
+	height : 100%;
+	z-index : 1;
+}
+
+#start{
+	height : 100vh;
+	width : 35vw;
+	background : white;
+	top : 0px;
+}
+
+#tit{
+	position : absolute;
+	top : 17vh;
+	left : 3vw;
+	height : 30vw;
+	width : 30vw;
+	margin : 0px;
+}
+#tit img{
+	position : absolute;
+	maring : 0px;
+	top : 6vh;
+	width : 28vw;
+	height : 26vw;
+}
+
+
+#ex{
+	z-index : 3;
+	position : absolute;
+	top : 74vh;
+	left : 11vw;
+}
+
+
+#f{
+	z-index : 3;
+	position : absolute;
+	top : 87vh;
+	left : 63%;
+	color : white;
+	font : 5em;
+	
+	
+}
+
+
+
+
+
+
+
+
+#Scene2{
+	position : absolute;
+	top : 100vh;
+	z-index : 1;
+}
+
+
+#Scene2 fieldset{
+	position : absolute;
+	top : 20vh;
+	left : 10vw;
+	width : 54vw;
+	height : 30vh;
+}
+
+#Scene2 #Second h1{
+	color : white;
+}
+#Scene2 #Second p{
+	position : absolute;
+	font-weight : 1000;
+	color : white;
+}
+
+
+
+
+
+
+#Scene3{
+	top : 200vh;
+	position : absolute;
+	z-index : 1;
+}
+#Scene3 #Thrid fieldset {
+	position : absolute;
+	top : 20vh;
+	right : 5vw;
+	width : 54vw;
+	height : 30vh;
+	
+}
+#Scene3 #Thrid h1{
+	color : white;
+}
+#Scene3 #Thrid p{
+	position : absolute;
+	top : 2vh;
+	font-weight : 1000;
+	color : white;
+}
+
+
+
+
+
+
+
+
+
+
+#Scene4{	
+	position : absolute;
+	top : 300vh;
+	z-index : 1;
+}
+
+
+#Scene4 fieldset{
+	position : absolute;
+	top : 20vh;
+	left : 10vw;
+	width : 54vw;
+	height : 30vh;
+}
+
+#Scene4 #Fourth h1{
+	color : white;
+}
+#Scene4 #Fourth p{
+	position : absolute;
+	top : 2vh;
+	font-weight : 1000;
+	color : white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Scene5{
+	position : absolute;
+	top : 400vh;
+	background : white;
+	z-index : 1;
+}
+
+
+.fade-in-box {
+  display: inline-block;
+  animation: fadein 3s;
+  -moz-animation: fadein 3s;
+  -webkit-animation: fadein 3s;
+  -o-animation: fadein 3s; /* Opera */
+}
+@keyframes fadein {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-moz-keyframes fadein { /* Firefox */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Scene5 #T{
+	position : absolute;
+	top : 11vh; 
+	left : 14vw;
+	width : 75vw;
+	height : 50vh;
+	margin : 0px;
+	padding : 0px;
+}
+#Scene5 #T img{
+	width : 50vw;
+	height : 50vh;
+}
+
+#Scene5 #T p{
+	position : absolute;
+	top : 5vh;
+	left : 51vw;
+	margin : 2px;
+}
+
+
+
+
+.travel{
+  padding: 15px 100px;
+  margin:10px 4px;
+  color: black;
+
+  text-decoration: none;
+  display:inline-block;
+  position: relative;
+  top : 82vh;
+  left : 7.5vw;
+  
+}
+
+
+.travel:hover::before {
+  -webkit-transform-origin: right top;
+  -ms-transform-origin: right top;
+  transform-origin: right top;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1)
+}
+.travel{
+    text-transform: uppercase!important;
+    letter-spacing: 2px;
+    color:  black;
+    cursor: hand;
+    text-align: center;
+    text-transform: capitalize;
+    border: 1px solid black;
+    border-radius:50px;
+    overflow: hidden!important;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    background: transparent!important;
+    z-index:10;
+    
+}
+
+
+.travel:hover{
+    border: 1px solid #071982;
+    color: white!important;
+}
+.travel::before {
+    content: '';
+    width: 0%;
+    height: 100%;
+    display: block;
+    background: black;
+    position: absolute;
+    -ms-transform: skewX(-20deg);
+    -webkit-transform: skewX(-20deg); 
+    transform: skewX(-20deg);   
+    left: -10%;
+    opacity: 1;
+    top: 0;
+    z-index: -12;
+    -moz-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  -webkit-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+     box-shadow:2px 0px 14px rgba(0,0,0,.6);
+  } 
+
+.travel::after {
+    content: '';
+    width: 0%;
+    height: 100%;
+    display: block;
+    background: black; /*占십반울옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占싹깍옙 */
+    position: absolute;
+  -ms-transform: skewX(-20deg);
+    -webkit-transform: skewX(-20deg); 
+    transform: skewX(-20deg);   
+    left: -10%;
+    opacity: 0;
+    top: 0;
+    z-index: -15;
+    -webkit-transition: all .94s cubic-bezier(.2,.95,.57,.99);
+    -moz-transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    -o-transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    box-shadow: 2px 0px 14px rgba(0,0,0,.6);
+}
+.travel:hover::before, .btn1O:hover::before{
+  opacity:1;
+  width: 116%;
+}
+.travel:hover::after, .btn1O:hover::after{
+  opacity:1;
+  width: 120%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.ToPlan{
+  padding: 15px 100px;
+  margin:10px 4px;
+  color: black;
+  position: absolute;
+  left : 2.2vw;
+  top : -4vh;
+  text-decoration: none;
+  display:inline-block;
+  
+}
+
+.ToPlan::before {
+  content: '';
+  position: absolute;
+  bottom: 50%;
+  left: 0px;
+  width: 100%;
+  height: 1px;
+  background: #6098FF;
+  display: block;
+  -webkit-transform-origin: left top;
+  -ms-transform-origin: left top;
+  transform-origin: left top;
+  -webkit-transform: scale(0, 1);
+  -ms-transform: scale(0, 1);
+  transform: scale(0, 1);
+  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.4s cubic-bezier(1, 0, 0, 1)
+}
+
+.ToPlan:hover::before {
+  -webkit-transform-origin: right top;
+  -ms-transform-origin: right top;
+  transform-origin: right top;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1)
+}
+.ToPlan{
+    font-family: "proxima-nova", sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase!important;
+    letter-spacing: 2px;
+    color:  black;
+    cursor: hand;
+    text-align: center;
+    text-transform: capitalize;
+    border: 1px solid black;
+    border-radius:50px;
+    position: relative;
+    overflow: hidden!important;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    background: transparent!important;
+    z-index:10;
+    
+}
+
+
+.ToPlan:hover{
+    border: 1px solid black;
+    color: white!important;
+}
+.ToPlan::before {
+    content: '';
+    width: 0%;
+    height: 100%;
+    display: block;
+    background: black;
+    position: absolute;
+    -ms-transform: skewX(-20deg);
+    -webkit-transform: skewX(-20deg); 
+    transform: skewX(-20deg);   
+    left: -10%;
+    opacity: 1;
+    top: 0;
+    z-index: -12;
+    -moz-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  -webkit-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+     box-shadow:2px 0px 14px rgba(0,0,0,.6);
+  } 
+
+.ToPlan::after {
+    content: '';
+    width: 0%;
+    height: 100%;
+    display: block;
+    background: black;
+    position: absolute;
+  -ms-transform: skewX(-20deg);
+    -webkit-transform: skewX(-20deg); 
+    transform: skewX(-20deg);   
+    left: -10%;
+    opacity: 0;
+    top: 0;
+    z-index: -15;
+    -webkit-transition: all .94s cubic-bezier(.2,.95,.57,.99);
+    -moz-transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    -o-transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    box-shadow: 2px 0px 14px rgba(0,0,0,.6);
+}
+.ToPlan:hover::before, .btn1O:hover::before{
+  opacity:1;
+  width: 116%;
+}
+.ToPlan:hover::after, .btn1O:hover::after{
+  opacity:1;
+  width: 120%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.ReadMore{
+  padding: 15px 100px;
+  margin:10px 4px;
+  color: black;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  position: absolute;
+  top : 6vh;
+  left : 3vw;
+  text-decoration: none;
+  display:inline-block;
+  
+}
+
+.ReadMore::before {
+  content: '';
+  position: absolute;
+  bottom: 50%;
+  left: 0px;
+  width: 100%;
+  height: 1px;
+  background: #6098FF;
+  display: block;
+  -webkit-transform-origin: left top;
+  -ms-transform-origin: left top;
+  transform-origin: left top;
+  -webkit-transform: scale(0, 1);
+  -ms-transform: scale(0, 1);
+  transform: scale(0, 1);
+  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.4s cubic-bezier(1, 0, 0, 1)
+}
+
+.ReadMore:hover::before {
+  -webkit-transform-origin: right top;
+  -ms-transform-origin: right top;
+  transform-origin: right top;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1)
+}
+.ReadMore{
+    font-family: "proxima-nova", sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase!important;
+    letter-spacing: 2px;
+    color:  black;
+    cursor: hand;
+    text-align: center;
+    text-transform: capitalize;
+    border: 1px solid black;
+    border-radius:50px;
+    position: relative;
+    overflow: hidden!important;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    background: transparent!important;
+    z-index:10;
+    
+}
+
+
+.ReadMore:hover{
+    border: 1px solid black;
+    color: white!important;
+}
+.ReadMore::before {
+    content: '';
+    width: 0%;
+    height: 100%;
+    display: block;
+    background: black;
+    position: absolute;
+    -ms-transform: skewX(-20deg);
+    -webkit-transform: skewX(-20deg); 
+    transform: skewX(-20deg);   
+    left: -10%;
+    opacity: 1;
+    top: 0;
+    z-index: -12;
+    -moz-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  -webkit-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
+     box-shadow:2px 0px 14px rgba(0,0,0,.6);
+  } 
+
+.ReadMore::after {
+    content: '';
+    width: 0%;
+    height: 100%;
+    display: block;
+    background: black;
+    position: absolute;
+  -ms-transform: skewX(-20deg);
+    -webkit-transform: skewX(-20deg); 
+    transform: skewX(-20deg);   
+    left: -10%;
+    opacity: 0;
+    top: 0;
+    z-index: -15;
+    -webkit-transition: all .94s cubic-bezier(.2,.95,.57,.99);
+    -moz-transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    -o-transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    transition: all .4s cubic-bezier(.2,.95,.57,.99);
+    box-shadow: 2px 0px 14px rgba(0,0,0,.6);
+}
+.ReadMore:hover::before, .btn1O:hover::before{
+  opacity:1;
+  width: 116%;
+}
+.ReadMore:hover::after, .btn1O:hover::after{
+  opacity:1;
+  width: 120%;
+}
+	  
+	  

@@ -1,0 +1,267 @@
+body{
+	overflow-x : hidden;
+	margin : 0px;
+}
+
+#head{
+	background : white;
+}
+
+
+#menu a{
+	color: black;
+}
+
+
+
+#content{
+	position : absolute;
+	top : 37px;
+	width : 100vw;
+	margin : 0px;
+	padding : 0px;
+	height : 100vh;
+	
+	
+}
+
+#content h1{
+	position : absolute;
+	top : 3vh;
+	left : 45vw;
+}
+
+#content #bar1{
+	position : absolute;
+	top : 12vh;
+	left : 46.125vw;
+	
+	background : black;
+	height : 10px;
+	width : 6vw;
+	
+	border-radius : 15px;
+}
+
+#content #search{
+	position : absolute;
+	top : 18vh;
+	left : 25vw;
+	
+	
+	height : 3vh;
+	width : 50vw;
+}
+
+#content #search #searchInput{
+	position : absolute;
+	
+	border : solid 1px black;
+	border-radius : 20px 0px 0px 20px /20px 0px 0px 20px;
+	
+	height : 3vh;
+	width : 45vw;
+	background : white;
+	
+	text-align : center;
+}
+
+#content #search #searchInput:focus{
+	border : solid 1px black;
+}
+
+#content #search #doSearch{
+	position : absolute;
+	left :45vw;
+	border : solid 1px black;
+	border-radius : 0px 20px 20px 0px / 0px 20px 20px 0px;
+	
+	height : 3.34vh;
+	width : 5vw;
+	background-color : black;
+	color : white;
+}
+
+#content #filter {
+	position : absolute;
+	top : 28vh;
+	left : 26vw;
+	
+	z-index : 2;
+	height : 7vh;
+	width : 48vw;
+	
+	border-top : solid 1px black;
+	border-bottom : solid 1px black;
+
+	margin : 0px;
+	padding : 0px;
+		
+	}
+	
+#filter-menus {
+	
+	width: 48vw; margin: 0px; list-style: none; padding: 0; text-align: center; font-size: 0; display: table;
+
+}
+
+#filter-menus > li {
+	
+	width: 12vw; height: 7vh; display: table-cell; vertical-align: middle; text-align: center; font-size: 14px;margin : 0px;
+
+}
+
+#filter-menus > li > a {
+	
+	font-size:17px;
+	 display: table-cell;
+	 vertical-align: middle; 
+	 width: 28vw; 
+	 height: 7vh;
+	 text-decoration: none; 
+	 color: black;
+	 margin : 0px;
+	 padding : 0px;
+}
+
+/* #menubar-menus li를 position: relative 처리를 하는 경우에 아래 hover 상태 처리를 주석 처리 할 것. */
+
+#filter-menus > li > div {
+
+	position: absolute;
+	background: white; 
+	color: black;
+	left: 0; 
+	height : 150px;
+	width: 48vw; 
+	top: 7.1vh;
+	/*padding: 50px 0; */
+	display : none;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	z-index: 10;
+	border-bottom : solid 1px black;
+}
+
+.submenu>a{
+	margin : 15px;
+}
+
+#list{
+	position : absolute;
+	top : 40vh;
+	left: 24vw;
+	
+	height : 725px;
+	width : 48vw;
+	
+	background : white;
+	
+	border-left : solid 1px gray;
+	display : flex;
+	 justify-content: center; 
+	
+	
+}
+
+
+.pull-right{
+	position : absolute;
+	top : 725px;
+
+
+	
+}
+
+.pull-right>.pagination{
+	list-style : none;
+}
+
+.pull-right>.pagination>li{
+	float : left;
+	margin : 10px;
+}
+
+.pull-right>.pagination>li>div{
+	width : 25px;
+	height : 25px;
+	display : flex;
+	justify-content : center;
+	
+}
+.pull-right>.pagination>li>div>a{
+	color : black;
+}
+
+.arrow_next{
+	position : absolute;
+	top : 30px;
+	border-top : 2px solid black;
+	border-right : 2px solid black;
+	width : 18px;
+	height : 18px;
+	  transform: rotate(45deg); /* 각도 */
+}
+
+.arrow_prev{
+	position : absolute;
+	left : 25px;
+	top : 30px;
+	border-top : 2px solid black;
+	border-right : 2px solid black;
+	width : 18px;
+	height : 18px;
+	  transform: rotate(225deg); /* 각도 */
+}
+
+#insert button{
+	background : #d3d3d3;
+	border : none;
+	
+	position : absolute;
+	top : 82vh;
+	left : 50vw;
+	
+	height : 35px;
+	width : 70px;
+	
+	color : white;
+}
+
+
+#table{
+  border-collapse: separate;
+  border-spacing: 1px;
+  text-align: left;
+  line-height: 1.5;
+  border-top: 1px solid #ccc;
+  margin : 0 10px 0 10px;
+  
+  position : absolute;
+  left : 2vw;
+}
+
+#table th {
+  width: 150px;
+  padding: 10px;
+  font-weight: bold;
+  vertical-align: top;
+  border-bottom: 1px solid #ccc;
+}
+
+
+#table td {
+  width: 350px;
+  padding: 10px;
+  vertical-align: top;
+  border-bottom: 1px solid #ccc;
+}
+
+#table td>a{
+	text-decoration : none;
+	color : black;
+}
+
+#table td>a:hover{
+	text-decoration : underline;
+}

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.myosp.mapper.BoardMapper">
+	<resultMap type="org.myosp.domain.BoardDTO" id="boardDTO">
+		<id property="board_id" column="board_id" />
+		<result property="writer" column="writer"/>
+		<result property="writeDate" column="writeDate"/>
+		<result property="views" column="views"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="good" column="good"/>
+		<result property="dislike" column="dislike"/>
+		<result property="local" column="local"/>
+		<result property="contentType" column="contentType"/>
+		<result property="sources" column="sources"/>
+	</resultMap>
+	<select id="readAll" parameterType="String" resultMap="boardDTO">
+		<![CDATA[
+
+				SELECT 
+					/*+ INDEX_DESC(board pk_board)*/ * FROM board 
+				WHERE 
+					local=#{local}
+				ORDER BY board_id desc
+			
+			
+			]]>
+	</select>
+	
+	<select id="readOne" parameterType="int" resultMap = "boardDTO">
+		SELECT * FROM board where board_id = #{board_id}
+	</select>
+	
+	<update id="addView" parameterType="org.myosp.domain.BoardDTO">
+		update board set views=(#{views} + 1) where board_id = #{board_id}
+	
+	</update>
+	
+	
+	<resultMap type="org.myosp.domain.AreaDTO" id="areaDTO">
+		<id property="area_id" column="area_id" />
+		<result property="koreanName" column="koreanName" />
+		<result property="englishName" column="englishName" />
+		<result property="address" column="address" />
+		<result property="season" column="season" />
+		<result property="popularity" column="popularity" />
+		<result property="introduction" column="introduction" />
+	</resultMap>
+	
+	<select id="getAreaList" resultMap="areaDTO">
+	select * from areaList
+	
+	</select>
+</mapper>

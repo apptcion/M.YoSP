@@ -1,0 +1,60 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<bean id="CustomPasswordEncoder"
+		class="org.myosp.security.CustomNoOpPasswordEncoder"></bean>
+	<bean id="bcryptPasswordEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+	<bean id="CustomUserDetailsService"
+		class="org.myosp.security.CustomUserDetailsService"></bean>
+	<bean id="CustomLoginSuccessHandler"
+		class="org.myosp.security.CustomLoginSuccessHandler"></bean>
+
+
+	<security:http auto-config="true">
+		<security:intercept-url pattern="/board/**"
+			access="isAuthenticated()" />
+		<security:intercept-url pattern="/login"
+			access="isAnonymous()" />
+		<security:intercept-url pattern="/logout"
+			access="isAuthenticated()"></security:intercept-url>
+
+		<security:form-login
+			login-page="/login" login-processing-url="/login" />
+		<!--default-target-url="/home" -->
+
+		<security:logout logout-url="/logout"
+			logout-success-url="/" delete-cookies="JSESSIONID,remember-me" />
+
+		<security:access-denied-handler
+			error-page="/accessError" />
+
+		<security:remember-me
+			data-source-ref="dataSource" token-validity-seconds="604800"
+			user-service-ref="CustomUserDetailsService" />
+	</security:http>
+
+
+
+	<security:authentication-manager>
+		<security:authentication-provider
+			user-service-ref="CustomUserDetailsService">
+			<!-- user-service-ref="CustomUserDetailsService" -->
+			<!--<security:jdbc-user-service data-source-ref="dataSource" users-by-username-query="select 
+				userName, password, enabled from member where username=?" authorities-by-username-query="select 
+				userName, authority from author_member where username=?" /> -->
+
+			<security:password-encoder
+				ref="bcryptPasswordEncoder" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+
+</beans>
