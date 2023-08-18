@@ -37,7 +37,7 @@ public class BoardMapperTests {
 		@Test
 		public void testUserbyUserName() {
 			
-			log.info(mapper.readAll("seoul"));
+			log.info(mapper.readComments(121));
 
 		}
 }

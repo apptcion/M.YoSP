@@ -1,19 +1,26 @@
 package org.myosp.service;
 
+import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.myosp.domain.AreaDTO;
 import org.myosp.domain.BoardDTO;
+import org.myosp.domain.CommentDTO;
 import org.myosp.domain.Criteria;
+import org.myosp.domain.LikeDTO;
 import org.myosp.mapper.BoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
+import oracle.jdbc.driver.parser.Parseable;
 
 @Service
 @Log4j
@@ -32,17 +39,23 @@ public class BoardDAOImpl implements BoardDAO {
 	public BoardDTO readOne(int board_id) {
 		BoardDTO dto = mapper.readOne(board_id);
 
-		mapper.addView(dto);
-
-		dto = mapper.readOne(board_id);
-
 		return dto;
 	}
+	
+	@Override
+	public void addView(BoardDTO dto) {
+		mapper.addView(dto);
+	}
 
-	public List<BoardDTO> getListWithPaging(Criteria cri, String order,String local) {
+	public List<BoardDTO> getListWithPaging(Criteria cri, String order,String local,String search) {
 		List<BoardDTO> resultList = new ArrayList();
 		
-		List<BoardDTO> list = mapper.readAll(local);
+		
+		Map<String,String> map = new HashMap<>();
+		
+		map.put("local",local);
+		map.put("search", search);
+		List<BoardDTO> list = mapper.readAll(map);
 		
 		int Count = list.size();
 		
@@ -80,8 +93,8 @@ public class BoardDAOImpl implements BoardDAO {
 
 			});
 			
-			for(int i = 1; i < cri.getPageNum() * cri.getAmount(); i++) {
-				if(i > (cri.getPageNum()-1) * cri.getAmount()) {
+			for(int i = 1; i <= cri.getPageNum() * cri.getAmount(); i++) {
+				if(i >= (cri.getPageNum()-1) * cri.getAmount()) {
 					try {
 						resultList.add(list.get(i-1));
 					}catch(Exception e) {
@@ -91,7 +104,7 @@ public class BoardDAOImpl implements BoardDAO {
 			}
 			
 			break;
-		case "byLike": // 추천수 정렬 DESC
+		case "byLikeDesc": // 추천수 정렬 DESC
 			Collections.sort(list, new Comparator<BoardDTO>() {
 
 				@Override
@@ -113,15 +126,114 @@ public class BoardDAOImpl implements BoardDAO {
 			
 			
 			break;
-		case "byTime": // 시간순 정렬 
-			break;
+		case "byLikeAsc": // 추천수 오름차순 정렬 ASC
+			
+			Collections.sort(list, new Comparator<BoardDTO>() {
 
+				@Override
+				public int compare(BoardDTO dto1, BoardDTO dto2) {
+					return dto1.getGood() - dto2.getGood(); 
+				}
+
+			});
+			
+			for(int i = 1; i < cri.getPageNum() * cri.getAmount(); i++) {
+				if(i > (cri.getPageNum()-1) * cri.getAmount()) {
+					try {
+						resultList.add(list.get(i-1));
+					}catch(Exception e) {
+						break;
+					}
+				}
+			}
+			break;
+			
+			
+		case "byTimeDesc":
+			Collections.sort(list, new Comparator<BoardDTO>() {
+
+				@Override
+				public int compare(BoardDTO dto1, BoardDTO dto2) {
+					SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+					String date1 = format.format(dto1.getWriteDate());
+					String date2 = format.format(dto2.getWriteDate());
+					
+					int Ndate1 = Integer.parseInt(date1);
+					int Ndate2 = Integer.parseInt(date2);
+					
+					return Ndate2 - Ndate1;
+				}
+
+			});
+			
+			for(int i = 1; i < cri.getPageNum() * cri.getAmount(); i++) {
+				if(i > (cri.getPageNum()-1) * cri.getAmount()) {
+					try {
+						resultList.add(list.get(i-1));
+					}catch(Exception e) {
+						break;
+					}
+				}
+			}
+			break;
+			
+		case "byTimeAsc":
+			Collections.sort(list, new Comparator<BoardDTO>() {
+
+				@Override
+				public int compare(BoardDTO dto1, BoardDTO dto2) {
+					SimpleDateFormat format = new SimpleDateFormat("yyMMddHHmmss");
+					int date1 = Integer.parseInt(format.format(dto1.getWriteDate()));
+					int date2 = Integer.parseInt(format.format(dto2.getWriteDate()));
+				
+					
+					return date1 - date2;
+				}
+
+			});
+			
+			for(int i = 1; i < cri.getPageNum() * cri.getAmount(); i++) {
+				if(i > (cri.getPageNum()-1) * cri.getAmount()) {
+					try {
+						resultList.add(list.get(i-1));
+					}catch(Exception e) {
+						break;
+					}
+				}
+			}
+			break;
 		}
 		return resultList;
 	}
 	
-	public int Count(String local) {
-		List<BoardDTO> list = mapper.readAll(local);
+	@Override
+	public void turn(boolean how,int board_id,String member_id) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		
+		map.put("board_id",board_id);
+		map.put("member_id", member_id);
+		
+		
+		if(how) {
+			mapper.toGood(map);
+			mapper.UpCount(board_id);
+		}else {
+			mapper.toBad(map);
+			mapper.DownCount(board_id);
+		}
+	}
+	
+	
+	@Override
+	public int Count(String local,String search) {
+		
+		Map<String,String> map = new HashMap<>();
+		
+		
+		map.put("local",local);
+		map.put("search", search);
+		
+		List<BoardDTO> list = mapper.readAll(map);
 		int count = list.size();
 		
 		return count;
@@ -131,5 +243,73 @@ public class BoardDAOImpl implements BoardDAO {
 	public List<AreaDTO> getAreaList() {
 		List<AreaDTO> areaName = mapper.getAreaList();
 		return areaName;
+	}
+	
+	
+	@Override
+	public boolean isLike(BoardDTO dto,String member_id) {
+		
+		List<LikeDTO> likedto =  mapper.readLike(dto.getBoard_id());
+		
+		for(LikeDTO like : likedto) {
+			System.out.println("from dao.isLike;  " + like);
+			if(like.getMember_id().equals(member_id)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public List<CommentDTO> readComments(int board_id){
+		List<CommentDTO> result = mapper.readComments(board_id);
+		
+		Collections.sort(result, new Comparator<CommentDTO>() {
+		
+		@Override
+		public int compare(CommentDTO dto1, CommentDTO dto2) {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHH");
+			int date1 = Integer.parseInt(sdf.format(dto1.getWriteDate()));
+			int date2 = Integer.parseInt(sdf.format(dto2.getWriteDate()));
+		
+			
+			return date2 - date1;
+		}
+		
+		});
+			
+		return result; 
+	}
+	
+	
+	@Override
+	public void enrolComment(int board_id, int member_id, String Username, String Content) {
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("board_id", board_id);
+		map.put("member_id", member_id);
+		map.put("Username", Username);
+		map.put("Content", Content);
+		
+		
+		mapper.enrolComment(map);
+	}
+	
+	@Override
+	public void Cupdate(int comment_id, String Con) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("comment_id",comment_id);
+		map.put("Con",Con);
+
+		mapper.Cupdate(map);
+	}
+	
+	
+	@Override
+	public void Cdel(int comment_id) {
+		mapper.Cdel(comment_id);
 	}
 }

@@ -23,7 +23,10 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{@
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		
-	response.sendRedirect("/home");
+	
+	String TargetUrl = (String) request.getSession().getAttribute("prevPage");
+	
+	response.sendRedirect(TargetUrl);
 		
 	}
 

@@ -19,18 +19,19 @@
 
 
 	<security:http auto-config="true">
-		<security:intercept-url pattern="/board/**"
-			access="isAuthenticated()" />
-		<security:intercept-url pattern="/login"
+		<security:intercept-url pattern="/login/login"
 			access="isAnonymous()" />
-		<security:intercept-url pattern="/logout"
-			access="isAuthenticated()"></security:intercept-url>
+		<security:intercept-url pattern="/logout/login"
+			access="isAuthenticated()" />
 
 		<security:form-login
-			login-page="/login" login-processing-url="/login" />
+			login-page="/login" login-processing-url="/login/login" 
+			authentication-success-handler-ref="CustomLoginSuccessHandler"
+			authentication-failure-handler-ref="loginFailHandler"
+			/>
 		<!--default-target-url="/home" -->
 
-		<security:logout logout-url="/logout"
+		<security:logout logout-url="/login/logout"
 			logout-success-url="/" delete-cookies="JSESSIONID,remember-me" />
 
 		<security:access-denied-handler

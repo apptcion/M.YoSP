@@ -9,5 +9,6 @@ www.w3.org./TR/html4/loose.dtd">
 </head>
 <body>
 	<h1>해당 URL은 존재하지 않습니다</h1>
+	${error }
 </body>
 </html>

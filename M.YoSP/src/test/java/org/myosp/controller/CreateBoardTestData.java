@@ -28,9 +28,9 @@ public class CreateBoardTestData {
 	@Test
 	public void test(){
 		String sql = 
-		"insert into board (board_id,writer,title,content,local) values (board_seq.NEXTVAL,?,?,?,'seoul')";
+		"insert into comments (board_id, member_id, comments_id,comments,userName) values (121,?,comments_seq.NEXTVAL,'test Content test Content',?)";
 		
-		for(int i = 1; i < 11; i++ ) {
+		for(int i = 1; i < 10; i++ ) {
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -40,9 +40,8 @@ public class CreateBoardTestData {
 				pstmt = con.prepareStatement(sql);
 				
 				
-				pstmt.setString(1, "member" + i);
-				pstmt.setString(2, "test" + i);
-				pstmt.setString(3, "testContent" + i);
+				pstmt.setInt(1, i);
+				pstmt.setString(2, "member" + i);
 				
 				pstmt.executeUpdate();
 			}catch(Exception e) {

@@ -7,14 +7,14 @@
 <title>Insert title here</title>
 </head>
 <body>
-<script src="resources/js/jquery-3.6.4.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
-	$(document).ready(function() {
-		$("#logout").trigger('click');
-	})
+$(function() {
+	$("#logout").trigger("click");
+});
 
 </script>
-<form method="post" action="/logout">
+<form method="post" action="/login/logout">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
            <button type="submit" id="logout">로그아웃</button>
     </form>

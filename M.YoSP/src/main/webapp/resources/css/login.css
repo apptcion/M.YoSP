@@ -1,76 +1,115 @@
 #login{
-	position : absolute;
-	top : 17vh;
-	left : 37vw;
-	
+	position: relative;
+	top : 138px;
+	margin : 0 auto;
 	border : solid black 1px;
-	
 	border-radius: 30px;
-	
-	height : 50vh;
-	width : 26vw
-	
+	height : 500px;
+	width : 450px;
 }
 
 #login>h1{
 	 font-family: 'Montserrat';
-	position : absolute;
-	top : -10vh;
-	left : 7.5vw;
+	 position : relative;
+	 margin : 0 auto;
+	 width: 190px;
+	 top : -81.2px;
 }
+
 
 
 #login>form{
-	position : absolute;
-	top : 7vh;
-	left : 5.5vw;
+	position : relative;
+	top : 57px;
+	width : 100%;
+	margin : 0 auto;
 }
+
 
 .text{
 	font-size : 15px;
+	width: 100%;
 }
 
 .data{
+	position : relative;
+	width: 80%;
+	margin: 0 auto;
+	/* left : 40px; */
+	display: block;
+}
+
 	
-	border : none;
-	border-bottom : solid 1px #a0a0a0;
-	width : 100%;
-	height : 3vh;
-	margin-bottom : 20px;
+.data>input{
+	
+border : none;
+	
+border-bottom : solid 1px #a0a0a0;
+	
+margin : 0 auto;
+	
+width: 100%;
+	
+height : 25px;
+	
+margin-bottom : 20px;
 }
 
 
-.data:focus{
+.data>input:focus{
 	border-bottom : solid 2px black;
 	outline : none;
 }
 
 #remember-me{
-	position : absolute;
-	top : 20vh;
+	position : relative;
+	left : 40px;
 }
+	
 
 #hidden{
 	display : none;
 }
 
 
+#login_button {
+    position: relative;
+    width: 264px;
+    top: 20px;
+    margin: 0 auto;
+}
+
+
 #move{
-	position : absolute;
-	top : 34vh;
-	left : 2.5vw;
+	position: relative;
+	top: 20px;
+	margin: 0 auto;
+	/* left : 2.5vw; */
+	width: 200px;
+}
 
-	width : 100%;
 
+#move>a:focus{
+	text-decoration : underline;
 }
 
 
 #move>a{
 	color : gray;
+	text-decoration : none;
+	margin: 7px;
 }
 
 #move>a:hover{
 	text-decoration : underline;
+}
+
+#error{
+	position : relative;
+	width : 289px;
+	top : -100px;
+	left : 45px;
+	color : red;
 }
 
 
@@ -83,7 +122,6 @@
   text-decoration: none;
   display:inline-block;
   position: relative;
-  top : 5vh;
   
 }
 
@@ -100,7 +138,7 @@
     text-transform: uppercase!important;
     letter-spacing: 2px;
     color:  black;
-    cursor: hand;
+    cursor: pointer;
     text-align: center;
     text-transform: capitalize;
     border: 1px solid black;
@@ -112,7 +150,6 @@
     transition: all .3s ease-in-out;
     background: transparent!important;
     z-index:10;
-    
 }
 
 
@@ -146,7 +183,7 @@
     width: 0%;
     height: 100%;
     display: block;
-    background: black; /*占십반울옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占싹깍옙 */
+    background: black; /*Ã¥ÂÂ Ã¬â€¹Â­Ã«Â°ËœÃ¬Å¡Â¸Ã¬Ëœâ„¢ Ã¥ÂÂ Ã¬Ââ„¢Ã¬Ëœâ„¢Ã¥ÂÂ Ã¬Ââ„¢Ã¬Ëœâ„¢ Ã¥ÂÂ Ã¬Ââ„¢Ã¬Ëœâ„¢Ã¥ÂÂ Ã¬Ââ„¢Ã¬Ëœâ„¢ Ã¥ÂÂ Ã¬Ââ„¢Ã¬Ëœâ„¢Ã¥ÂÂ Ã¬â€¹Â¹ÃªÂ¹ÂÃ¬Ëœâ„¢ */
     position: absolute;
   -ms-transform: skewX(-20deg);
     -webkit-transform: skewX(-20deg); 
@@ -169,3 +206,4 @@
   opacity:1;
   width: 120%;
 }
+

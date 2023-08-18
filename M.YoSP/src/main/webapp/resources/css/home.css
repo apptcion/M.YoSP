@@ -83,15 +83,6 @@ video {
 	margin : 0;
 }
 
-
-
-
-
-
-
-
-
-
 #Scene1{
 	position :absolute;
 	top : 0px;
@@ -123,14 +114,12 @@ video {
 	height : 26vw;
 }
 
-
 #ex{
 	z-index : 3;
 	position : absolute;
 	top : 74vh;
 	left : 11vw;
 }
-
 
 #f{
 	z-index : 3;
@@ -139,23 +128,13 @@ video {
 	left : 63%;
 	color : white;
 	font : 5em;
-	
-	
 }
-
-
-
-
-
-
-
 
 #Scene2{
 	position : absolute;
 	top : 100vh;
 	z-index : 1;
 }
-
 
 #Scene2 fieldset{
 	position : absolute;
@@ -173,11 +152,6 @@ video {
 	font-weight : 1000;
 	color : white;
 }
-
-
-
-
-
 
 #Scene3{
 	top : 200vh;
@@ -201,15 +175,6 @@ video {
 	font-weight : 1000;
 	color : white;
 }
-
-
-
-
-
-
-
-
-
 
 #Scene4{	
 	position : absolute;
@@ -235,21 +200,6 @@ video {
 	font-weight : 1000;
 	color : white;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #Scene5{
 	position : absolute;
@@ -282,20 +232,6 @@ video {
         opacity:1;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #Scene5 #T{
 	position : absolute;
@@ -362,11 +298,11 @@ video {
     
 }
 
-
 .travel:hover{
     border: 1px solid #071982;
     color: white!important;
 }
+
 .travel::before {
     content: '';
     width: 0%;
@@ -386,7 +322,7 @@ video {
   -webkit-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
   transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
      box-shadow:2px 0px 14px rgba(0,0,0,.6);
-  } 
+} 
 
 .travel::after {
     content: '';
@@ -416,29 +352,6 @@ video {
   opacity:1;
   width: 120%;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .ToPlan{
@@ -503,7 +416,6 @@ video {
     
 }
 
-
 .ToPlan:hover{
     border: 1px solid black;
     color: white!important;
@@ -527,7 +439,7 @@ video {
   -webkit-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
   transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
      box-shadow:2px 0px 14px rgba(0,0,0,.6);
-  } 
+} 
 
 .ToPlan::after {
     content: '';
@@ -557,21 +469,6 @@ video {
   opacity:1;
   width: 120%;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .ReadMore{
@@ -639,11 +536,11 @@ video {
     
 }
 
-
 .ReadMore:hover{
     border: 1px solid black;
     color: white!important;
 }
+
 .ReadMore::before {
     content: '';
     width: 0%;
@@ -663,7 +560,7 @@ video {
   -webkit-transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
   transition: all .7s cubic-bezier(0.77, 0, 0.175, 1);
      box-shadow:2px 0px 14px rgba(0,0,0,.6);
-  } 
+} 
 
 .ReadMore::after {
     content: '';
@@ -685,13 +582,13 @@ video {
     transition: all .4s cubic-bezier(.2,.95,.57,.99);
     box-shadow: 2px 0px 14px rgba(0,0,0,.6);
 }
+
 .ReadMore:hover::before, .btn1O:hover::before{
   opacity:1;
   width: 116%;
 }
+
 .ReadMore:hover::after, .btn1O:hover::after{
   opacity:1;
   width: 120%;
 }
-	  
-	  

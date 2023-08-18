@@ -1,48 +1,57 @@
 #formContain{
-	position : absolute;
-	top : 17vh;
-	left : 35vw;
-	width : 30vw;
-	height : 60vh;
+	position: relative;
+	top: 138px;
+	margin: 0 auto;
+	width: 550px;
+	height: 487px;
 	border : solid 1px black;
 	border-radius : 20px;
 }
 
 
-#formContain h1{
+#formContain>h1{
     font-family: 'Montserrat';
     font-size: 35px;
     font-weight: 600;
     text-align: center;
     color: #000000;
-    position  : absolute;
-    top : -10vh;
-    left : 9.5vw;
+    position: relative;
+    top: -101px;
+    margin: 0 auto;
+    width: 162px;
 }
 
 #inform{
-	position : absolute;
-	top : 3vh;
-	width : 30vw;
-	height : 45vh;
+	position: relative;
+	top: 0px;
+	width: 100%;
+	height: 365px;
 }
 
 #formContain #informations {
-	position : absolute;
-	left : 2vw;
+	position: relative;
+	/* margin: 0 auto; */
 	font-size : 14px;
 	width : 100%;
-	top : 5.75vh;
-	
+	top: 57px;
 }
 
 #formContain #informations input{
 	border : none;
 	border-bottom : solid 1px #e0e0e0;
 	border-radius: 0 !important;
-	height : 5vh;
-	width : 56%;
+	height : 45.5px;
+	width: 60%;
 }
+
+#informations label{
+	position : relative;
+	display : block;
+	width : 80%;
+	margin : 0 auto;
+}
+
+
 
 #formContain #informations input:focus{
 	border-color: black;
@@ -51,29 +60,32 @@
 }
 
 
-button {
+#check, #tryCheck{
   background : none;
-  height : 5vh;
-  width : 9vw;
-  border : solid 2px black;
+  border: solid 1.4px black;
   border-radius: 20px;
-
-  position : absolute;
-  top : 9vh;
-  left : 18vw;
+  height : 50px;
+  width : 150px;
 }
 
-button:hover{
+#check:hover, #tryCheck:hover{
   box-shadow: 1px 1px 4px black;
 }
 
 
+#tryCheck{
+  position : relative;
+  top : -90px;
+  left: 385px;
+}
+
 
 #retry{
-  position : absolute;
-  top : 14.25vh;
-  left: 19.625vw;
+  position : relative;
+  top : -45px;
+  left: 255px;
   color : gray;
+  cursor : pointer;
 }
 
 #retry:hover{
@@ -81,26 +93,136 @@ button:hover{
 }
 
 #code{
-  border : solid 1.5px black;
-  position : absolute;
-  top : 26vh;
-  left : 2vw;
-  width : 56.5%;
-  height : 5vh; 
+  border: solid 1px black;
+  position : relative;
+  top : 0px;
+  width: 55%;
+  left: 50px;
+  height: 42px;
 }
 
 #check{
-  position : absolute;
-  top : 26vh;
-  left : 20vw;
+  position: absolute;
+	top : 237px;
+  left: 385px;
 }
 
-#mail-ok{
+#timer{
+	position : relative;
+	left : 50px;
+}
+
+#back{
+	display : block;
+	position : relative;
+	top : 20px;
+	width: 64px;
+	margin : 0 auto;
+	color : gray;
+	text-decoration : none;
+}
+
+	
+#modal{
+	display :none;
+	position : fixed;
+	top : 40px;
+	margin : 0 auto;
+	width : 550px;
+	height : 300px;
+
+	border : solid 1px black;
+	border-radius : 10px;
+	background-color : white;
+	z-index : 101;
+}
+
+#modal>h2{
 	position : absolute;
-	top : 26vh;
+	top : 20px;
+	left : 80px;
+	width : 300px;
+}
+
+#modal>#body{
+	position : absolute;
+	left : 80px;
+	top : 50px;
+	width : 400px;
+	height : 100px;
+	margin : 50px auto;
+}
+
+#modal>#dataInput{
+	display : none;
+	position : absolute;
+	top : 140px;
+	left : 80px;
+	background-color : ;
+	border : none;
+	border-bottom : solid 1px black;
+	border-radius: 0 !important;
+	width : 70%;
+	height : 20px;
+}
+
+#modal>#dataInput:focus{
+	border-color: black;
+	border-bottom-width: 2px;
+	outline : none;
+}
+
+#modal>#submit{
+	display : none;
+    position: absolute;
+    background-color: black;
+    border-radius: 30px;
+    color: white;
+    width: 80px;
+    height: 40px;
+    bottom: 50px;
+    font-size: 15px;
+    right: 50px;
+	
 }
 
 
+#modal>.warn{
+	position : absolute;
+	top : 170px;
+	left : 80px;
+	width : 70%;
+	height : 30px;
+}
+
+
+#cover{
+	display : none;
+	position : fixed;
+	top : 0px;
+	left : 0px;
+	width : 100vw;
+	height : 100vh;
+	opacity : 0.8;
+	background-color :  dimgray;
+	z-index : 100;
+}
+
+#close{
+	position : absolute;
+	top: 19px;
+	height: 30px;
+	right: 19px;
+	border : none;
+	background-color : white;
+	width: 30px;
+}
+
+
+#X:after{
+ content : "\00d7";
+ font-size : 20pt;
+}
 
 
 .find{
@@ -110,10 +232,10 @@ button:hover{
 
   text-decoration: none;
   display:inline-block;
-  position: relative;
-  top : 40vh;
-  left : 5.75vw;
-  
+  position: absolute;
+
+  top : 300px;
+  left : 120px
 }
 
 
@@ -175,7 +297,7 @@ button:hover{
     width: 0%;
     height: 100%;
     display: block;
-    background: black; /*占십반울옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占싹깍옙 */
+    background: black; 
     position: absolute;
   -ms-transform: skewX(-20deg);
     -webkit-transform: skewX(-20deg); 

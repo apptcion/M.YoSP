@@ -28,14 +28,14 @@
 <div id="header">
 	<div id="logo">
 		<a href="/">
-			<h2>TRIP</h2>
+			<h2>Trip</h2>
 			<p>Trip Route Itinerary Planner</p>
 			
 		</a>
 	</div>
 	<ul id="menus">
 		<li id="menu1">
-			<a href="/board/?page=1&order=byViewsDesc&local=etc">여행후기</a>
+			<a href="/board/?page=1&order=byViewsDesc&local=etc&search=">여행후기</a>
 		</li>
 		<li id="menu2">
 			<a href="#">TRIP</a>
@@ -45,7 +45,7 @@
 				<a href="/login">로그인</a>
 			</security:authorize>
 			<security:authorize access="isAuthenticated()">
-				<a href="/logout">로그아웃</a>
+				<a href="/login/logout">로그아웃</a>
 			</security:authorize>
 		</li>
 	</ul>

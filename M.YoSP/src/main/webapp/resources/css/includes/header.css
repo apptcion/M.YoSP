@@ -1,12 +1,12 @@
 #header{
 	z-index : 1000;
 	position : fixed;
+	top : 0px;
 	width : 100vw;
-	display : flex;
+	left : 0px;
 	/*justify-content: space-between;
 	backdrop-filter : blur(5px);
 	backgroud-color : rgba(0,0,0,0.08); */
-	background-color : ;
 }
 
 #logo{
@@ -43,9 +43,8 @@
 	
 	top : 0px;
 	list-style : none;
-	padding : 0px;
 	
-	width : 20vw;
+	width : auto;
 	
 }
 

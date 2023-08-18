@@ -20,8 +20,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class CustomUserDetailsService implements UserDetailsService{
 
-	//@Inject
-	//@Setter(onMethod_= { @Inject })
+	
 	@Setter(onMethod_=@Autowired)
 	public MemberMapper mapper;
 
@@ -34,7 +33,12 @@ public class CustomUserDetailsService implements UserDetailsService{
 		
 		
 		MemberDTO dto = mapper.read(username);
-		return dto == null ? null : new CustomUser(dto);
+		
+		if(dto == null) {
+			throw new UsernameNotFoundException(username);
+		}
+		
+		return new CustomUser(dto);
 	}
 
 }

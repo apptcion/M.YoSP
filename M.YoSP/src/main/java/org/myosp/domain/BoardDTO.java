@@ -10,7 +10,7 @@ import lombok.Data;
 public class BoardDTO{
 	private int board_id;
 	private String writer;
-	@DateTimeFormat(pattern = "yy/MM/dd")
+	@DateTimeFormat(pattern = "yyyy/MM/dd/HH/mm")
 	private Date writeDate;
 	private int views;
 	private String title;

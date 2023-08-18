@@ -7,12 +7,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+$(function(){
+	history.back();
+})
+</script>
 </head>
 <body>
-<h2> <c:out value="${SPRING_SECURITY_403_EXCEPTION.getMessage() }" /></h2>
-<h2> <c:out value="${msg }"/></h2>
-
-
-<button onclick="history.back();">돌아가기</button>
 </body>
 </html>

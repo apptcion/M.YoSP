@@ -12,69 +12,34 @@
 <body>
 	<div id="login">
 	<h1>TRIP - Login</h1>
-		<form action="/login" method="POST">
-			<label>
+		<form action="/login/login" method="POST">
+			<label class="data">
 			<div class="text">아이디</div><br>
-			<input type="text" class="data" name="username" required></label>
+			<input type="text" name="username" required></label>
 			<br>
-			<label>
+			<label class="data">
 			<div class="text">비밀번호</div><br>
-			<input type="password" class="data" name="password"></label>
+			<input type="password" name="password"></label>
 			
 			<br>
 			<label id="remember-me"><input type="checkbox"name="remember-me">자동 로그인</label>
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 			<label><button id="hidden" value="login"></button>
+			<div id="login_button">
 			<a class="login"> 
          		<span>로그인</span>
      	 		<div class="transition"></div>
-    		</a></label>
+    		</a>
+    		</div>
+    		</label>
     		<div id="move">
-    			<a>비밀번호 찾기</a>
-    			<a> 회원가입 </a>
+    			<a href="/login/find">비밀번호 찾기</a>
+    			<a href="/login/join"> 회원가입 </a>
     		</div>
 		</form>
-	
-	
+		<div id="error">
+			<c:out value="${error }"/>
+		</div>
 	</div>
 </body>
 </html>
-
-
-
-
-<!--<c:set var="path" value="${pageContext.request.contextPath}"/>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	
-	<title>로그인</title>
-	
-	<link href="<c:url value="/resources/css/login.css" />" rel="stylesheet">
-	
-    <script src="resources/js/jquery-3.6.4.min.js"></script>
- 	<script src="${path}/resources/js/login.js"></script>
-</head>
-<body>
-		<div id="formContain">
-			<h1>YoSP-login</h1>
-			<div id="inform">
-				<div id="informations" method="post" action="/login">
-					<label><div class="text id">아이디</div>
-					<input  id="id" name="id" type="text" required></label><br>
-					<br id="here"><br>
-					<label><div class="text password">비밀번호</div>
-					<input id="password" name="password" type="password" required></label><br>
-				</div>
-				
-				<a class="login"> 
-         				<span>로그인</span>
-     	 				<div class="transition"></div>
-    				</a>
-				<a href="FindPW" id="findpw">비밀번호 찾기</a>
-				<a href="join" id="join">회원가입 하기</a>
-			</div>
-		</div>
-</body>
-</html> -->

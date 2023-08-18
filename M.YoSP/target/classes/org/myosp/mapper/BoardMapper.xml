@@ -17,13 +17,15 @@
 		<result property="contentType" column="contentType"/>
 		<result property="sources" column="sources"/>
 	</resultMap>
-	<select id="readAll" parameterType="String" resultMap="boardDTO">
+	<select id="readAll" parameterType="Map" resultMap="boardDTO">
 		<![CDATA[
 
 				SELECT 
 					/*+ INDEX_DESC(board pk_board)*/ * FROM board 
 				WHERE 
-					local=#{local}
+					local like '%' ||  #{local} || '%'
+				AND
+					title like '%' || #{search} || '%'
 				ORDER BY board_id desc
 			
 			
@@ -54,4 +56,62 @@
 	select * from areaList
 	
 	</select>
+	
+	<resultMap type="org.myosp.domain.LikeDTO" id="likeDTO">
+		<id property="Board_id" column="board_id" />
+		<result property="Member_id" column="member_id" />
+	</resultMap>
+	
+	<select id="readLike" resultMap="likeDTO"> 
+	select * from heart where board_id = #{board_id}	
+	
+	</select>
+	
+	
+	<insert id="toGood" parameterType="Map">
+		insert into heart (board_id,member_id) values (#{board_id}, #{member_id})
+	</insert>
+	
+	
+	<delete id="toBad" parameterType="Map">
+		delete from heart where board_id = #{board_id} and member_id = #{member_id}
+	</delete>
+	
+	<update id="UpCount" parameterType="int">
+	update board set good = good +1 where board_id = #{board_id}
+	</update>
+	
+	
+	<update id="DownCount" parameterType="int">
+	update board set good = good -1 where board_id = #{board_id}
+	</update>
+	
+	
+	<resultMap type="org.myosp.domain.CommentDTO" id="commentDTO">
+		<id property="comment_id" column="comments_id" />
+		<result property="board_id" column="board_id" /> 
+		<result property="member_id" column="member_id" />
+		<result property="userName" column="username" />
+		<result property="writeDate" column="writedate" />
+		<result property="content" column="comments" />
+	</resultMap>
+	
+	<select id="readComments" parameterType="int" resultMap="commentDTO">
+		
+		select * from comments where board_id = #{board_id}
+	
+	</select>
+	
+	<insert id="enrolComment" parameterType="Map">
+		insert into comments (Comments_id,board_id,member_id,username,comments) values (comments_seq.NEXTVAL,#{board_id},#{member_id},#{Username},#{Content})
+	</insert>
+	
+	<update id="Cupdate">
+		update comments set comments = #{Con } where comments_id = #{comment_id}
+	</update>
+	
+	<delete id="Cdel">
+		delete from comments where comments_id = #{comment_id}
+	</delete>
+	
 </mapper>

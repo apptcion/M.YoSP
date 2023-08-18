@@ -25,5 +25,20 @@
 			
 		</select>
 
+		<select id="inUse" resultType="int">
+			select COUNT(*) from member where username=#{id}
+		</select>
+	
+		<insert id="JoinMember">
+			insert into member (user_id,userName,password,email) values (member_seq.NEXTVAL,#{username},#{password},#{email})
+		</insert>
+		
+		<insert id="JoinAuth">
+			insert into author_member (userName) values (#{username})
+		</insert>
+	
+		<update id="changePw" parameterType="String">
+			update member set password=#{password} where username=#{username}
+		</update>
 	
 	</mapper>
