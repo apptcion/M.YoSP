@@ -12,6 +12,10 @@ body::-webkit-scrollbar-thumb{
 	border : 2px solid transparent;
 }
 
+footer{
+	left : -8px;
+	bottom : -10px;
+}
 
 #header{
 	background-color : white;
@@ -53,29 +57,49 @@ body::-webkit-scrollbar-thumb{
 	height : 62px;
 }
 
+#Viewheader>svg{
+	position : absolute;
+	top : 10px;
+	right : 5px;
+	width : 20px;
+	height : 21px;
+}
+
 #leftHeader{
 	position : absolute;
 	top : 5px;
 	left : 10px;
-	
-	display: flex;
-	flex-wrap:wrap-reverse;
+
 	
 	height : 55px;
-	width : 200px;	
+	width : 150px;	
+}
+
+#BoardInter{
+	position : absolute;
+	top : 100px;
+	left : 100px;
+	z-index : 10;
 }
 
 #leftHeader>#title{
+	position : absolute;
+	top : -5px;
 	font-size : 23px;
 	font-weight : bold;
 }
 
 #leftHeader>#writer{
+	position : absolute;
+	top : 30px;
 	font-size : 15px;
 	margin-right : 10px;
 }
 
 #leftHeader>#writeDate{
+	position : absolute;
+	top : 30px;
+	left : 90px;
 	font-size : 15px;
 	
 }
@@ -100,6 +124,47 @@ body::-webkit-scrollbar-thumb{
 	font-size : 14px;
 }
 
+#BoardInter{
+	position: absolute;
+    border: solid 0.5px gray;
+    border-radius: 10px;
+    left: 750px;
+	top : 10px;
+    width: 70px;
+    height: 60px;
+    background-color: #f1f3f5;
+    padding-left: 5px;
+    display : none;
+    z-index : 2;
+}
+
+#BoardCover{
+	position : fixed;
+	width : 100vw;
+	height : 100vh;
+}
+
+
+#BoardInter>a{
+		position : relative;
+	top : 7px;
+	display : block;
+	width : 65px;
+}
+	
+#BoardInter>a:hover{
+		background-color : #ced5da;
+	cursor : pointer;
+}
+
+#BoardInter>#BoardModify{
+	color : #adb5bd;
+}
+
+#BoardInter>#BoardDel{
+
+	color : #FF0800;
+}
 #content{
 	position : absolute;
 	margin : 0px;

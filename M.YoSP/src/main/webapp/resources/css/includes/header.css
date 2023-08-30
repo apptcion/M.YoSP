@@ -75,21 +75,67 @@
 	color : #5882FA !important;
 }
 
-/*#header>#menus>div{
+#HeaderprofileDiv{
+		width : 55px;
+	height : 55px;
+	border-radius : 100%;
+	background-color : white;
+}
+
+#Headerprofile{
+	
+	
+	position : relative;
+	left : 2.5px;
+	top : 2.5px;
+	width : 50px;
+	height : 50px;
+	object-fit : cover;
+	border-radius : 100%;
+	background-color : black;
+}
+
+
+#UserMenu{
+	position : relative;
+	top : 76px;
+	right : 0px;
+	
+	    box-shadow: 0 0 10px rgb(0 0 0 / 15%);
+	display : none;
 	position : absolute;
-	top : -25px;
-	
-	height : 90px;
+	background-color : white;
+	width : 175px;
+	height : 80px;
+	border-radius : 12px;
+	justify-content : center;
+	flex-wrap : wrap;
 }
 
-#header>#menus>div:hover{
-	background : white;
-}
-
-#header>#menus>div>a{
+#UserMenu>a{
+	margin-top : 7px;
+	display : flex;
+	align-items : center;
+	width : 100px;
+	height : 27px;
+	color : black;
 	text-decoration : none;
-	color : white;
-	margin-top : 10px;
+	font-size : 13px;
+	z-index : 2;
+}
+
+#UserMenu>a:hover{
+	background-color : #dee2e6;
+}
+
+#HeaderCover{
+	position : fixed;
+	top : 0px;
+	left : 0px;
+	width : 100vw;
+	height : 100vh;
+	display : none;
 	
-	font-size : 18px;
-}*/
+	z-index : 1
+}
+

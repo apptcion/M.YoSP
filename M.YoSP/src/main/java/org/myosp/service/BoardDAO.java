@@ -22,7 +22,7 @@ public interface BoardDAO {
 	
 	public boolean isLike(BoardDTO dto,String member_id);
 	
-	public void turn(boolean how,int board_id, String member_id);
+	public void turn(boolean how,int board_id, int member_id);
 	
 	public List<CommentDTO> readComments(int board_id);
 	
@@ -31,5 +31,11 @@ public interface BoardDAO {
 	public void Cupdate(int comment_id, String Con);
 	
 	public void Cdel(int comment_id);
+	
+	public boolean posting(String title, String content, String area,String Username,int UserId);
+	
+	public void modify(int BoardId, String Title, String content,String local);
+	
+	public void exeDel(int BoardId);
 	
 }

@@ -7,12 +7,12 @@
 <head>
 	<meta charset="UTF-8">
 	<link href="<c:url value="/resources/css/login.css" />" rel="stylesheet">
-	<title>로그인</title>
+	<title>Login</title>
 </head>
 <body>
 	<div id="login">
 	<h1>TRIP - Login</h1>
-		<form action="/login/login" method="POST">
+		<form action="/login" method="POST">
 			<label class="data">
 			<div class="text">아이디</div><br>
 			<input type="text" name="username" required></label>
@@ -34,7 +34,7 @@
     		</label>
     		<div id="move">
     			<a href="/login/find">비밀번호 찾기</a>
-    			<a href="/login/join"> 회원가입 </a>
+    			<a href="/login/signup"> 회원가입 </a>
     		</div>
 		</form>
 		<div id="error">

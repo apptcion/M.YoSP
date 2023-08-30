@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>여행 플래너  - 요셉</title>
+	<title>여행 플래너  - Trip</title>
     <link href="<c:url value="/resources/css/home.css" />" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/> 
     <script src="resources/js/jquery-3.6.4.min.js"></script>
@@ -28,7 +28,7 @@
 							<div id="start">
 								&nbsp;&nbsp;<div id="tit"><img src="<c:url value='/resources/img/logo2.png'/>"></div>
 		    					<p id="ex">이미 이용하신 적이 있니요?</p>
-		    					<a href="planner" class="travel"> 
+		    					<a href="CreateMap" class="travel"> 
          							<span>여행하기</span>
      	 							<div class="transition"></div>
     							</a>

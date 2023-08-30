@@ -3,15 +3,22 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<c:set var="path" value="${pageContext.request.contextPath}" />
-<!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
 <link href="<c:url value="/resources/css/includes/list.css" />" rel="stylesheet">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+	$(function(){
+		$("#insert").click(function(){
+			location.href = "/board/write"
+		})
+		
+		function reLoad(){
+			location.reload();
+		}
+	})
+</script>
 </head>
-<body>
 <div id="other">
 		<div id="list">
 			<div id="Theader">
@@ -30,24 +37,28 @@
 						</c:set>
 						<div class="Onum"><c:out value="${status.count }"/></div>
 						<div class="title">
-						<security:authorize access="isAuthenticated()">
 							<a
-								href="view?id=${board.getBoard_id() }&page=${page }&order=byViewsDesc&local=etc&Username=<security:authentication property="principal.Username"/>&search=">
+								href="/board/view?id=${board.getBoard_id() }&page=${page }">
 								<c:out value="${board.getTitle() }" />
 							</a>
-						</security:authorize>
-						<security:authorize access="isAnonymous()">
-							<a
-								href="view?id=${board.getBoard_id() }&page=${page }&order=byViewsDesc&local=etc&Username=&search=">
-								<c:out value="${board.getTitle() }" />
-							</a>
-						</security:authorize>
 						</div>
 						<div class="writer"><c:out value="${board.getWriter() }" /></div>
 						<div class="date"><c:out value="${date }" /></div>
 						<div class="view"><c:out value="${board.getViews() }" /></div>
 					</div>
 				</c:forEach>
+				<c:if test="${empty list }">
+					<div id="NoResult">
+						<h1>조건에 맞는 게시물이 없습니다.</h1>
+						<p>아래의 내용을 확인해보세요</p>
+						<ol>
+							<li>검색은 제목을 기준으로 검색합니다</li>
+							<li>띄어쓰기가 일치해야 합니다</li>
+							<li>지역이 맞지 않을 수 있습니다 (기타로 설정시 모든 지역이 나옵니다)</li>
+							<li>게시물이 삭제되었을 수 있습니다.</li>
+						</ol>
+					</div>
+				</c:if>
 			</div>
 
 			<div class="pull-right">
@@ -78,5 +89,4 @@
 			</div>
 		</div>
 	</div>
-</body>
 </html>

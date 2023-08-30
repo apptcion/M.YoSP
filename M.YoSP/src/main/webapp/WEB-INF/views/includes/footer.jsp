@@ -15,28 +15,30 @@
 <body>
 	<footer>
 
-		<div id="R">
+		<div id="L">
 			<h1>Trip, Travel Route Itinerary Planner</h1>
-			<p style="font-family: serif; font-style: italic">Our Mission is
+			<p>Our Mission is
 				to make your travel easy and comfortable.</p>
 
 		</div>
-		<div id="L">
-			<div>
+			<img id="earth" src="${path }/resources/img/earth.png"/>
+		<div id="R">
+			<div id="siteMap">
 				<h2>Site Map</h2>
 				<ul>
-					<li><a>Main Page</a></li>
-					<li><a>Sign in</a></li>
-					<li><a>Find Password</a></li>
-					<li><a>How to Use</a></li>
-					<li><a>Go to Use</a></li>
+					<li><a href="/">Main Page</a></li>
+					<li><a href="/login">Sign in</a></li>
+					<li><a href="/login/find">Find Password</a></li>
+					<li><a href="#">How to Use</a></li>
+					<li><a href="#">Go to Use</a></li>
 				</ul>
 			</div>
-			<div>ⓒ 2023. Trip Co. all rights reserved</div>
-			<div>
+			<div id="copyright">ⓒ 2023. Trip Co. all rights reserved</div>
+			<div id="information">
 				Tel : 010-1111-1111 <br> email : Mail4M.yosp@gmail.com
 			</div>
 		</div>
+		<hr>
 	</footer>
 
 

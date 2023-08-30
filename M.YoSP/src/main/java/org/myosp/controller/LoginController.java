@@ -28,13 +28,13 @@ public class LoginController {
 		public String getLoginView(HttpServletRequest request,
 				@RequestParam(value="error", required=false)String error,Model model) {
 			
-			log.info(error);
-			
 			String uri = (String)request.getHeader("Referer");
 			if(uri != null && !uri.contains("/login")) {
 				request.getSession().setAttribute("prevPage", uri);
 			}
 			model.addAttribute("error", error);
+			
+			log.info("login");
 			
 			return "login/login";
 		}
@@ -43,21 +43,29 @@ public class LoginController {
 		@GetMapping("/logout")
 		public String getLogoutView() {
 			
-			
+			log.info("logout");
 			
 			return "login/logout";
 		}
 		
 		
 		
-		@GetMapping("/join")
-		public String getJoin() {
+		@GetMapping("/signup")
+		public String signup() {
+			
+			log.info("signup");
 			return "login/join";
 		}
 		
 		
 		@GetMapping("/find")
-		public String Find() {
+		public String Find(HttpServletRequest request) {
+			
+			log.info(request.getHeader("REFERER"));
+			log.info(request.getSession().getAttribute("prevPage"));
+			log.info("find");
+			
+			
 			return "/login/find";
 		}
 		

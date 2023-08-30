@@ -45,4 +45,9 @@ public interface BoardMapper {
 		
 		public void Cdel(int comment_id);
 		
+		public void posting(Map<String,String> map);
+		
+		public void modify(Map<String,Object> map);
+		
+		public void exeDel(int BoardId);
 }

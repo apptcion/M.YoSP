@@ -3,7 +3,7 @@
 	top: 138px;
 	margin: 0 auto;
 	width: 550px;
-	height: 487px;
+	height: 550px;
 	border : solid 1px black;
 	border-radius : 20px;
 }
@@ -16,9 +16,9 @@
     text-align: center;
     color: #000000;
     position: relative;
-    top: -101px;
+    top: -80px;
     margin: 0 auto;
-    width: 162px;
+    width: 250px;
 }
 
 #inform{
@@ -110,16 +110,6 @@
 #timer{
 	position : relative;
 	left : 50px;
-}
-
-#back{
-	display : block;
-	position : relative;
-	top : 20px;
-	width: 64px;
-	margin : 0 auto;
-	color : gray;
-	text-decoration : none;
 }
 
 	
@@ -224,6 +214,20 @@
  font-size : 20pt;
 }
 
+#back{
+	display : block;
+	position : relative;
+	top : 60px;
+	width: 64px;
+	margin : 0 auto;
+	color : gray;
+	text-decoration : none;
+}
+
+#back:hover{
+	text-decoration : underline;
+}
+
 
 .find{
   padding: 15px 100px;
@@ -234,7 +238,7 @@
   display:inline-block;
   position: absolute;
 
-  top : 300px;
+  top : 340px;
   left : 120px
 }
 
@@ -251,7 +255,7 @@
     text-transform: uppercase!important;
     letter-spacing: 2px;
     color:  black;
-    cursor: hand;
+    cursor: pointer;
     text-align: center;
     text-transform: capitalize;
     border: 1px solid black;

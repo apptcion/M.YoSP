@@ -16,6 +16,7 @@
 		<result property="local" column="local"/>
 		<result property="contentType" column="contentType"/>
 		<result property="sources" column="sources"/>
+		<result property="MemberId" column="MemberId" />
 	</resultMap>
 	<select id="readAll" parameterType="Map" resultMap="boardDTO">
 		<![CDATA[
@@ -25,7 +26,7 @@
 				WHERE 
 					local like '%' ||  #{local} || '%'
 				AND
-					title like '%' || #{search} || '%'
+					UPPER(title) like '%' || UPPER(#{search}) || '%'
 				ORDER BY board_id desc
 			
 			
@@ -112,6 +113,19 @@
 	
 	<delete id="Cdel">
 		delete from comments where comments_id = #{comment_id}
+	</delete>
+	
+	<insert id="posting" parameterType="Map">
+	insert into board (board_id,writer,title,content,local,MemberId) values (board_seq.NEXTVAL,#{Username},#{title},#{content},#{local},#{UserId})
+	</insert>
+	
+	<update id="modify" parameterType="Map">
+		update board set title = #{title},content=#{content},local=#{local} where board_id = #{BoardId}
+	</update>
+	
+	
+	<delete id="exeDel">
+		delete from board where BOARD_ID = #{BoardId}
 	</delete>
 	
 </mapper>

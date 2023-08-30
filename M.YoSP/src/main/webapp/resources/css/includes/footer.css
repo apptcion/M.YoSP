@@ -2,6 +2,88 @@ footer{
     position : relative;
     width: 100vw;
     height: 400px;
-    left : -8px;
-    bottom: -10px;
+    background-color : black;
+    color : white;
+}
+
+hr{
+	position: relative;
+	top: 200px;
+	width: 70vw;
+	margin: 0 auto;
+}
+
+#earth{
+background: white;
+    border-radius: 100px;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    top: 120px;
+    left: calc(50vw - 50px);
+}
+
+#R, #L{
+	position : absolute;
+	width : 50vw;
+	height : 100%;
+	top : 0px;
+}
+
+#L{
+	left : 0px;
+}
+
+#R{
+	left : 50vw;
+}
+
+
+#L>h1, #L>p{
+	
+	position : relative;
+	top : 100px;
+	width : 540px;
+	margin :  0 auto;
+	
+}
+
+#L>p{
+	 font-family: serif; 
+	 font-style: italic;
+}
+
+
+#R>#siteMap{
+	position : relative;
+	width : 150px;
+	left : 200px;
+	top : 50px;
+	
+}
+
+
+#R a{
+	text-decoration : none;
+	color : gray;
+	
+}
+
+#R a:hover{
+	text-decoration : underline;
+}
+
+
+#copyright{
+	position : absolute;
+	top : 80px;
+	left : 400px;
+	font-size : 18px;
+}
+
+
+#information{
+	position : absolute;
+	top : 150px;
+	left : 400px;
 }

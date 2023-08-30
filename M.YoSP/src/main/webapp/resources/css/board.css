@@ -147,6 +147,11 @@ body {
 	color: #495057;
 }
 
+.selected{
+	font-weight : bold;
+	color : black !important;
+}
+
 #sort>a {
 	position: relative;
 	top: 90px;

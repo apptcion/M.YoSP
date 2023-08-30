@@ -1,0 +1,213 @@
+@charset "UTF-8";
+body{
+	overflow-x : hidden;
+	margin : 0px;
+}
+
+#MyPageWrap{
+	position: relative;
+	top: 90px;
+	/* height: 950px; */
+	width: 100vw;
+	padding-bottom: 400px;
+	display : flex;
+	justify-content : space-evenly;
+	flex-wrap : wrap;
+}
+
+#UserData, #Maps{
+	position : relative;
+	top : 20px;
+	width : 700px;
+	height : 900px;
+	border-radius : 10px;
+		border : solid 1px black;
+}
+
+#title{
+	position : absolute;
+	/* left : 70px; */
+	font-weight : bold;
+	top: -55px;
+	font-size: 25px;
+}
+
+#profileDiv{
+	position : absolute;
+	top : 50px;
+	left : 50px;
+}
+
+#profile{
+	width : 200px;
+	height : 200px;
+	object-fit : cover;
+	border-radius : 100%;
+	background-color : black;
+}
+
+#Data{
+	position : absolute;
+	top : 50px;
+	left : 300px;
+	height : 400px;
+	width : 1000px;
+}
+
+
+#email>p{
+	color : #adb5bd;
+}
+#email>input{
+	background-color : #f1f3f5;
+	border : solid 1.5px #ced4da;
+	width : 250px;
+	height : 30px;
+	border-radius : 5px;
+	outline : none;
+}
+
+#email>button{
+	border : solid 1.5px #ced4da;
+	background-color : white;
+	color : #039BE5;
+	font-weight : bold;
+	border-radius : 3px;
+	height : 35px;
+	width : 125px;
+	box-shadow: 1px 1px 5px 1px #dee2e6;
+}
+
+#password{
+	position : relative;
+	top : 10px;
+}
+
+#password>#PwTitle{
+	color : #adb5bd;
+}
+
+#password>button{
+	background-color : white;
+	border : solid 1.5px #ced4da;
+	color : #039BE5;
+	font-weight : bold;
+	border-radius : 3px;
+	width : 125px;
+	height : 35px;
+	box-shadow: 1px 1px 5px 1px #dee2e6;
+}
+
+#password>img{
+		width : 23px;
+	position : absolute;
+	top : 88px;
+	left : 0px;
+}
+
+#password>#Warn{
+	position : relative;
+	left : 30px;
+	color : #868e96;
+}
+
+#name{
+	position : relative;
+	top : 15px;
+}
+
+#name>p{
+	color : #adb5bd;
+	
+}
+
+#name>input{
+	border : solid 1.5px #ced4da;
+	background-color : white;
+	border-radius : 5px;
+	width : 380px;
+	height : 30px;
+	box-shadow: 1px 1px 5px 1px #dee2e6;
+	outline : none;
+}
+
+#resign{
+	position : absolute;
+	top : 800px;
+	left: 450px;
+	width : 240px;
+	height: 100px;
+}
+
+#resign>button{
+	background-color : #FF4646;
+	border : solid 2px red;
+	color : white;
+	font-weight : bold;
+	width : 120px;
+	height : 50px;
+	border-radius : 20px;
+	font-size : 15px;
+
+	position : absolute;
+	right : 0px;
+}
+
+#resign>img{
+	position : absolute;
+	width : 23px;
+	left : -15px;
+	top : 65px;
+}
+
+#resign>p{
+	position : absolute;
+	top : 50px;
+	left : 20px;
+	color : red;
+}
+
+#modal{
+
+	position : absolute;
+	top : 500px;
+	display : flex;
+	justify-content : center;
+	flex-wrap  : wrap;
+	height : 300px;
+	width : 400px;
+
+	border-radius : 10px;
+	border : solid 1px black;
+}
+
+#modal>h2{
+	position : relative;
+	top : 20px;
+}
+
+#modal>p{
+	width : 100px;
+	margin: 0 30px;
+}
+
+#modal>button{
+	background-color : red;
+	color : white;
+	border-radius : 10px;
+	width : 300px;
+	height : 50px;
+	border : none;
+	font-size : 17px;
+}
+
+#modal>a{
+	position : absolute;
+	top : 270px;
+	color : gray;
+}
+
+#header{
+	border-bottom : solid 1px black;
+	box-shadow: 0px 1px 10px 1px black;
+}

@@ -154,7 +154,7 @@ public class BoardDAOImpl implements BoardDAO {
 
 				@Override
 				public int compare(BoardDTO dto1, BoardDTO dto2) {
-					SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+					SimpleDateFormat format = new SimpleDateFormat("yyMMddHH");
 					String date1 = format.format(dto1.getWriteDate());
 					String date2 = format.format(dto2.getWriteDate());
 					
@@ -182,7 +182,7 @@ public class BoardDAOImpl implements BoardDAO {
 
 				@Override
 				public int compare(BoardDTO dto1, BoardDTO dto2) {
-					SimpleDateFormat format = new SimpleDateFormat("yyMMddHHmmss");
+					SimpleDateFormat format = new SimpleDateFormat("yyMMddHH");
 					int date1 = Integer.parseInt(format.format(dto1.getWriteDate()));
 					int date2 = Integer.parseInt(format.format(dto2.getWriteDate()));
 				
@@ -207,7 +207,30 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 	
 	@Override
-	public void turn(boolean how,int board_id,String member_id) {
+	public boolean posting(String title,String content,String area, String Username,int UserId) {
+		
+		Map<String,String> map = new HashMap<>();
+		
+		content = content.replaceAll("\r|\r\n|\n|\n\r ", "\n");
+		if(!area.equals("etc")) {
+			area = area + ", etc";
+		}
+		
+		map.put("title",title);
+		map.put("content",content);
+		map.put("local",area);
+		map.put("Username",Username);
+		map.put("UserId",Integer.toString(UserId));
+		
+		System.out.println("BoardDAOImpl - posting  : " + map.toString());
+		
+		mapper.posting(map);
+		
+		return true;
+	}
+	
+	@Override
+	public void turn(boolean how,int board_id,int member_id) {
 		Map<String, Object> map = new HashMap<String,Object>();
 		
 		map.put("board_id",board_id);
@@ -222,6 +245,7 @@ public class BoardDAOImpl implements BoardDAO {
 			mapper.DownCount(board_id);
 		}
 	}
+	
 	
 	
 	@Override
@@ -288,6 +312,7 @@ public class BoardDAOImpl implements BoardDAO {
 	public void enrolComment(int board_id, int member_id, String Username, String Content) {
 		
 		Map<String, Object> map = new HashMap<>();
+		Content = Content.replaceAll("\r|\r\n|\n|\n\r ", "\n");
 		
 		map.put("board_id", board_id);
 		map.put("member_id", member_id);
@@ -311,5 +336,30 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public void Cdel(int comment_id) {
 		mapper.Cdel(comment_id);
+	}
+	
+	
+	@Override
+	public void modify(int BoardId, String title, String content, String local) {
+		
+		Map<String,Object> map = new HashMap<>();
+		
+		if(!local.equals("etc")) {
+			local = local + ", etc";
+		}
+		
+		
+		map.put("BoardId",BoardId);
+		map.put("title",title);
+		map.put("content",content);
+		map.put("local",local);
+		
+		mapper.modify(map);
+		
+	}
+	
+	@Override
+	public void exeDel(int BoardId) {
+		mapper.exeDel(BoardId);
 	}
 }

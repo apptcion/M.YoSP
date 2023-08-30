@@ -1,11 +1,7 @@
 package org.myosp.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,12 +10,12 @@ import org.myosp.domain.AreaDTO;
 import org.myosp.domain.BoardDTO;
 import org.myosp.domain.CommentDTO;
 import org.myosp.domain.Criteria;
+import org.myosp.domain.CustomUser;
 import org.myosp.domain.MemberDTO;
 import org.myosp.domain.PageDTO;
-import org.myosp.mapper.BoardMapper;
-import org.myosp.mapper.MemberMapper;
 import org.myosp.service.BoardDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,11 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Controller
-@RequestMapping("/board/*")
+@RequestMapping("/board*")
 @Log4j
 public class BoardController {
 
@@ -41,57 +36,62 @@ public class BoardController {
 	private BoardDAOImpl dao;
 
 	@GetMapping("")
-	public String board(Model model,HttpServletRequest request) {
-		
-		int page = Integer.parseInt(request.getParameter("page"));
-		String order = request.getParameter("order");
-		String local = request.getParameter("local");
-		String search = request.getParameter("search");
+	public String board(Model model
+			,@RequestParam(value="page", required=false, defaultValue="1")int page
+			,@RequestParam(value="order", required=false, defaultValue="byTimeDesc")String order
+			,@RequestParam(value="local", required=false, defaultValue="etc")String local
+			,@RequestParam(value="search", required=false, defaultValue="")String search) {
 				
 		log.info("board Page");
 		log.info(order);
 		log.info(page);
 		log.info(local);
+		log.info(search);
 
 		Criteria cri = new Criteria(page, 13);
 		List<BoardDTO> list = dao.getListWithPaging(cri, order, local,search);
 		List<AreaDTO> areaList = dao.getAreaList();
 		
+		
+		model.addAttribute("isAjax",false);
 		model.addAttribute("pageMaker",new PageDTO(cri, dao.Count(local,search)));
+		model.addAttribute("areaList", areaList);
+		model.addAttribute("local",local);
+		model.addAttribute("order", order);
 		model.addAttribute("list", list);
 		model.addAttribute("page",page);
-		model.addAttribute("order",order);
-		model.addAttribute("local",local);
-		model.addAttribute("areaList",areaList);
-		model.addAttribute("search",search);
-
+		model.addAttribute("search", search);
+		
+		
+		
 		return "board/board";
 	}
 
-	@GetMapping("view")
-	public String view(Model model, @RequestParam("id") int id
+	@GetMapping("/view")
+	public String view(Model model, @RequestParam("id") int id //게시판 아이디
+			,@RequestParam(value="page",required=false,defaultValue="1")int page
 			,HttpServletRequest request
-			,HttpServletResponse response
-			,@RequestParam("Username") String Username
-			,@RequestParam("search") String search) {
-		
+			,HttpServletResponse response) {
+		int userId;
+		try {
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			CustomUser user = (CustomUser)principal;
 
-		int page = Integer.parseInt(request.getParameter("page"));
-		String order = request.getParameter("order");
-		String local = request.getParameter("local");
+			userId = user.getMember().getUser_id();
+		}catch(Exception e) {
+			userId = 0;
+		}
 				
 		log.info("view Page");
 
 		Criteria cri = new Criteria(page, 12);
-		List<BoardDTO> list = dao.getListWithPaging(cri, order, local,search);
+		List<BoardDTO> list = dao.getListWithPaging(cri, "byTimeDesc", "etc","");
 		
 		model.addAttribute("id", id);
-		model.addAttribute("pageMaker",new PageDTO(cri, dao.Count(local,search)));
+		model.addAttribute("pageMaker",new PageDTO(cri, dao.Count("etc","")));
 		model.addAttribute("list", list);
 		model.addAttribute("page",page);
-		model.addAttribute("order",order);
-		model.addAttribute("local",local);
-		model.addAttribute("Username",Username);
+		model.addAttribute("UserId",userId);
 		BoardDTO dto = dao.readOne(id);
 		
 		//조회수 로직
@@ -121,7 +121,7 @@ public class BoardController {
 			}
 			
 		// 좋아요 눌러져있는지 여부
-		boolean isLike = dao.isLike(dto,Username);
+		boolean isLike = dao.isLike(dto,Integer.toString(userId));
 		
 		model.addAttribute("board", dto);
 		model.addAttribute("isLike",isLike);
@@ -135,59 +135,126 @@ public class BoardController {
 		return "/board/view";
 	}
 
-	@GetMapping("turn")
+	@RequestMapping("write")
+	public String write(Model model) {
+		List<AreaDTO> areaList = dao.getAreaList();
+		model.addAttribute("area", areaList);
+		return "board/write";
+	}
+	
+	
+	@RequestMapping("modify")
+	public String modify(@RequestParam("BoardId")int BoardId,Model model,HttpServletRequest request) {
+		
+		BoardDTO dto = dao.readOne(BoardId);
+		
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		CustomUser user = (CustomUser)principal;
+		
+		
+		if(dto.getMemberId() == user.getMember().getUser_id()) {
+			model.addAttribute("BoardId", BoardId);
+			model.addAttribute("title",dto.getTitle());
+			model.addAttribute("content",dto.getContent());
+			model.addAttribute("area",dao.getAreaList());
+			
+			
+			return "board/modify";
+		}else {
+			return "redirect:" + request.getHeader("REFERER");
+		}
+	}
+	
+	
+	@GetMapping("/exeModify")
 	@ResponseBody
-	public boolean turn(@RequestParam("board_id") int board_id, @RequestParam("Username") String Username,
+	public void exeModify(@RequestParam("BoardId")int BoardId
+			,@RequestParam("Title")String title
+			,@RequestParam("Content")String content
+			,@RequestParam("local")String local) {
+		
+		log.info(BoardId);
+		log.info(title);
+		log.info(content);
+		log.info(local);
+		
+		
+		dao.modify(BoardId,title,content,local);
+		
+	}
+	
+	
+	@GetMapping("/exeDel")
+	@ResponseBody
+	public void exeDel(@RequestParam("")int BoardId) {
+		dao.exeDel(BoardId);
+	}
+	
+	@GetMapping("/posting")
+	@ResponseBody
+	public boolean enrol(@RequestParam("content")String content
+			,@RequestParam("title")String title
+			,@RequestParam("area")String area) {
+		
+		
+		Object principal2 = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		CustomUser user = (CustomUser)principal2;
+		
+		String Username = user.getUsername();
+		int UserId = user.getMember().getUser_id();
+		
+		dao.posting(title,content,area,Username,UserId);
+		
+		return true;
+	}
+	
+	@GetMapping("/turn")
+	@ResponseBody
+	public boolean turn(@RequestParam("board_id") int board_id, @RequestParam("UserId")int UserId,
 			@RequestParam("now") boolean isLike) {
 		
 		log.info(board_id);
-		log.info(Username);
+		log.info(UserId);
 		log.info(isLike);
 		
 		if(isLike) {
-			// trun to dislike
-			dao.turn(false,board_id,Username);
+			//like  to dislike
+			dao.turn(false,board_id,UserId);
 			return false;
 		}else {
-			dao.turn(true,board_id,Username);
+			dao.turn(true,board_id,UserId);
 			return true;
 		}
 
 	}
 	
-	@GetMapping("enroll")
+	@GetMapping("/enroll")
 	@ResponseBody
-	public void enroll(@RequestParam("board_id") int board_id, @RequestParam("member_id") int member_id,
-			@RequestParam("Username") String username,@RequestParam("Content") String Content) {
+	public void enroll(@RequestParam("board_id") int board_id,@RequestParam("Content") String Content) {
 		
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		CustomUser user = (CustomUser)principal;
 		
-		log.info(board_id);
-		log.info(member_id);
-		log.info(username);
-		log.info(Content);
-		
-		Content = Content.replaceAll("\r|\r\n|\n|\n\r ", "\n");
-		log.info(Content);
+		int member_id = user.getMember().getUser_id();
+		String username = user.getUsername();
 
 		dao.enrolComment(board_id,member_id,username,Content);
 		
 		
 	}
 	
-	
-	@GetMapping("Cupdate")
+	@GetMapping("/Cupdate")
 	@ResponseBody
 	public void Cupdate(@RequestParam("comment_id")int comment_id,@RequestParam("Con")String con) {
 		dao.Cupdate(comment_id,con);
 	}
 	
 	
-	@GetMapping("Cdel")
+	@GetMapping("/Cdel")
 	@ResponseBody
-	public void Cdel(@RequestParam("comment_id")int comment_id,HttpServletRequest req) {
-		String id = req.getParameter("comment_id");
-		
-		dao.Cdel(comment_id);
+	public void Cdel(@RequestParam("comment_id")int comment_id) {
+
+			dao.Cdel(comment_id);
 	}
 	
 	@GetMapping("/ex01")

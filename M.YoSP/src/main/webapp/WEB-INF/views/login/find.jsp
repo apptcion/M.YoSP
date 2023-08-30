@@ -24,7 +24,7 @@
  		var InterTimer;
  		
  		$("#back").on('click',function(){
- 			location.replace("/login");
+ 			location.href = "/login"
  		})
  		
  		
@@ -223,7 +223,7 @@
 </head>
 <body>
 	<div id="formContain">
-		<h1>YoSP-find</h1>
+		<h1>TRIP - find</h1>
 		<div id="inform">
 			<div id="informations">
 				<label>

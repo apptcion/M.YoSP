@@ -1,3 +1,5 @@
+<%@page import="org.myosp.domain.BoardDTO"%>
+<%@page import="java.util.List"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -9,10 +11,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시판</title>
+<title>여행 리뷰</title>
 <link href="<c:url value="/resources/css/board.css" />" rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="${path}/resources/js/board.js"></script>
 
@@ -25,8 +25,8 @@
 		var search = String($("#search").val());
 
 		$("#header>#menus>li>a").css("color", "black"); // 해당 페이지에서만 적용
-		$("#local>#" + local).css("font-weight", "bold").css("color", "black");
-		$("#sort>#" + order).css("font-weight", "bold")
+
+		$("#sort").children("a[id='" +order + "']").css("font-weight", "bold")
 
 		$(".num>div>#" + page).parent("div").css("background-color",
 				"rgba(0,0,0,0.25)")
@@ -51,21 +51,23 @@
 		$("#local>a").click(
 				function() {
 					local = String($(this).attr("id"));
-					location.href = "/board/?page=" + 1 + "&order=" + order
+					location.href = "/board/?page=1&order=" + order
 							+ "&local=" + local + "&search=" + search;
 				})
 
 		$("#sort>a").click(
 				function() {
 					order = String($(this).attr("id"));
-					location.href = "/board/?page=" + page + "&order=" + order
-							+ "&local=" + local + "&search=" + search;;
+					location.href = "/board/?page=1&order=" + order
+							+ "&local=" + local + "&search=" + search;
+					;
 				})
 		$(".num").click(
 				function() {
 					location.href = "/board/?page="
 							+ $(this).children("div").children("a").attr("id")
-							+ "&order=" + order + "&local=" + local + "&search=" + search;
+							+ "&order=" + order + "&local=" + local
+							+ "&search=" + search;
 				})
 
 		$(".previous").click(
@@ -90,40 +92,32 @@
 					location.href = "/board/?page=" + ToPage + "&order="
 							+ order + "&local=" + local + "&search=" + search;
 				})
-				
-				
-		$("#doSearch").click(function(){
-			location.href= "/board/?page=1&order=" 
-					+ order + "&local=" + local + "&search=" + $("#searchInput").val();
-			
-		})
-		
-		$("#searchInput").keyup(function(key){
-			if(key.keyCode == 13){
-				location.href= "/board/?page=1&order=" 
-				+ order + "&local=" + local + "&search=" + $("#searchInput").val();
-			}
-		})
+
+		$("#doSearch").click(
+				function() {
+					location.href = "/board/?page=1&order=" + order + "&local="
+							+ local + "&search=" + $("#searchInput").val();
+
+				})
+
+		$("#searchInput").keyup(
+				function(key) {
+					if (key.keyCode == 13) {
+						location.href = "/board/?page=1&order=" + order + "&local="
+						+ local + "&search=" + $("#searchInput").val();
+					}
+				})
 
 	});
 </script>
 </head>
 <body>
-	<%@include file="../../views/includes/header.jsp"%>
+	<%@include file="../includes/header.jsp"%>
 	<input id="page" type="hidden" value="${page }">
 	<input id="realEnd" type="hidden" value="${pageMaker.realEnd }">
 	<input id="order" type="hidden" value="${order }" />
 	<input id="local" type="hidden" value="${local }" />
-	<input id="search" type="hidden" value="${search }"/>
-	<security:authorize access="isAuthenticated()">
-		<input id="member_id" type="hidden"
-			value="<security:authentication property="principal.member.user_id"/>" />
-	</security:authorize>
-	<security:authorize access="isAnonymous()">
-		<input id="member_id" type="hidden" value="" />
-	</security:authorize>
-
-
+	<input id="search" type="hidden" value="${search }">
 	<div id="content">
 		<h1>여행 리뷰</h1>
 		<div id="bar1"></div>
@@ -137,10 +131,17 @@
 				<li><a>지역</a>
 					<div class="submenu" id="local">
 						<c:forEach items="${areaList }" var="area">
-							<a id="${area.getEnglishName() }"><c:out
-									value="${area.getKoreanName() }" /></a>
+							<c:choose>
+								<c:when test="${area.getEnglishName() eq local}">
+									<a id="${area.getEnglishName() }" class="selected"><c:out
+											value="${area.getKoreanName() }" /></a>
+								</c:when>
+								<c:otherwise>
+									<a id="${area.getEnglishName() }"><c:out
+											value="${area.getKoreanName() }" /></a>
+								</c:otherwise>
+							</c:choose>
 						</c:forEach>
-						<a id="etc">기타</a>
 					</div></li>
 				<li><a>정렬 방식</a>
 					<div class="submenu" id="sort">
@@ -151,9 +152,9 @@
 			</ul>
 		</div>
 		<div id="Board">
-		<%@include file="../../views/includes/list.jsp"%>
+			<%@include file="../includes/list.jsp"%>
 		</div>
 	</div>
-	<%@include file="../../views/includes/footer.jsp"%>
+	<%@include file="../includes/footer.jsp"%>
 </body>
 </html>

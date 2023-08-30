@@ -1,17 +1,11 @@
 package org.myosp.service;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.util.HashMap;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.myosp.domain.MemberDTO;
-import org.myosp.mapper.BoardMapper;
 import org.myosp.mapper.MemberMapper;
-import org.myosp.security.CreateRandKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;

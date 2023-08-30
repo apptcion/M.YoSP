@@ -13,25 +13,21 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title><c:out value="${board.getTitle() }" /></title>
 <link href="<c:url value="/resources/css/view.css" />" rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="${path}/resources/js/view.js"></script>
 <script>
 	$(function() {
 		var page = Number($("#page").val());
-		var order = String($("#order").val());
-		var local = String($("#local").val());
 		var isLike = !JSON.parse($("#isLike").val());
 		var board_id = Number($("#board_id").val());
-		var Username = String($("#Username").val());
 		var ComSize = Number($("#ComSize").val());
-		var member_id = String($("#member_id").val());
+		var UserId = String($("#UserId").val());
 		var realEnd = Number($("#realEnd").val());
 		var Cheight = Number($("#comments").css("height").slice(0,
 				$('#comments').css('height').length - 2));
+		var UserName = $("#UserName").val();
 
 		function load() {
 			var len = Number($("div[class='CommentWrapper']:hidden").length);
@@ -62,7 +58,7 @@
 		$("a[id='" + page + "']").parent().parent().css("background-color","rgba(0,0,0,0.25)")
 		turn(isLike);
 		if (ComSize == 0) {
-			$("#other").css('top', '1450px')
+			$("#other").css('top', '20px')
 			$("#more").hide()
 		} else if (ComSize <= 5) {
 			load();
@@ -80,9 +76,7 @@
 		$(".num").click(
 				function() {
 					location.href = "/board/view?id=" + board_id + "&page="
-							+ $(this).children("div").children("a").attr("id")
-							+ "&order=" + order + "&local=" + local
-							+ "&Username=" + Username + "&search=";
+							+ $(this).children("div").children("a").attr("id");
 
 				})
 
@@ -95,8 +89,7 @@
 					}
 
 					location.href = "/board/view?id=" + board_id + "&page="
-							+ ToPage + "&order=" + order + "&local=" + local
-							+ "&Username=" + Username + "&search=";
+							+ ToPage
 				})
 
 		$(".next").click(
@@ -107,8 +100,7 @@
 						var ToPage = page + 5;
 					}
 					location.href = "/board/view?id=" + board_id + "&page="
-							+ ToPage + "&order=" + order + "&local=" + local
-							+ "&Username=" + Username + "&search=";
+							+ ToPage
 				})
 
 		$("#like").click(function() {
@@ -116,27 +108,26 @@
 				url : 'turn',
 				data : {
 					"now" : isLike,
-					"Username" : Username,
+					"UserId" : UserId,
 					"board_id" : board_id
 				},
 				success : function(result) {
 					turn(!result);
-					$("#rightHeader").load(location.href + ' #rightHeader');
+					location.reload();
 				}
 			})
 		})
 
 		$("#writing").keyup(function(e) {
-			let content = $(this).val();
+			var content = $(this).val();
 			$("#Count").css("color", "");
 			$("#Count").empty();
 			if (content.length > 200) {
+				$("#Count").css("color", "red");
 				$("#Count").append("200자/200자")
+				$(this).blur();
 			} else {
 				$("#Count").append(content.length + "자/200자");
-			}
-			if (content.length >= 200) {
-				$("#Count").css("color", "red");
 			}
 		})
 
@@ -147,8 +138,6 @@
 					url : 'enroll',
 					data : {
 						"board_id" : board_id,
-						"Username" : Username,
-						"member_id" : member_id,
 						"Content" : $("#writing").val()
 						},
 					success : function(result) {
@@ -168,6 +157,7 @@
 		
 		$("#cover").on('click',function(){
 			$("svg[class*='svg']").siblings(".inter").hide();
+			$("#BoardInter").hide();
 			$(this).hide();
 		})
 		
@@ -175,7 +165,8 @@
 			
 			if($("#cover").css("display") == "block"){
 			$("#cover").hide();
-			$("svg[class*='svg']").siblings(".inter").hide();;
+			$("svg[class*='svg']").siblings(".inter").hide();
+			$("#BoardInter").hide();
 			}
 		});
 		
@@ -213,15 +204,16 @@
 		})
 		
 		$(".R_del").click(function(){
+			console.log("test")
 			var test = confirm("정말 삭제하시겠습니까?");
 			if(test){
 				var ComId = $(this).parent().siblings(".CHeader").attr("id");
 				$.ajax({
 					url : 'Cdel',
 					data : {
-						comment_id : Number(ComId)
+						comment_id : Number(ComId),
 					},
-					success : function(){
+					success : function(result){
 						location.reload();
 					}
 				})
@@ -245,36 +237,56 @@
 				})
 			}
 		})
+		
+		
+		$("#BoardSVG").click(function(){
+			$("#BoardInter").show();
+			$("#cover").show();
+		})
+		
+		
+		$("#BoardModify").click(function(){
+			console.log("test BoardSVG");
+			location.href = "/board/modify?BoardId=" + board_id;
+			
+		})
+		
+		$("#BoardDel").click(function(){
+			console.log("test BoardSVG");
+			$.ajax({
+				url : 'exeDel',
+				data : {
+					BoardId : board_id
+				},
+				success : function(){
+					location.replace("/board")
+				}
+			})
+		})
 
 	});
 </script>
 </head>
 <body>
-	<%@include file="../../views/includes/header.jsp"%>
 	<input id="board_id" type="hidden" value="${id }" />
 	<input id="page" type="hidden" value="${page }" />
-	<input id="order" type="hidden" value="${order }" />
-	<input id="local" type="hidden" value="${local }" />
 	<input id="isLike" type="hidden" value="${isLike }">
-	<input id="Username" type="hidden" value="${Username }">
 	<input id="ComSize" type="hidden" value="${ComSize }" />
 	<input id="realEnd" type="hidden" value="${pageMaker.realEnd }">
-	<security:authorize access="isAuthenticated()">
-		<input id="member_id" type="hidden"
-			value="<security:authentication property="principal.member.user_id"/>" />
-	</security:authorize>
-	<security:authorize access="isAnonymous()">
-		<input id="member_id" type="hidden" value="" />
-	</security:authorize>
+	<input id="UserId" type="hidden" value="${UserId }" />
 	<%
 		pageContext.setAttribute("br", "<br/>");
 	pageContext.setAttribute("cn", "\n");
 	%>
+	<%@include file="../includes/header.jsp"%>
 	<div id="View_wrap">
 	<div id="view">
 		<div id="Viewheader">
 			<div id="leftHeader">
-				<div id="writer">
+				<div id="title">
+					<c:out value="${board.getTitle() }" />
+				</div>
+								<div id="writer">
 					<c:out value="${board.getWriter() }" />
 				</div>
 
@@ -286,10 +298,7 @@
 				<div id="writeDate">
 					<c:out value="${date }" />
 				</div>
-
-				<div id="title">
-					<c:out value="${board.getTitle() }" />
-				</div>
+				
 			</div>
 			<div id="rightHeader">
 				<div id="views">
@@ -300,21 +309,22 @@
 					추천
 					<c:out value="${board.getGood() }" />
 				</div>
-
 			</div>
+			<svg id="BoardSVG">
+       	 		<path
+				d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+    		</svg>
+    		<c:if test="${board.getMemberId() eq UserId }">
+    		
+    		<div id="BoardInter">
+    			<a id="BoardModify">수정</a>
+    			<a id="BoardDel">삭제</a>
+    		</div>
+    		</c:if>
 		</div>
 
 		<div id="content">
-			<c:out value="${fn:replace(board.getContent(),cn,br)}" />
-			//테스트용 글<br> 다람쥐 헌 쳇바퀴에 타고파<br> 닭 콩팥 훔친 집사<br> 물컵 속
-			팥찾던 형<br> 동틀 녘 햇빛 포개짐<br> 동틀 녘 햇빛 작품<br> 자동차 바퀴 틈새가
-			파랗니<br> 해태 옆 치킨집 닭맛<br> 코털 팽 대감네 첩 좋소<br> 닭 잡아서 치킨파티 함<br>
-			초코볼은 티피가 맛 좋다<br> 파티에 참석한 키다리 부자<br> 펄코트 못 받은 척하자<br>
-			추운 겨울에는 따뜻한 커피와 티를 마셔야지요<br> 그는 미쳐서 칼부림하는 인성파탄자일 뿐이다<br>
-			동녘구름 틈새로 퍼지는 햇빛<br> 초성에 자음 14개(ㄱ~ㅎ)를 순서에 맞춰 모두 사용해 만든 문장<br>
-			그 늙다리만 본선에 진출케 투표해<br> 가나 독립 명분상 이제 총칼 타파함 <br> 그는 독립문 보수에
-			지쳐 칼퇴 표함<br> 그날 드라마 부서와 재차 콘티 평함<br> 그 남다른 마법사의 절친, 커트 폐하<br>
-			가느다란 몸 부수어 쥔 총칼, 터, 평화<br>
+			<c:out value="${fn:replace(board.getContent(),cn,br)}" escapeXml="false"/>
 			<c:out value="${board.getSources() }" />
 
 			<div id="likeButton">
@@ -364,7 +374,6 @@
 	</div>
 			<div id="comments">
 			<c:forEach items="${comments }" var="comment" varStatus="status">
-
 				<div class="CommentWrapper">
 					<div class="CHeader" id="${comment.getComment_id() }">
 						<div class="Cname">
@@ -392,7 +401,7 @@
     				</svg>
 					<div class="inter svg${status.count }" id="${status.count }">
 						<c:choose>
-							<c:when test="${Username eq comment.getUserName() }">
+							<c:when test="${UserId eq comment.getMember_id() }">
 								<a class="alter inter_R R_alter">수정</a>
 								<a class="del inter_R R_del">삭제</a>
 							</c:when>
@@ -415,10 +424,10 @@
 					<a href="#" id="load">더 보기</a>
 				</legend>
 			</fieldset>
-			<%@include file="../../views/includes/list.jsp"%>
+			<%@include file="../includes/list.jsp"%>
 		</div>
 	</div>
-	<%@include file="../../views/includes/footer.jsp"%>
+	<%@include file="../includes/footer.jsp"%>
 	<div id="cover"></div>
 </body>
 </html>

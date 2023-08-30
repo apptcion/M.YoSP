@@ -26,6 +26,8 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{@
 	
 	String TargetUrl = (String) request.getSession().getAttribute("prevPage");
 	
+	System.out.println("CUstomLoginSuccessHandler");
+	
 	response.sendRedirect(TargetUrl);
 		
 	}

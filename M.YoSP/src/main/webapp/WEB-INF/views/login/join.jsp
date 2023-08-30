@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원가입</title>
+<title>Sign Up</title>
 <link href="<c:url value="/resources/css/join.css" />" rel="stylesheet">
 <link rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -149,7 +149,7 @@ $(document).ready(function(){
 </head>
 <body>
 	<div id="formContain">
-		<h1>YoSP-joinMember</h1>
+		<h1>TRIP - Sign Up</h1>
 		<div id="inform">
 			<div id="informations">
 				<label>
