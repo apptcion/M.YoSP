@@ -142,6 +142,14 @@
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
+													<c:choose>
+								<c:when test="${local eq 'etc'}">
+									<a id="etc" class="selected">기타</a>
+								</c:when>
+								<c:otherwise>
+									<a id="etc">기타</a>
+								</c:otherwise>
+							</c:choose>
 					</div></li>
 				<li><a>정렬 방식</a>
 					<div class="submenu" id="sort">

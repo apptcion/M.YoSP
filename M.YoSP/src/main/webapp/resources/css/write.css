@@ -4,6 +4,18 @@ body{
 	overflow-x : hidden;
 }
 
+.fileDrag{
+	border: dashed 1.5px black;
+	position : absolute;
+	top : -800px;
+	/* border : solid 1px black; */
+	height : 400px;
+	width : 400px;
+}
+#file{
+	display : none;
+}
+
 
 #ContentWrap{
 	
@@ -169,6 +181,10 @@ body{
 #resources{
 	position : absolute;
 	top : 1000px;
+}
+
+#fileDrag{
+	border : dashed 1.5px black;
 }
 
 

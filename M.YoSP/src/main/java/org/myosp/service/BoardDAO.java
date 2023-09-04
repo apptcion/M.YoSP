@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.myosp.domain.AreaDTO;
 import org.myosp.domain.BoardDTO;
+import org.myosp.domain.BoardFileDTO;
 import org.myosp.domain.CommentDTO;
 import org.myosp.domain.Criteria;
 
@@ -32,10 +33,13 @@ public interface BoardDAO {
 	
 	public void Cdel(int comment_id);
 	
-	public boolean posting(String title, String content, String area,String Username,int UserId);
+	public int posting(String title, String content, String area,String Username,int UserId);
 	
 	public void modify(int BoardId, String Title, String content,String local);
 	
 	public void exeDel(int BoardId);
 	
+	public void addFile(BoardFileDTO dto);
+	
+	public List<BoardFileDTO> readFiles(int bno);
 }

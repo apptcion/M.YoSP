@@ -9,13 +9,9 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
 	$(function(){
-		$("#insert").click(function(){
-			location.href = "/board/write"
+		$("#insertButton").click(function(){
+			location.href = "/board/write";
 		})
-		
-		function reLoad(){
-			location.reload();
-		}
 	})
 </script>
 </head>

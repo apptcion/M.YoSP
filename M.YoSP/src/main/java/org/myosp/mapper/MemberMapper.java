@@ -21,4 +21,10 @@ public interface MemberMapper {
 	public void JoinAuth(String username);
 	
 	public void changePw(Map<String,String> map);
+	
+	public void resignMember(String userName);
+	
+	public void resignAuthorMember(String userName);
+	
+	public void modifyEmail(Map<String,String> map);
 }

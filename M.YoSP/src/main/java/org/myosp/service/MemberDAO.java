@@ -16,4 +16,7 @@ public interface MemberDAO {
 	
 	public void changePw(String id, String Pw);
 	
+	public void resign(String userName);
+	
+	public void modifyEmail(String userName, String email);
 }

@@ -18,7 +18,7 @@
     position: relative;
     top: -80px;
     margin: 0 auto;
-    width: 250px;
+    width: 186px;
 }
 
 #inform{
@@ -148,18 +148,16 @@
 	position : absolute;
 	top : 140px;
 	left : 80px;
-	background-color : ;
 	border : none;
 	border-bottom : solid 1px black;
 	border-radius: 0 !important;
 	width : 70%;
 	height : 20px;
+	outline : none;
 }
 
 #modal>#dataInput:focus{
-	border-color: black;
-	border-bottom-width: 2px;
-	outline : none;
+	border-bottom : solid 2px black;
 }
 
 #modal>#submit{

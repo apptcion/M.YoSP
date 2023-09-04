@@ -118,7 +118,7 @@ public class LoginController {
 		@GetMapping("/changePW")
 		@ResponseBody
 		public void changePw(@RequestParam("id")String id,@RequestParam("newPw")String newPw) {
-			
+
 			dao.changePw(id,newPw);
 			
 		}

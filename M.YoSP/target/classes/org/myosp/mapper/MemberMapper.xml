@@ -41,4 +41,15 @@
 			update member set password=#{password} where username=#{username}
 		</update>
 	
+		<delete id="resignMember">
+			delete from member where userName = #{userName}
+		</delete>
+		<delete id="resignAuthorMember">
+			delete from author_member where userName = #{userName}
+		</delete>
+		
+		
+		<update id="modifyEmail">
+			update member set email = #{email} where userName = #{userName}
+		</update>
 	</mapper>

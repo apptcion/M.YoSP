@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.myosp.domain.AreaDTO;
 import org.myosp.domain.BoardDTO;
+import org.myosp.domain.BoardFileDTO;
 import org.myosp.domain.CommentDTO;
 import org.myosp.domain.Criteria;
 import org.myosp.domain.LikeDTO;
@@ -45,9 +46,13 @@ public interface BoardMapper {
 		
 		public void Cdel(int comment_id);
 		
-		public void posting(Map<String,String> map);
+		public int posting(BoardDTO dto);
 		
 		public void modify(Map<String,Object> map);
 		
 		public void exeDel(int BoardId);
+		
+		public void addFile(BoardFileDTO dto);
+		
+		public List<BoardFileDTO> readFiles(int bno);
 }

@@ -17,10 +17,7 @@ public class BoardDTO{
 	private String title;
 	private String content;
 	private int good;
-	private int dislike;
 	private String local;
-	private String contentType;
 	private String sources;
-	private int rownum;
 	
 }

@@ -1,20 +1,35 @@
 package org.myosp.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.myosp.domain.AreaDTO;
 import org.myosp.domain.BoardDTO;
+import org.myosp.domain.BoardFileDTO;
 import org.myosp.domain.CommentDTO;
 import org.myosp.domain.Criteria;
 import org.myosp.domain.CustomUser;
 import org.myosp.domain.MemberDTO;
 import org.myosp.domain.PageDTO;
 import org.myosp.service.BoardDAOImpl;
+import org.myosp.service.MediaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -132,9 +147,57 @@ public class BoardController {
 		model.addAttribute("comments",comments);
 		model.addAttribute("ComSize",comments.size());
 		
+		
+		List<BoardFileDTO> fileList = dao.readFiles(id);
+		
+		model.addAttribute("files", fileList);
+		
 		return "/board/view";
 	}
 
+	@RequestMapping("/display")
+	public ResponseEntity<byte[]> displayFile(@RequestParam("fileName")String fileName
+			,@RequestParam("uuid")String uuid
+			,@RequestParam("date")String dateStr) throws Exception{
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Date date = format.parse(dateStr);
+		
+		InputStream in = null;
+		ResponseEntity<byte[]> entity = null;
+		String uploadPath = "C:\\Users\\mojan\\Downloads\\upload\\";
+		uploadPath = uploadPath + format.format(date).replace("-", File.separator) + File.separator;
+
+		try {
+		
+			String formatName = fileName.substring(fileName.lastIndexOf(".")+1);
+			MediaType mType = MediaUtils.getMediaType(formatName);
+			HttpHeaders header = new HttpHeaders();
+			in = new FileInputStream(uploadPath + uuid +"_"+fileName);
+		
+			if(mType != null) {
+				header.setContentType(mType);
+			}else {
+				header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+				header.add("Content-Disposition","attachment; filename=\"" + new String(fileName.getBytes("UTF-8") + "ISO-8859-1") +"\"");
+				
+			}
+			
+			entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in),header,HttpStatus.CREATED);
+			
+		}catch(Exception e) {
+			log.info(e.getStackTrace());
+			entity = new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
+		}finally {
+			in.close();
+		}
+		
+		
+		return entity;
+	}
+	
+	
 	@RequestMapping("write")
 	public String write(Model model) {
 		List<AreaDTO> areaList = dao.getAreaList();
@@ -190,12 +253,12 @@ public class BoardController {
 		dao.exeDel(BoardId);
 	}
 	
-	@GetMapping("/posting")
+	@PostMapping("/posting")
 	@ResponseBody
 	public boolean enrol(@RequestParam("content")String content
 			,@RequestParam("title")String title
-			,@RequestParam("area")String area) {
-		
+			,@RequestParam("area")String area
+			,MultipartFile[] uploadFile) {
 		
 		Object principal2 = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		CustomUser user = (CustomUser)principal2;
@@ -203,10 +266,61 @@ public class BoardController {
 		String Username = user.getUsername();
 		int UserId = user.getMember().getUser_id();
 		
-		dao.posting(title,content,area,Username,UserId);
+		int bno = dao.posting(title,content,area,Username,UserId);
+		
+		log.info("bno : " + bno);
+		
+		String uploadFolder = "C:\\Users\\mojan\\Downloads\\upload";
+		File uploadPath = new File(uploadFolder,getFolder());
+		
+		if(uploadPath.exists() == false) {
+			uploadPath.mkdirs();
+		}
+		
+		for(MultipartFile files : uploadFile) {
+			
+			String uploadFileName = files.getOriginalFilename();
+			
+			//IE 파일 경로 조정
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("/") + 1);
+			
+			UUID uuid = UUID.randomUUID();
+			
+			uploadFileName = uuid.toString() + "_" + uploadFileName;
+			
+			File file = new File(uploadPath,uploadFileName);
+			try {
+				files.transferTo(file);
+				
+				BoardFileDTO fileDTO = new BoardFileDTO();
+				
+				fileDTO.setBno(bno);
+				fileDTO.setDate(new Date());
+				fileDTO.setFileOriginalName(files.getOriginalFilename());
+				fileDTO.setUuid(uuid.toString());
+				
+				
+				log.info(fileDTO);
+				
+				dao.addFile(fileDTO);
+			}catch(Exception e){
+				log.info(e.getStackTrace());
+			}
+		}
+		
 		
 		return true;
 	}
+	
+	private String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Date date = new Date();
+		
+		String str = sdf.format(date);
+		return str.replace("-",File.separator);
+	}
+	
 	
 	@GetMapping("/turn")
 	@ResponseBody
@@ -274,11 +388,41 @@ public class BoardController {
 	}
 
 	@PostMapping("/exUploadPost")
-	public void exUploadPost(ArrayList<MultipartFile> files) {
-		files.forEach(file -> {
-			log.info("-----------------------");
-			log.info("name : " + file.getOriginalFilename());
-			log.info("size : " + file.getSize());
-		});
+	public void exUploadPost(MultipartFile[]  multipartFiles,Model model) {
+		String uploadFolder = "C:\\Users\\mojan\\Downloads\\upload";
+		
+		for(MultipartFile file : multipartFiles) {
+			File saveFile = new File(uploadFolder,file.getOriginalFilename());
+			
+			try {
+				file.transferTo(saveFile);
+				
+			}catch(Exception e) {
+				log.info(e.getStackTrace());
+			}
+		}
+		
+	}
+	
+	
+	@PostMapping("/uploadAjaxAction")
+	@ResponseBody
+	public void uploadAjaxPost(MultipartFile[] uploadFile) {
+		String uploadFolder = "C:\\Users\\mojan\\Downloads\\upload";
+		
+		for(MultipartFile file : uploadFile) {
+			File saveFile = new File(uploadFolder,file.getOriginalFilename());
+			
+			try {
+				file.transferTo(saveFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@RequestMapping("/insert")
+	public void insert() {
+		log.info("너 대체 누구야");
 	}
 }

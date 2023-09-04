@@ -78,6 +78,12 @@ public class MemberDAOImpl implements MemberDAO{
 	
 	
 	@Override
+	public void resign(String Username) {
+		mapper.resignMember(Username);
+		mapper.resignAuthorMember(Username);
+	}
+	
+	@Override
 	public boolean sendMail(String id, String email,String key) {
 		
 		MemberDTO dto = read(id);
@@ -121,6 +127,21 @@ public class MemberDAOImpl implements MemberDAO{
 		}catch(Exception e) {
 			return false;
 		}
+	}
+
+
+	@Override
+	public void modifyEmail(String userName, String email) {
+		
+		Map<String,String> map = new HashMap<>();
+		
+		map.put("userName",userName);
+		map.put("email",email);
+		
+		System.out.println(map);
+		
+		mapper.modifyEmail(map);
+		
 	}
 	
 

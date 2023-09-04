@@ -171,17 +171,45 @@ footer{
 	top : 100px;
 	left: 15px;
 	height: 900px;
-	width : 830px;
-	
+	width: 815px;
 	overflow-y : auto;
 	overflow-x : hidden;
 }
 
+#ImgWrap{
+	border : solid 1px black;
+	display : flex;
+	flex-wrap : wrap;
+	position: absolute;
+	bottom : 40px;
+	right: 15px;
+	max-width: 785px;
+	max-height : 500px;
+	overflow-y : auto;
+	background-color : #f1f3f5;
+}
 
+#ImgWrap>.resources{
+	max-height : 450px;
+	max-width: 760px;
+}
+
+#ImgWrap::-webkit-scrollbar{
+	width : 10px;
+}
+
+#ImgWrap::-webkit-scrollbar-thumb{
+	background-color : gray;
+	border-radius : 15px;
+	background-clip : padding-box;
+	border : 2px solid transparent;
+}
+
+	
 #likeButton{
 	position : absolute;
 	bottom : 0px;
-	width : 815px;
+	width : 830px;
 }
 
 #like{

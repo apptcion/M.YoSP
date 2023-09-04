@@ -1,7 +1,9 @@
 package org.myosp.controller;
 
 import java.security.Principal;
+import java.util.List;
 
+import org.myosp.domain.AreaDTO;
 import org.myosp.domain.CustomUser;
 import org.myosp.domain.MemberDTO;
 import org.myosp.service.BoardDAOImpl;
@@ -13,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.log4j.Log4j;
 
@@ -58,6 +62,28 @@ public class MainController {
 		return "/MyPage";
 	}
 	
+	
+	@RequestMapping("/resign")
+	@ResponseBody
+	public void resign(Principal principal) {
+		
+		MemberDAO.resign(principal.getName());
+		
+	}
+	
+	@RequestMapping("/modifyEmail")
+	@ResponseBody
+	public void modifyEmail(Principal principal
+			,@RequestParam("email")String email) {
+		
+		log.info(principal.getName());
+		log.info(email);
+		
+		MemberDAO.modifyEmail(principal.getName(),email);
+		
+	}
+	
+	
 	@RequestMapping("/test")
 	public String test(){
 		
@@ -71,5 +97,19 @@ public class MainController {
 		log.info("CreateMaps");
 		
 		model.addAttribute("area", BoardDAO.getAreaList());
+	}
+	
+	@RequestMapping("/Creating")
+	public void Creating(Model model,@RequestParam("area")String areaName) {
+		
+		List<AreaDTO> areas= BoardDAO.getAreaList();
+		
+		areas.forEach(area ->{
+			if(area.getEnglishName().equals(areaName)) {
+				model.addAttribute("local",area);
+				return;
+			}
+		});
+		
 	}
 }

@@ -80,27 +80,32 @@ body {
 	object-fit: cover;
 	margin: 0 auto;
 	width: 250px;
+	height: 350px;
 	border-radius: 15px;
 }
 
 .Areas>img:hover {
 	width: 260px;
+	height : 360px;
 }
 
 .Areas>h2 {
 	font-family: Montserrat;
 	font-size: 25px;
-	font-weight: 100;
+	font-weight: 500;
+	/* font-family: Montserrat,Noto Sans KR,sans-serif; */
 }
 
 .Areas>p {
 	position: relative;
-	left: 25px;
+	/* left: 25px; */
+	/* color: #dee2e6; */
+	font-weight: 100;
 }
 
 #modal {
 	display : none;
-	position: absolute;
+	position: fixed;
 	left: calc(50vw - 497px);
 	top: calc(50vh - 256px);
 	width: 865px;
@@ -113,6 +118,32 @@ body {
 	/* margin: auto; */
 }
 
+#modal>img{
+	position : absolute;
+	object-fit : cover;
+	top: 64px;
+	height: 400px;
+	width: 400px;
+	right: 64px;
+}
+
+#modal>p{
+	font-size : 20px;;
+}
+
+#modal>div{/* border: solid 1px black; */width: 450px;height: 200px;max-height: 200px;position: absolute;font-weight: 100;}
+
+#modal>#create{
+	position : relative;
+	top: 225px;
+	background-color : black;
+	color : white;
+	border : none;
+	border-radius : 205px;
+	height : 50px;
+	width : 100px;
+}
+
 #cover {
 	display : none;
 	position: fixed;
@@ -123,4 +154,18 @@ body {
 	left: 0px;
 	background-color: dimgray;
 	opacity: 0.2;
+}
+
+#close{
+	position : absolute;
+	top: 25px;
+	right: 25px;
+	border : none;
+	background-color : white;
+}
+
+
+#X:after{
+ content : "\00d7";
+ font-size: 25pt;
 }

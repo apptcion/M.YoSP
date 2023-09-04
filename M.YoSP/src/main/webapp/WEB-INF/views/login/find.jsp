@@ -146,8 +146,7 @@
  	 				$.ajax({
  	 					url : 'changePW',
  	 					data : {
- 	 						newPw : NewPw,
- 	 						id : $("#id").val()
+ 	 						newPw : NewPw
  	 					},
  	 					success : function(){
  	 						location.replace("/login")
@@ -223,7 +222,7 @@
 </head>
 <body>
 	<div id="formContain">
-		<h1>TRIP - find</h1>
+		<h1>TRIP - Find</h1>
 		<div id="inform">
 			<div id="informations">
 				<label>
@@ -250,7 +249,7 @@
 			<button id="close"><div id="X"></div></button>
 			<h2 id="title"></h2>
 			<div id="body"></div>
-			<input id="dataInput">
+			<input id="dataInput" type="password">
 			<div class="warn"></div>
 			<button id="submit">변경</button>
 		</div>

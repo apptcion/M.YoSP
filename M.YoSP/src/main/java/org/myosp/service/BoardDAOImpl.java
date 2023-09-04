@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.myosp.domain.AreaDTO;
 import org.myosp.domain.BoardDTO;
+import org.myosp.domain.BoardFileDTO;
 import org.myosp.domain.CommentDTO;
 import org.myosp.domain.Criteria;
 import org.myosp.domain.LikeDTO;
@@ -207,26 +208,24 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 	
 	@Override
-	public boolean posting(String title,String content,String area, String Username,int UserId) {
-		
-		Map<String,String> map = new HashMap<>();
+	public int posting(String title,String content,String area, String Username,int UserId) {
 		
 		content = content.replaceAll("\r|\r\n|\n|\n\r ", "\n");
 		if(!area.equals("etc")) {
 			area = area + ", etc";
 		}
 		
-		map.put("title",title);
-		map.put("content",content);
-		map.put("local",area);
-		map.put("Username",Username);
-		map.put("UserId",Integer.toString(UserId));
+		BoardDTO dto = new BoardDTO();
 		
-		System.out.println("BoardDAOImpl - posting  : " + map.toString());
+		dto.setTitle(title);
+		dto.setContent(content);
+		dto.setLocal(area);
+		dto.setWriter(Username);
+		dto.setMemberId(UserId);
 		
-		mapper.posting(map);
+		mapper.posting(dto);
 		
-		return true;
+		return dto.getBoard_id();
 	}
 	
 	@Override
@@ -361,5 +360,16 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public void exeDel(int BoardId) {
 		mapper.exeDel(BoardId);
+	}
+
+	@Override
+	public void addFile(BoardFileDTO dto) {
+		mapper.addFile(dto);
+		
+	}
+	
+	@Override
+	public List<BoardFileDTO> readFiles(int bno){
+		return mapper.readFiles(bno);
 	}
 }

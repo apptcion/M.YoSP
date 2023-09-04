@@ -12,9 +12,7 @@
 		<result property="title" column="title"/>
 		<result property="content" column="content"/>
 		<result property="good" column="good"/>
-		<result property="dislike" column="dislike"/>
 		<result property="local" column="local"/>
-		<result property="contentType" column="contentType"/>
 		<result property="sources" column="sources"/>
 		<result property="MemberId" column="MemberId" />
 	</resultMap>
@@ -44,13 +42,10 @@
 	
 	
 	<resultMap type="org.myosp.domain.AreaDTO" id="areaDTO">
-		<id property="area_id" column="area_id" />
 		<result property="koreanName" column="koreanName" />
 		<result property="englishName" column="englishName" />
-		<result property="address" column="address" />
-		<result property="season" column="season" />
-		<result property="popularity" column="popularity" />
-		<result property="introduction" column="introduction" />
+		<result property="address" column="detail" />
+		<result property="intro" column="intro" />
 	</resultMap>
 	
 	<select id="getAreaList" resultMap="areaDTO">
@@ -115,8 +110,11 @@
 		delete from comments where comments_id = #{comment_id}
 	</delete>
 	
-	<insert id="posting" parameterType="Map">
-	insert into board (board_id,writer,title,content,local,MemberId) values (board_seq.NEXTVAL,#{Username},#{title},#{content},#{local},#{UserId})
+	<insert id="posting" parameterType="org.myosp.domain.BoardDTO">
+	insert into board (board_id,writer,title,content,local,MemberId) values (board_seq.NEXTVAL,#{writer},#{title},#{content},#{local},#{MemberId})
+		<selectKey keyProperty="board_id" resultType="int" order="AFTER">
+			select board_seq.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
 	
 	<update id="modify" parameterType="Map">
@@ -128,4 +126,18 @@
 		delete from board where BOARD_ID = #{BoardId}
 	</delete>
 	
+	<insert id="addFile" parameterType="org.myosp.domain.BoardFileDTO">
+		insert into FileBoard (uuid,writeDate,originalFileName,board_id) values (#{uuid},#{date},#{fileOriginalName},#{Bno})
+	</insert>
+	
+	<resultMap type="org.myosp.domain.BoardFileDTO" id="FileDTO">
+		<id property="bno" column="board_id"/>
+		<result property="uuid" column="uuid" />
+		<result property="date" column="writeDate" />
+		<result property="fileOriginalName" column="originalfilename" />
+	</resultMap>
+	
+	<select id="readFiles" resultMap="FileDTO">
+		select * from FileBoard where board_id = #{bno}
+	</select>
 </mapper>

@@ -1,213 +1,329 @@
 @charset "UTF-8";
-body{
-	overflow-x : hidden;
-	margin : 0px;
+
+body {
+	overflow-x: hidden;
+	margin: 0px;
 }
 
-#MyPageWrap{
+#MyPageWrap {
 	position: relative;
 	top: 90px;
 	/* height: 950px; */
 	width: 100vw;
 	padding-bottom: 400px;
-	display : flex;
-	justify-content : space-evenly;
-	flex-wrap : wrap;
+	display: flex;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
 }
 
-#UserData, #Maps{
-	position : relative;
-	top : 20px;
-	width : 700px;
-	height : 900px;
-	border-radius : 10px;
-		border : solid 1px black;
+#UserData, #Maps {
+	position: relative;
+	top: 20px;
+	width: 700px;
+	height: 900px;
+	border-radius: 10px;
+	border: solid 1px black;
 }
 
-#title{
-	position : absolute;
+#title {
+	position: absolute;
 	/* left : 70px; */
-	font-weight : bold;
+	font-weight: bold;
 	top: -55px;
 	font-size: 25px;
 }
 
-#profileDiv{
-	position : absolute;
-	top : 50px;
-	left : 50px;
+#profileDiv {
+	position: absolute;
+	top: 50px;
+	left: 50px;
 }
 
-#profile{
-	width : 200px;
-	height : 200px;
-	object-fit : cover;
-	border-radius : 100%;
-	background-color : black;
+#profile {
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
+	border-radius: 100%;
+	background-color: black;
 }
 
-#Data{
-	position : absolute;
-	top : 50px;
-	left : 300px;
-	height : 400px;
-	width : 1000px;
+#Data {
+	position: absolute;
+	top: 50px;
+	left: 300px;
+	height: 400px;
+	width: 1000px;
 }
 
-
-#email>p{
-	color : #adb5bd;
-}
-#email>input{
-	background-color : #f1f3f5;
-	border : solid 1.5px #ced4da;
-	width : 250px;
-	height : 30px;
-	border-radius : 5px;
-	outline : none;
+#email>p {
+	color: #adb5bd;
 }
 
-#email>button{
-	border : solid 1.5px #ced4da;
-	background-color : white;
-	color : #039BE5;
-	font-weight : bold;
-	border-radius : 3px;
-	height : 35px;
-	width : 125px;
+#email>input {
+	background-color: #f1f3f5;
+	border: solid 1.5px #ced4da;
+	width: 250px;
+	height: 30px;
+	border-radius: 5px;
+	outline: none;
+}
+
+#email>button {
+	border: solid 1.5px #ced4da;
+	background-color: white;
+	color: #039BE5;
+	font-weight: bold;
+	border-radius: 3px;
+	height: 35px;
+	width: 125px;
 	box-shadow: 1px 1px 5px 1px #dee2e6;
 }
 
-#password{
-	position : relative;
-	top : 10px;
+#password {
+	position: relative;
+	top: 10px;
 }
 
-#password>#PwTitle{
-	color : #adb5bd;
+#password>#PwTitle {
+	color: #adb5bd;
 }
 
-#password>button{
-	background-color : white;
-	border : solid 1.5px #ced4da;
-	color : #039BE5;
-	font-weight : bold;
-	border-radius : 3px;
-	width : 125px;
-	height : 35px;
+#password>button {
+	background-color: white;
+	border: solid 1.5px #ced4da;
+	color: #039BE5;
+	font-weight: bold;
+	border-radius: 3px;
+	width: 125px;
+	height: 35px;
 	box-shadow: 1px 1px 5px 1px #dee2e6;
 }
 
-#password>img{
-		width : 23px;
-	position : absolute;
-	top : 88px;
-	left : 0px;
+#password>img {
+	width: 23px;
+	position: absolute;
+	top: 88px;
+	left: 0px;
 }
 
-#password>#Warn{
-	position : relative;
-	left : 30px;
-	color : #868e96;
+#password>#Warn {
+	position: relative;
+	left: 30px;
+	color: #868e96;
 }
 
-#name{
-	position : relative;
-	top : 15px;
+#name {
+	position: relative;
+	top: 15px;
 }
 
-#name>p{
-	color : #adb5bd;
-	
+#name>p {
+	color: #adb5bd;
 }
 
-#name>input{
-	border : solid 1.5px #ced4da;
-	background-color : white;
-	border-radius : 5px;
-	width : 380px;
-	height : 30px;
+#name>input {
+	border: solid 1.5px #ced4da;
+	background-color: white;
+	border-radius: 5px;
+	width: 380px;
+	height: 30px;
 	box-shadow: 1px 1px 5px 1px #dee2e6;
-	outline : none;
+	outline: none;
 }
 
-#resign{
-	position : absolute;
-	top : 800px;
+#resign {
+	position: absolute;
+	top: 800px;
 	left: 450px;
-	width : 240px;
+	width: 240px;
 	height: 100px;
 }
 
-#resign>button{
-	background-color : #FF4646;
-	border : solid 2px red;
-	color : white;
-	font-weight : bold;
-	width : 120px;
-	height : 50px;
-	border-radius : 20px;
-	font-size : 15px;
-
-	position : absolute;
-	right : 0px;
+#resign>button {
+	background-color: #FF4646;
+	border: solid 2px red;
+	color: white;
+	font-weight: bold;
+	width: 120px;
+	height: 50px;
+	border-radius: 20px;
+	font-size: 15px;
+	position: absolute;
+	right: 0px;
 }
 
-#resign>img{
-	position : absolute;
-	width : 23px;
-	left : -15px;
-	top : 65px;
+#resign>img {
+	position: absolute;
+	width: 23px;
+	left: -15px;
+	top: 65px;
 }
 
-#resign>p{
-	position : absolute;
-	top : 50px;
-	left : 20px;
-	color : red;
+#resign>p {
+	position: absolute;
+	top: 50px;
+	left: 20px;
+	color: red;
 }
 
-#modal{
-
-	position : absolute;
-	top : 500px;
-	display : flex;
-	justify-content : center;
-	flex-wrap  : wrap;
-	height : 300px;
-	width : 400px;
-
-	border-radius : 10px;
-	border : solid 1px black;
+#modal {
+	position: fixed;
+	left: calc(50vw - 175px);
+	display: none;
+	justify-content: center;
+	flex-wrap: wrap;
+	height: 270px;
+	width: 350px;
+	border-radius: 10px;
+	z-index: 1001;
+	background-color: white;
 }
 
-#modal>h2{
-	position : relative;
-	top : 20px;
+#modal>h2 {
+	position: relative;
+	top: 20px;
+	height: 30px;
 }
 
-#modal>p{
-	width : 100px;
+#modal>p {
+	position: absolute;
+	height: 50px;
+	width: 261px;
 	margin: 0 30px;
+	top: 87px;
 }
 
-#modal>button{
-	background-color : red;
-	color : white;
+#modal>button {
+	position: absolute;
+	background-color: red;
+	color: white;
+	border-radius: 10px;
+	width: 300px;
+	height: 50px;
+	border: none;
+	font-size: 17px;
+	top: 170px;
+	cursor: pointer;
+}
+
+#modal>a {
+	position: absolute;
+	top: 237px;
+	color: gray;
+	cursor: pointer;
+}
+
+#modal>a:hover {
+	text-decoration: underline;
+}
+
+#cover {
+	display: none; position : fixed;
+	width: 100vw;
+	height: 100vh;
+	top: 0px;
+	left: 0px;
+	background-color: dimgray;
+	z-index: 1000;
+	opacity: 0.8;
+	position: fixed;
+}
+
+#pwModal{
+	position : fixed;
+	display : none;
+	z-index : 1001;
+	width : 600px;
+	height : 300px;
+	top : 40px;
+	left : calc(50vw - 275px);
+	width : 550px;
+	height : 300px;
+
+	border : solid 1px black;
 	border-radius : 10px;
+	background-color : white;
+}
+
+#pwModal>h2{
+		position : absolute;
+	top : 20px;
+	left : 80px;
 	width : 300px;
-	height : 50px;
+}
+
+#pwModal>p{
+		position : absolute;
+	left : 80px;
+	top : 80px;
+}
+
+#pwModal>input{
 	border : none;
-	font-size : 17px;
-}
-
-#modal>a{
-	position : absolute;
-	top : 270px;
-	color : gray;
-}
-
-#header{
 	border-bottom : solid 1px black;
-	box-shadow: 0px 1px 10px 1px black;
+	outline : none;
+	width: 385px;
+	height : 20px;
+	position : absolute;
+	top: 140px;
+	left: 80px;
+}
+
+#pwModal>input:focus{
+	border-color: black;
+	border-bottom-width: 2px;
+}
+
+
+#pwModal>#warn{
+	width: 385px;
+	position: absolute;
+	top: 165px;
+	margin: 0px;
+	color: red;
+}
+#pwCover{
+	display : none;
+	background-color :dimgray;
+	width : 100vw;
+	height : 100vh;
+	position : fixed;
+	top : 0px;
+	left : 0px;
+	z-index : 1000;
+	opacity : 0.8;
+}
+
+#pwModal>#submit{
+    position: absolute;
+	bottom : 50px;
+	right : 50px;
+    background-color: black;
+    border-radius: 30px;
+    color: white;
+    width: 80px;
+    height: 40px;
+    font-size: 15px;
+}
+
+#close{
+	position : absolute;
+	top: 19px;
+	height: 30px;
+	right: 19px;
+	border : none;
+	background-color : white;
+	width: 30px;
+}
+
+
+#X:after{
+ content : "\00d7";
+ font-size : 20pt;
+}
+
+
+#header {
+	border-bottom: solid 1px black;
+	box-shadow: 0px 1px 5px 1px black;
 }
