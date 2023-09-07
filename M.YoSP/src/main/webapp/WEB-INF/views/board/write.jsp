@@ -88,7 +88,6 @@ $(function(){
 	
     fileDrop.addEventListener('drop', function(e) {
     	e.preventDefault();
-        this.style.backgroundColor = 'white';
 
         var data = e.dataTransfer.files[0];
         

@@ -91,6 +91,11 @@ public class MainController {
 	}
 	
 	
+	@RequestMapping("/test2")
+	public void test2() {
+	}
+	
+	
 	@RequestMapping("/CreateMap")
 	public void CreateMap(Model model) {
 	
