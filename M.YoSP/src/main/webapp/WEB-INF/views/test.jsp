@@ -53,7 +53,7 @@ img {
 		<div class="drop">
 		<img class="output imgNum1" src="">
 		</div>
-
+	<input>
 </body>
 <script>
 	function readFile(input, num) {

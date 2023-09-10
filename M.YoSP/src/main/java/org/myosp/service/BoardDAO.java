@@ -42,4 +42,6 @@ public interface BoardDAO {
 	public void addFile(BoardFileDTO dto);
 	
 	public List<BoardFileDTO> readFiles(int bno);
+	
+	public void deleteFile(BoardFileDTO file);
 }

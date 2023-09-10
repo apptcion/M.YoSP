@@ -17,11 +17,10 @@
 
 		<div id="L">
 			<h1>Trip, Travel Route Itinerary Planner</h1>
-			<p>Our Mission is
-				to make your travel easy and comfortable.</p>
+			<p>Our Mission is to make your travel easy and comfortable.</p>
 
 		</div>
-			<img id="earth" src="${path }/resources/img/earth.png"/>
+		<img id="earth" src="${path }/resources/img/earth.png" />
 		<div id="R">
 			<div id="siteMap">
 				<h2>Site Map</h2>
@@ -33,9 +32,11 @@
 					<li><a href="#">Go to Use</a></li>
 				</ul>
 			</div>
-			<div id="copyright">ⓒ 2023. Trip Co. all rights reserved</div>
-			<div id="information">
-				Tel : 010-1111-1111 <br> email : Mail4M.yosp@gmail.com
+			<div id="CopyAndInform">
+				<div id="copyright">ⓒ 2023. Trip Co. all rights reserved</div>
+				<div id="information">
+					Tel : 010-1111-1111 <br> email : Mail4M.yosp@gmail.com
+				</div>
 			</div>
 		</div>
 		<hr>

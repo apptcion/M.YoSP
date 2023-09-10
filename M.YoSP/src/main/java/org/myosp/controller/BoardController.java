@@ -1,11 +1,16 @@
 package org.myosp.controller;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import lombok.extern.log4j.Log4j;
 
@@ -160,6 +166,7 @@ public class BoardController {
 			,@RequestParam("uuid")String uuid
 			,@RequestParam("date")String dateStr) throws Exception{
 		
+		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		
 		Date date = format.parse(dateStr);
@@ -214,13 +221,16 @@ public class BoardController {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		CustomUser user = (CustomUser)principal;
 		
-		
 		if(dto.getMemberId() == user.getMember().getUser_id()) {
 			model.addAttribute("BoardId", BoardId);
 			model.addAttribute("title",dto.getTitle());
 			model.addAttribute("content",dto.getContent());
+			model.addAttribute("local", dto.getLocal());
 			model.addAttribute("area",dao.getAreaList());
 			
+			List<BoardFileDTO> fileDTO = dao.readFiles(BoardId);
+			
+			model.addAttribute("fileList", fileDTO);
 			
 			return "board/modify";
 		}else {
@@ -229,18 +239,76 @@ public class BoardController {
 	}
 	
 	
-	@GetMapping("/exeModify")
+	@PostMapping("/exeModify")
 	@ResponseBody
 	public void exeModify(@RequestParam("BoardId")int BoardId
-			,@RequestParam("Title")String title
-			,@RequestParam("Content")String content
-			,@RequestParam("local")String local) {
+			,@RequestParam("title")String title
+			,@RequestParam("content")String content
+			,@RequestParam("area")String local
+			,MultipartFile[] uploadFile
+			,@RequestParam("delList")String[] delArray) {
 		
-		log.info(BoardId);
-		log.info(title);
-		log.info(content);
-		log.info(local);
+			List<String> delList = new ArrayList<String>(Arrays.asList(delArray));
+			log.info(delList);
 		
+			List<BoardFileDTO> fileDTOs = dao.readFiles(BoardId);
+			log.info(fileDTOs);
+		
+		for(BoardFileDTO boardfiledto : fileDTOs) {
+			String fileName = boardfiledto.getUuid() + "_" + boardfiledto.getFileOriginalName();
+			for(String delName : delList) {
+				log.info("delName : " + delName);
+				log.info("fileName : " + fileName);
+				if(fileName.equals(delName)) {
+					dao.deleteFile(boardfiledto);
+					log.info(boardfiledto);
+				}
+				log.info("-----------------------------------------");
+			}
+		}
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String uploadFolder = "C:\\Users\\mojan\\Downloads\\upload\\";
+		
+			List<BoardFileDTO> fileDtos = dao.readFiles(BoardId);
+			
+			
+			File uploadPath = new File(uploadFolder,getFolder());
+			
+			if(uploadPath.exists() == false) {
+				uploadPath.mkdirs();
+			}
+			
+			for(MultipartFile files : uploadFile) {
+				
+				String uploadFileName = files.getOriginalFilename();
+				
+				//IE 파일 경로 조정
+				uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("/") + 1);
+				
+				UUID uuid = UUID.randomUUID();
+				
+				uploadFileName = uuid.toString() + "_" + uploadFileName;
+				
+				File file = new File(uploadPath,uploadFileName);
+				try {
+					files.transferTo(file);
+					
+					BoardFileDTO fileDTO = new BoardFileDTO();
+					
+					fileDTO.setBno(BoardId);
+					fileDTO.setDate(new Date());
+					fileDTO.setFileOriginalName(files.getOriginalFilename());
+					fileDTO.setUuid(uuid.toString());
+					
+					
+					log.info(fileDTO);
+					
+					dao.addFile(fileDTO);
+				}catch(Exception e){
+					log.info(e.getStackTrace());
+				}
+			}
 		
 		dao.modify(BoardId,title,content,local);
 		

@@ -140,4 +140,9 @@
 	<select id="readFiles" resultMap="FileDTO">
 		select * from FileBoard where board_id = #{bno}
 	</select>
+	
+	<delete id="deleteFile">
+		delete from FileBoard where board_id = #{bno} AND uuid = #{uuid}
+	
+	</delete>
 </mapper>

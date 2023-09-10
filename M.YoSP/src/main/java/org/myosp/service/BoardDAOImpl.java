@@ -372,4 +372,10 @@ public class BoardDAOImpl implements BoardDAO {
 	public List<BoardFileDTO> readFiles(int bno){
 		return mapper.readFiles(bno);
 	}
+
+	@Override
+	public void deleteFile(BoardFileDTO file) {
+		mapper.deleteFile(file);
+		
+	}
 }

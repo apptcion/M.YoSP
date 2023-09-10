@@ -36,16 +36,26 @@ background: white;
 
 #R{
 	left : 50vw;
+	display: flex;
+	justify-content: space-evenly;
 }
 
 
 #L>h1, #L>p{
 	
-	position : relative;
-	top : 100px;
-	width : 540px;
-	margin :  0 auto;
+position : relative;
 	
+top: 100px;
+	
+width: 50vw;
+	
+/* margin : 0 auto; */
+	
+display: flex;
+	
+justify-content: center;
+	
+align-items: center;
 }
 
 #L>p{
@@ -57,9 +67,9 @@ background: white;
 #R>#siteMap{
 	position : relative;
 	width : 150px;
-	left : 200px;
+	/* left : 200px; */
 	top : 50px;
-	
+	height : 200px;
 }
 
 
@@ -75,15 +85,15 @@ background: white;
 
 
 #copyright{
-	position : absolute;
+	position: relative;
 	top : 80px;
-	left : 400px;
+	/* left : 400px; */
 	font-size : 18px;
 }
 
 
 #information{
-	position : absolute;
+	position: absolute;
 	top : 150px;
-	left : 400px;
+	/* left : 400px; */
 }

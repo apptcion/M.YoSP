@@ -320,9 +320,12 @@
 				</c:if>
 			</div>
 
-			<div id="content">
-				<c:out value="${fn:replace(board.getContent(),cn,br)}"
+			<div id="contentWrap">
+				<div id="content">
+									<c:out value="${fn:replace(board.getContent(),cn,br)}"
 					escapeXml="false" />
+					
+				</div>
 				<fieldset id="ImgWrap">
 					<legend>업로드된 이미지</legend>
 					<c:forEach items="${files}" var="file">
@@ -374,9 +377,6 @@
 				<input id="Cmodal_id" type="hidden" value="">
 				<textarea id="Cmodal_textarea" placeholder="댓글을 입력하세요"
 					maxlength="200"></textarea>
-				<button id="Cclose">
-					<div id="X"></div>
-				</button>
 				<button id="Csubmit">수정</button>
 			</div>
 			<div id="Mcover"></div>
@@ -436,7 +436,7 @@
 			<%@include file="../includes/list.jsp"%>
 		</div>
 	</div>
-	<%@include file="../includes/footer.jsp"%>
 	<div id="cover"></div>
+	<%@include file="../includes/footer.jsp"%>
 </body>
 </html>
