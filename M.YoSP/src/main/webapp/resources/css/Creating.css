@@ -1,0 +1,382 @@
+@charset "UTF-8";
+
+body{
+	overflow-x : hidden;
+}
+
+main{
+	position : absolute;
+	top : 0px;
+	left : 0px;
+	width : 100vw;
+	height : 100vh;
+}
+
+#Map{
+	position : absolute;
+	width : calc(100vw - 450px)!important;
+	right : 0px;
+	height : 100vh;
+}
+
+#Use{
+	position : absolute;
+	top : 0px;
+	left : 0px;
+	background-color : white;
+	z-index: 10;
+	height : 100vh;
+	width: 450px;
+	font-weight: 600;
+	/* background-color : #a3cca2; */
+}
+#steps{
+	height : 100vh;
+	width : 100px;
+}
+
+#steps>div[id^=step]{
+	position : relative;
+	top : 50px;
+		background-color : white;
+	width : 100px;
+	height : 100px;
+}
+
+
+#steps>div>a{
+	display : block;
+	width : 100px;
+	height : 36px;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+	display: flex;
+	justify-content: center;
+}
+
+#steps>#next{
+	width : 80px;
+	height : 60px;
+	background-color : black;
+	position : relative;
+	left : 8px;
+	top : calc(100vh - 400px);
+	border-radius : 8px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	color : white;
+}
+	
+.noSel{
+	font-size : 0.77rem;
+	color: #dee2e6;
+}
+
+.select{
+	color : #a3cca3;
+	font-size : 0.85rem;
+}
+	
+
+#steps>#step1{
+
+}
+
+#steps>#step2{
+
+}
+
+#steps>#step3{
+
+}
+
+#StepImplOutPut{
+	position : absolute;
+	top : 0px;
+	right : 0px;
+	height : 100vh;
+	width : 350px;
+	overflow : hidden;
+}
+
+
+#StepImplList{
+	position : relative;
+	top : 0px;
+	left : 0px;
+	height : 100vh;
+	width : 350px;
+	/* background-color : skyblue; */
+}
+
+
+#StepImplList>div{
+	position :relative;
+	height : 100%;
+	width : 100%;
+}
+
+
+
+#localName{
+	margin: 0px;
+	font-size : 1.875rem;
+	position: relative;
+	top: 55px;
+	left: 40px;
+}
+
+#period{
+	position : absolute;
+	top : 100px;
+	left : 40px;
+	width : 100%;
+	height : 45px;
+	font-size : 1rem;
+	font-weight : 600;
+	font-family : Montserrat,Noto Sans KR,sans-serif;
+}
+
+#sumTime{
+	position : absolute;
+	top : 160px;
+	left : 110px;
+	color: #00B0FF;
+	font-weight : 300;
+	font-size : 15px;
+}
+
+#TravelTime{
+	position : absolute;
+	top : 143px;
+	left : 40px;
+	font-size : 1rem;
+	font-weight : 200;
+}
+
+#ChDate>#notice{
+	position : absolute;
+	top : 200px;
+	left : 40px;
+	font-weight : 200;
+	width : 100%:
+	height : 100px;
+	color : #737e8a;
+	font-size : 11px;
+}
+
+
+#cover{
+	position : fixed;
+	top : 0px;
+	left : 0px;
+	z-index : 100;
+	width : 100vw;
+	height : 100vh;
+	background-color : rgba(0,0,0,0.75);
+	
+	display : flex;
+	justify-content : center;
+	align-items : center;
+}
+
+
+#modal{
+	width : 660px;
+	height : 556px;
+	background : white;
+	border-radius : 0.5rem;
+	padding: 3rem;
+	width: 770px;
+	min-height: 605px;
+	height: auto;
+	display : flex;
+	flex-wrap : wrap;
+	justify-content : center;
+	margin: 0px;
+}
+
+#tH2{
+	position : relative;
+	display : flex;
+	justify-content: center;
+	font-weight : 400;
+	margin: 0px;
+	height: 45px;
+	font-size : 35px;
+	padding-top: 1rem;
+	width: 100%;
+}
+
+#tP{
+	position : relative;
+	/* top : -30px; */
+	text-decoration : underline;
+	margin: 0px;
+	height: 20px;
+	width: 100%;
+	display: flex;
+	padding-top : 1rem;
+	padding-bottom : 0.5rem;
+	justify-content: center;
+}
+	
+#calendar{
+	/* border : Solid 1px black; */
+	width : 100%;
+	height : 440px;
+	margin-top : 0.5rem;
+	margin-bottom : 0.5rem;
+}
+
+#submit{
+	width : 100%;
+	display : flex;
+	justify-content: right;
+}
+
+#submit>button{
+	border : none;
+	background-color : #b4d491;
+	color : white;
+	width  :100px;
+	height : 50px;
+	border-radius : 8px;
+	/* position : relative; */
+	/* top : 20px; */
+	/* left : 337px; */
+}
+
+#calendar{
+	width: 100%;
+	min-height: 441px;
+	display : flex;
+	height: auto;
+	justify-content: space-around;
+}
+	
+#leftMonth, #rightMonth{
+	width: 350px;
+	/* height: 440px; */
+	height: auto;
+}
+
+.Day{
+	height: 125px;
+}
+	
+.Day>.y{
+	width : calc(100% - 32px);
+	height: 33px;
+	/* border : solid 1px black; */
+	display: flex;
+	font-weight: 400;
+	font-size: 25px;
+	justify-content: center;
+	align-items: center;
+	margin: 16px;
+	font-family: monospace;
+}
+
+.Day>.d{
+	width : 100%;
+	height: 40px;
+	/* border : solid 1px black; */
+	display: flex;
+	font-size: 20px;
+	justify-content: space-around;
+	position: relative;
+}
+
+.Day>.d>div{
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	height: 40px;
+	width: 40px;
+}
+
+
+#goPrev{
+	position : relative;
+	top: 40px;
+	left: 25px;
+	border-bottom : solid 2px;
+	border-left : solid 2px;
+	border-color : #cccccc;
+	width : 15px;
+	height : 15px;
+	transform: rotate(45deg);
+}
+
+#goNext{
+	position : relative;
+	top: 40px;
+	left: 312px;
+	border-top: solid 2px black;
+	border-right : solid 2px black;
+	width : 15px;
+	height : 15px;
+	transform : rotate(45deg);
+}
+
+
+.date{
+	width: 100%;
+	height: auto;
+	display : flex;
+	flex-wrap : wrap;
+	justify-content: space-around;
+	/* position: relative; */
+	top: 30px;
+}
+
+.Lweek, .Rweek{
+	width : 100%;
+	height: 60px;
+	display : flex;
+}
+
+.DayDiv{
+	width: calc(100% / 7 - 2px);
+	margin: 1px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	font-size : 23px;
+	font-weight : 200;
+}
+
+
+.Lweek>.sat, .Rweek>.sat{
+	color : #006f80;
+}
+
+.Lweek>.sun, .Rweek>.sun{
+	color : #e74d40;
+}
+
+
+.Sel{
+	color : white;
+	border-radius : 10px;
+}
+
+.dirSel{
+	background-color : rgb(120,200,120) ;
+	font-size : 25px;
+	font-weight : 700;
+}
+
+.indirSel{
+	background-color : #A5D6A0;
+}
+
+.SelCore{
+}
+
+
+.AbsNoSel, .RelNoSel{
+	color : #cfcccc !important;
+}

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -64,10 +65,6 @@ public class BoardController {
 			,@RequestParam(value="search", required=false, defaultValue="")String search) {
 				
 		log.info("board Page");
-		log.info(order);
-		log.info(page);
-		log.info(local);
-		log.info(search);
 
 		Criteria cri = new Criteria(page, 13);
 		List<BoardDTO> list = dao.getListWithPaging(cri, order, local,search);
@@ -187,7 +184,8 @@ public class BoardController {
 				header.setContentType(mType);
 			}else {
 				header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-				header.add("Content-Disposition","attachment; filename=\"" + new String(fileName.getBytes("UTF-8") + "ISO-8859-1") +"\"");
+				String FileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO-8859-1");
+				header.add("Content-Disposition","attachment; filename=\"" + FileName +"\"");
 				
 			}
 			
@@ -249,26 +247,28 @@ public class BoardController {
 			,@RequestParam("delList")String[] delArray) {
 		
 			List<String> delList = new ArrayList<String>(Arrays.asList(delArray));
-			log.info(delList);
-		
 			List<BoardFileDTO> fileDTOs = dao.readFiles(BoardId);
-			log.info(fileDTOs);
 		
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String uploadFolder = "C:\\Users\\mojan\\Downloads\\upload\\";	
+			
+			
 		for(BoardFileDTO boardfiledto : fileDTOs) {
 			String fileName = boardfiledto.getUuid() + "_" + boardfiledto.getFileOriginalName();
 			for(String delName : delList) {
-				log.info("delName : " + delName);
-				log.info("fileName : " + fileName);
 				if(fileName.equals(delName)) {
 					dao.deleteFile(boardfiledto);
-					log.info(boardfiledto);
+					String uploadPathstr = uploadFolder + format.format(boardfiledto.getDate()).replace("-",File.separator);
+					Path filepath = Paths.get(uploadPathstr +  File.separator + fileName);
+					
+					try {
+						Files.delete(filepath);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
-				log.info("-----------------------------------------");
 			}
 		}
-		
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		String uploadFolder = "C:\\Users\\mojan\\Downloads\\upload\\";
 		
 			List<BoardFileDTO> fileDtos = dao.readFiles(BoardId);
 			
@@ -300,9 +300,6 @@ public class BoardController {
 					fileDTO.setDate(new Date());
 					fileDTO.setFileOriginalName(files.getOriginalFilename());
 					fileDTO.setUuid(uuid.toString());
-					
-					
-					log.info(fileDTO);
 					
 					dao.addFile(fileDTO);
 				}catch(Exception e){
@@ -336,8 +333,6 @@ public class BoardController {
 		
 		int bno = dao.posting(title,content,area,Username,UserId);
 		
-		log.info("bno : " + bno);
-		
 		String uploadFolder = "C:\\Users\\mojan\\Downloads\\upload";
 		File uploadPath = new File(uploadFolder,getFolder());
 		
@@ -368,8 +363,6 @@ public class BoardController {
 				fileDTO.setUuid(uuid.toString());
 				
 				
-				log.info(fileDTO);
-				
 				dao.addFile(fileDTO);
 			}catch(Exception e){
 				log.info(e.getStackTrace());
@@ -394,10 +387,6 @@ public class BoardController {
 	@ResponseBody
 	public boolean turn(@RequestParam("board_id") int board_id, @RequestParam("UserId")int UserId,
 			@RequestParam("now") boolean isLike) {
-		
-		log.info(board_id);
-		log.info(UserId);
-		log.info(isLike);
 		
 		if(isLike) {
 			//like  to dislike

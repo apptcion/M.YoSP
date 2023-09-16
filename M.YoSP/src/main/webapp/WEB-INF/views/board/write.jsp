@@ -188,7 +188,7 @@ var formData = new FormData();
 			<button id="close">
 				<div></div>
 			</button>
-			<label for="file"><div id="uploadDiv">업로드</div></label> <input
+			<label for="file"><div id="uploadDiv">파일 찾기</div></label> <input
 				type="file" id="file" multiple accept="image/gif, image/png, image/jpg"> <img id="UploadImg"
 				src="/resources/img/upload.png">
 			<p>최대 50MB이하, png,jpg,gif 첨부 가능</p>

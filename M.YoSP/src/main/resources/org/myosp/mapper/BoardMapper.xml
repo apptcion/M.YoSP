@@ -46,6 +46,8 @@
 		<result property="englishName" column="englishName" />
 		<result property="address" column="detail" />
 		<result property="intro" column="intro" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
 	</resultMap>
 	
 	<select id="getAreaList" resultMap="areaDTO">

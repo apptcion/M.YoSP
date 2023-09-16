@@ -8,6 +8,8 @@ public class AreaDTO {
 	private String englishName;
 	private String address;
 	private String intro;
+	private double lat;
+	private double lng;
 	
 	
 }

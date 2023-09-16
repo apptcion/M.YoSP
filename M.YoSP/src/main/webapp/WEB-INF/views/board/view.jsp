@@ -322,20 +322,23 @@
 
 			<div id="contentWrap">
 				<div id="content">
-									<c:out value="${fn:replace(board.getContent(),cn,br)}"
-					escapeXml="false" />
-					
+					<c:out value="${fn:replace(board.getContent(),cn,br)}"
+						escapeXml="false" />
+
 				</div>
-				<fieldset id="ImgWrap">
-					<legend>업로드된 이미지</legend>
-					<c:forEach items="${files}" var="file">
-						<c:set var="fileDate">
-							<fmt:formatDate value="${file.getDate() }" pattern="yyyy-MM-dd" />
-						</c:set>
-						<img class="resources"
-							src="/board/display?fileName=${file.getFileOriginalName()}&uuid=${file.getUuid()}&date=${fileDate }" />
-					</c:forEach>
-				</fieldset>
+
+				<c:if test="${not empty files }">
+					<fieldset id="ImgWrap">
+						<legend>업로드된 이미지</legend>
+						<c:forEach items="${files}" var="file">
+							<c:set var="fileDate">
+								<fmt:formatDate value="${file.getDate() }" pattern="yyyy-MM-dd" />
+							</c:set>
+							<img class="resources"
+								src="/board/display?fileName=${file.getFileOriginalName()}&uuid=${file.getUuid()}&date=${fileDate }" />
+						</c:forEach>
+					</fieldset>
+				</c:if>
 			</div>
 			<div id="likeButton">
 				<security:authorize access="isAuthenticated()">

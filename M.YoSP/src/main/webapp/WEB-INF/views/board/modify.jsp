@@ -202,14 +202,14 @@
 			<button id="close">
 				<div id="X"></div>
 			</button>
-			<label for="file"><div id="uploadDiv">업로드</div></label> <input
+			<label for="file"><div id="uploadDiv">파일 찾기</div></label> <input
 				type="file" id="file" multiple> <img id="UploadImg"
 				src="/resources/img/upload.png">
 			<p>최대 50MB이하, png,jpg,gif 첨부 가능</p>
 			<fieldset id="imgs">
 				<legend align="center">업로드된 이미지</legend>
 				<c:forEach items="${fileList}" var="file" varStatus="status">
-					<div class="imgWrap" id="WrapId${status.count }">
+					<div class="imgWrap" id="OldWrapId${status.count }">
 											<c:set var="fileDate">
 							<fmt:formatDate value="${file.getDate() }" pattern="yyyy-MM-dd" />
 						</c:set>
