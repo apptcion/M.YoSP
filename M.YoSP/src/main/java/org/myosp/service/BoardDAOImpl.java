@@ -211,6 +211,9 @@ public class BoardDAOImpl implements BoardDAO {
 	public int posting(String title,String content,String area, String Username,int UserId) {
 		
 		content = content.replaceAll("\r|\r\n|\n|\n\r ", "\n");
+		content = content.replaceAll("<","&lt;");
+		content = content.replaceAll(">","&gt;");
+		
 		if(!area.equals("etc")) {
 			area = area + ", etc";
 		}
@@ -312,6 +315,8 @@ public class BoardDAOImpl implements BoardDAO {
 		
 		Map<String, Object> map = new HashMap<>();
 		Content = Content.replaceAll("\r|\r\n|\n|\n\r ", "\n");
+		Content = Content.replaceAll("<","&lt;");
+		Content = Content.replaceAll(">","&gt;");
 		
 		map.put("board_id", board_id);
 		map.put("member_id", member_id);
@@ -323,11 +328,16 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 	
 	@Override
-	public void Cupdate(int comment_id, String Con) {
+	public void Cupdate(int comment_id, String Content) {
+		
+		Content = Content.replaceAll("\r|\r\n|\n|\n\r ", "\n");
+		Content = Content.replaceAll("<","&lt;");
+		Content = Content.replaceAll(">","&gt;");
+
 		Map<String,Object> map = new HashMap<>();
 		map.put("comment_id",comment_id);
-		map.put("Con",Con);
-
+		map.put("Con",Content);
+		
 		mapper.Cupdate(map);
 	}
 	
@@ -342,6 +352,10 @@ public class BoardDAOImpl implements BoardDAO {
 	public void modify(int BoardId, String title, String content, String local) {
 		
 		Map<String,Object> map = new HashMap<>();
+		
+		content = content.replaceAll("\r|\r\n|\n|\n\r ", "\n");
+		content = content.replaceAll("<","&lt;");
+		content = content.replaceAll(">","&gt;");
 		
 		if(!local.equals("etc")) {
 			local = local + ", etc";

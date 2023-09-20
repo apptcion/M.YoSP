@@ -173,7 +173,7 @@
 					var Cmodal_id = Number($(this).parent()
 							.siblings(".CHeader").attr("id"));
 					var Con = $(this).parent().siblings(".Ccon").html()
-							.replace(/<br>/g, "\n").slice(7);
+							.replace(/<br>/g, "\n").slice(7).replace(/&lt;/g,"<").replace(/&gt;/g,">");
 					Con = Con.slice(0, Con.length - 6);
 
 					console.log(Con);

@@ -244,13 +244,28 @@ public class BoardController {
 			,@RequestParam("content")String content
 			,@RequestParam("area")String local
 			,MultipartFile[] uploadFile
-			,@RequestParam("delList")String[] delArray) {
+			,@RequestParam(value="delList",required = false)String[] delArray) {
 		
-			List<String> delList = new ArrayList<String>(Arrays.asList(delArray));
+			List<String> delList = new ArrayList<String>();
+		
+			try {
+			delList = new ArrayList<String>(Arrays.asList(delArray));
+				
+			}catch(Exception e) {
+			// 지울게 없음
+			}
+			
 			List<BoardFileDTO> fileDTOs = dao.readFiles(BoardId);
 		
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			String uploadFolder = "C:\\Users\\mojan\\Downloads\\upload\\";	
+			
+		log.info(BoardId);
+		log.info(title);
+		log.info(content);
+		log.info(local);
+		log.info(uploadFile);
+		log.info(delArray);
 			
 			
 		for(BoardFileDTO boardfiledto : fileDTOs) {

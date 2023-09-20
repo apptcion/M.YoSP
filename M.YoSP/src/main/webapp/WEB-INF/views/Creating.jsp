@@ -14,11 +14,14 @@
 <script>
 	$(function() {
 
-		var sumTime = "총 N시간 N분"
+		var sumTime = "총 12시간 0분"
 		
 		var CalSelisRun = false;
 		var Core;
 		var Ass;
+		
+		var SE = ["StartTime","EndTime"];
+		var HM = ["Hour","min"]
 		
 		var PlanSt;
 		var PlanLs;
@@ -33,6 +36,9 @@
 		var StartDay = LeftDate.getFullYear() + ". " + (LeftDate.getMonth() + 1) + "." + LeftDate.getDate();
 		var EndDay = LeftDate.getFullYear() + ". " + (LeftDate.getMonth() + 1) + ". " + LeftDate.getDate();
 		
+		var PlObjArr = [];
+		PlObjArr[0] = '';
+
 		
 		$("#period").append(StartDay + " - " + EndDay)
 		$("#sumTime").append(sumTime)
@@ -117,25 +123,25 @@
 			var result = '';
 			switch(num){
 			case 0 :
-				result = "일요일"
+				result = "일"
 				break;
 			case 1:
-				result = "월요일"
+				result = "월"
 				break;
 			case 2:
-				result = "화요일"
+				result = "화"
 				break;
 			case 3:
-				result = "수요일"
+				result = "수"
 				break;
 			case 4:
-				result = "목요일"
+				result = "목"
 				break;
 			case 5:
-				result = "금요일"
+				result = "금"
 				break;
 			case 6:
-				result = "토요일"
+				result = "토"
 				break;
 			}
 			return result;
@@ -244,17 +250,16 @@
 			
 			$("#Ldate").empty();
 			var LeftDayNum = 1;
-			
 			$("#Ldate").append("<div class='Lweek' id='Lweek1'></div>")
 			for(var First = 1; First <= 7; First++){
 				if(First > LeftStart){
 					
 					if(First == 1){
-						$("#Lweek1").append("<div class='DayDiv sun normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum + "</div>");
+						$("#Lweek1").append("<div class='DayDiv sun normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum + "</div>");
 					}else if(First == 7){
-						$("#Lweek1").append("<div class='DayDiv sat normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum + "</div>");						
+						$("#Lweek1").append("<div class='DayDiv sat normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum + "</div>");						
 					}else{
-						$("#Lweek1").append("<div class='DayDiv normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum + "</div>");	
+						$("#Lweek1").append("<div class='DayDiv normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum + "</div>");	
 					}
 					LeftDayNum++;
 				}else{
@@ -267,11 +272,11 @@
 				$("#Ldate").append("<div class='Lweek' id='Lweek" + week+ "'></div>")
 				for(var fromTwo = 1; fromTwo <= 7; fromTwo++){
 					if(fromTwo == 1){
-						$("#Lweek" + week).append("<div class='DayDiv sun normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum+ "</div>")
+						$("#Lweek" + week).append("<div class='DayDiv sun normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum+ "</div>")
 					}else if(fromTwo == 7){
-						$("#Lweek" + week).append("<div class='DayDiv sat normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum + "</div>");
+						$("#Lweek" + week).append("<div class='DayDiv sat normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum + "</div>");
 					}else{
-						$("#Lweek" + week).append("<div class='DayDiv normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum + "</div>");
+						$("#Lweek" + week).append("<div class='DayDiv normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum + "</div>");
 					}
 					LeftDayNum++;
 				}
@@ -280,11 +285,11 @@
 			$("#Ldate").append("<div class='Lweek' id='Lweek" + LeftLine+ "'></div>")
 			for(var last = 1;LeftDayNum <= LeftLast; last++){
 				if(last == 1){
-					$("#Lweek" + LeftLine).append("<div class='DayDiv sun normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum+ "</div>")
+					$("#Lweek" + LeftLine).append("<div class='DayDiv sun normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum+ "</div>")
 				}else if(last == 7){
-					$("#Lweek" + LeftLine).append("<div class='DayDiv sat normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum + "</div>");
+					$("#Lweek" + LeftLine).append("<div class='DayDiv sat normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum + "</div>");
 				}else{
-					$("#Lweek" + LeftLine).append("<div class='DayDiv normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,LeftDayNum)) + "'>" + LeftDayNum + "</div>");
+					$("#Lweek" + LeftLine).append("<div class='DayDiv normal L' id='L" + LeftDayNum + "' name='" + CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),LeftDayNum)) + "'>" + LeftDayNum + "</div>");
 				}
 				LeftDayNum++;
 			}
@@ -330,11 +335,11 @@
 				if(First > RightStart){
 					
 					if(First == 1){
-						$("#Rweek1").append("<div class='DayDiv sun normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum + "</div>");
+						$("#Rweek1").append("<div class='DayDiv sun normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum + "</div>");
 					}else if(First == 7){
-						$("#Rweek1").append("<div class='DayDiv sat normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum + "</div>");						
+						$("#Rweek1").append("<div class='DayDiv sat normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum + "</div>");						
 					}else{
-						$("#Rweek1").append("<div class='DayDiv normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum + "</div>");	
+						$("#Rweek1").append("<div class='DayDiv normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum + "</div>");	
 					}
 					RightDayNum++;
 				}else{
@@ -347,11 +352,11 @@
 				$("#Rdate").append("<div class='Rweek' id='Rweek" + week+ "'></div>")
 				for(var fromTwo = 1; fromTwo <= 7; fromTwo++){
 					if(fromTwo == 1){
-						$("#Rweek" + week).append("<div class='DayDiv sun normal R' id='R" + RightDayNum + "'  name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum+ "</div>")
+						$("#Rweek" + week).append("<div class='DayDiv sun normal R' id='R" + RightDayNum + "'  name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum+ "</div>")
 					}else if(fromTwo == 7){
-						$("#Rweek" + week).append("<div class='DayDiv sat normal R' id='R" + RightDayNum + "'  name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum + "</div>");
+						$("#Rweek" + week).append("<div class='DayDiv sat normal R' id='R" + RightDayNum + "'  name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum + "</div>");
 					}else{
-						$("#Rweek" + week).append("<div class='DayDiv normal R' id='R" + RightDayNum + "'  name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum + "</div>");
+						$("#Rweek" + week).append("<div class='DayDiv normal R' id='R" + RightDayNum + "'  name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum + "</div>");
 					}
 					RightDayNum++;
 				}
@@ -361,11 +366,11 @@
 			$("#Rdate").append("<div class='Rweek' id='Rweek" + RightLine+ "'></div>")
 			for(var last = 1;RightDayNum <= RightLast; last++){
 				if(last == 1){
-					$("#Rweek" + RightLine).append("<div class='DayDiv sun normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum + "</div>")
+					$("#Rweek" + RightLine).append("<div class='DayDiv sun normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum + "</div>")
 				}else if(last == 7){
-					$("#Rweek" + RightLine).append("<div class='DayDiv sat normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum + "</div>");
+					$("#Rweek" + RightLine).append("<div class='DayDiv sat normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum + "</div>");
 				}else{
-					$("#Rweek" + RightLine).append("<div class='DayDiv normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,RightDayNum)) + "'>" + RightDayNum + "</div>");
+					$("#Rweek" + RightLine).append("<div class='DayDiv normal R' id='R" + RightDayNum + "' name='" + CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),RightDayNum)) + "'>" + RightDayNum + "</div>");
 				}
 				RightDayNum++;
 			}
@@ -389,10 +394,10 @@
 					
 					if($(this).attr("class").includes("L")){
 						var site = "L";
-						Core = CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth()+1,$(this).attr("id").substring(1)));
+						Core = CNL(new Date(LeftDate.getFullYear(),LeftDate.getMonth(),$(this).attr("id").substring(1)));
 					}else{
 						var site = "R";
-						Core = CNL(new Date(RightDate.getFullYear(),RightDate.getMonth()+1,$(this).attr("id").substring(1)));
+						Core = CNL(new Date(RightDate.getFullYear(),RightDate.getMonth(),$(this).attr("id").substring(1)));
 					}
 					
 					
@@ -477,7 +482,6 @@
 				})
 		
 		$(document).on('mouseleave','div[class*=indirSel]',function(){
-			console.log("mouseLeave")
 				if(CalSelisRun){
 					DelIndir();	
 				}
@@ -517,9 +521,7 @@
 		
 		$(document).on('click','div[class*=SelAss]',function(){
 			DelIndir();
-			console.log($(this).attr("class"))
 			if($(this).attr("class").includes("SelCore")){
-				console.log("SelCore 포함됨")
 				$(this).addClass("normal")
 				$(this).removeClass("Sel SelAss dirSel SelCore");
 				Core = 0;
@@ -547,17 +549,16 @@
 		$(document).on('click','button[id=sub-btn]',function(){
 			
 			if($(this).attr("class").includes("pass")){
-				$("#cover").hide();
-				$("#modal").hide();
+				var PlanLen = $(".Sel").length
 				
-				console.log(PlanSt)
-				console.log(PlanLs)
+				$("#cover").hide();
 				
 				PlanSt = String(PlanSt)
 				PlanLs = String(PlanLs)
 				
-				console.log(typeof PlanSt)
-				console.log(typeof PlanLs)
+				$("#PlanDetail").empty();
+				console.log(PlanSt)
+				console.log(PlanLs)
 				
 				if(PlanSt[6] == '0'){
 					StartDay = PlanSt.substring(0,4) + "." + PlanSt.substring(4,6) + "." + PlanSt.substring(7)
@@ -571,12 +572,244 @@
 					EndDay = PlanLs.substring(0,4) + "." + PlanLs.substring(4,6) + "." + PlanLs.substring(6,8);
 				}
 				
-				$("#period").text(StartDay + " - " + EndDay)
+				PlanStDate = new Date(StartDay)
+				PlanLsDate = new Date(EndDay)
+				
+				
+				$("#period").html(StartDay + " - " + EndDay + "<img id='calImg' src='/resources/img/calendar.png'>")
+				var tempDate = new Date(StartDay);
+				tempDate.setDate(tempDate.getDate()-1)
+				
+				for(var i = 1; i <= PlanLen;i++){
+					tempDate.setDate(tempDate.getDate()+1);
+					console.log(tempDate)
+					
+					$("#PlanDetail").append("<div class='PlanWeekWrap' id='PWW" + i +"'></div>")
+					$("#PWW" + i).append("<div class='day'>" + (tempDate.getMonth()+1) +"/" + tempDate.getDate() +"</div>" 
+							+ "<div class='week'>" + getKoreanDay(tempDate.getDay()) +"</div>"
+							+ "<div class='stT'>10:00<img class='clockImg start' src='/resources/img/clock.png'></div>"
+							+ "<div class='fnT'>22:00<img class='clockImg end' src='/resources/img/clock.png'></div>")
+							
+					PlObjArr[i] = cre_plObject(10,0,22,0);
+					
+					
+					
+				}
+			
+				setSumTime();
 			}else{
 				alert("날짜를 선택해주세요")
 			}
 		})
 		
+		$(document).on('click','img[class*=clockImg]',function(){
+			
+			var PwwId = $(this).parent().parent().attr("id").substring(3);
+			var plObj = PlObjArr[PwwId];
+			
+			var H;
+			var M;
+			
+			$(this).addClass("altering")
+			
+			if($(this).attr("class").includes("start")){
+				H = plObj[SE[0]][HM[0]];
+				M = plObj[SE[0]][HM[1]];
+				
+				
+				$("#timeSet").addClass("start")
+			}else{
+				$("#timeSet").addClass("end")
+				
+				H = plObj[SE[1]][HM[0]];
+				M = plObj[SE[1]][HM[1]];
+				
+			}
+			
+			$("#H" + H).addClass("HtimeSetSel")
+			$("#M" + M).addClass("MtimeSetSel")
+			
+			$("#timeSetCover").show();
+			$("#timeSet").css("display","flex");
+			
+			$("#HList").scrollTop((H-1)*68)
+			$("#MList").scrollTop((M-1)*68)
+			
+		})
+		
+		$(document).on('click','div[class*=HSel]',function(){
+			if($(this).attr("class").includes("HtimeSetSel")){
+				$(this).removeClass("HtimeSetSel")
+			}else{
+				$(".HtimeSetSel").removeClass("HtimeSetSel")
+				$(this).addClass("HtimeSetSel")
+			}
+		})
+		
+		$(document).on('click','div[class*=MSel]',function(){
+			if($(this).attr("class").includes("MtimeSetSel")){
+				$(this).removeClass("MtimeSetSel")
+			}else{
+				
+				$(".MtimeSetSel").removeClass("MtimeSetSel")
+				$(this).addClass("MtimeSetSel")
+			}
+		})
+		
+		$(document).on('click','div[id=apply-btn]',function(){
+			if($(this).parent().parent().attr("class").includes("start")){
+			
+				var stH = Number($(".HtimeSetSel").attr("id").substring(1));
+				var stM = Number($(".MtimeSetSel").attr("id").substring(1));
+				
+				var PwwId = $(".altering").parent().parent().attr("id").substring(3);
+				var plObj = PlObjArr[PwwId]
+				
+				
+				var endH = plObj[SE[1]][HM[0]];
+				var endM = plObj[SE[1]][HM[1]];
+				
+				console.log(endH + ", " + endM)
+				console.log(stH + ", " + stM)
+				
+				if(canChange(stH,stM,endH,endM)){
+					var newPlobj = initTimeObj(stH,stM)
+					
+					PlObjArr[PwwId][SE[0]] = newPlobj;
+					
+					$("#timeSetCover").hide();
+					$("#timeSet").hide();
+					
+					var stHstr;
+					if(String(stH).length == 1){
+						stHstr  = "0" + String(stH)
+					}else{
+						stHstr = String(stH)
+					}
+					
+					
+					
+					var stMstr;
+					if(String(stM).length == 1){
+						stMstr  = "0" + String(stM)
+					}else{
+						stMstr = String(stM)
+					}
+					$("#PWW" + PwwId).children(".stT").html(stHstr + ":" + stMstr + "<img class='clockImg start' src='/resources/img/clock.png'>");
+					$(".HtimeSetSel").removeClass("HtimeSetSel")
+					$(".MtimeSetSel").removeClass("MtimeSetSel")
+					$("#timeSet").removeClass("start")
+					
+					setSumTime();
+				}else{
+					alert("시작 시간은 종료시간 전이어야 합니다")	
+				}			
+			}else{
+				var endH = Number($(".HtimeSetSel").attr("id").substring(1));
+				var endM = Number($(".MtimeSetSel").attr("id").substring(1));
+				
+				var PwwId = $(".altering").parent().parent().attr("id").substring(3);
+				var plObj = PlObjArr[PwwId]
+				
+				
+				var stH = plObj[SE[0]][HM[0]];
+				var stM = plObj[SE[0]][HM[1]];
+				
+				console.log(endH +  ", " + endM)
+				console.log(stH  + ", " + stM)
+				
+				if(canChange(stH,stM,endH,endM)){
+					var newPlobj = initTimeObj(endH,endM);
+					PlObjArr[PwwId][SE[1]] = newPlobj;
+					
+					$("#timeSetCover").hide();
+					$("#timeSet").hide();
+					
+					var endHstr;
+					if(String(endH).length == 1){
+						endHstr = "0" + String(endH)
+					}else{
+						endHstr = String(endH)
+					}
+					
+					var endMstr;
+					if(String(endM).length == 1){
+						endMstr = "0" + String(endM);
+					}else{
+						endMstr = String(endM)
+					}
+					
+					$("#PWW" + PwwId).children(".fnT").html(endHstr + ":" + endMstr + "<img class='clockImg end' src='/resources/img/clock.png'>")
+					$(".HtimeSetSel").removeClass("HtimeSetSel")
+					$(".MtimeSetSel").removeClass("MtimeSetSel")
+					$("#timeSet").removeClass("end")
+					
+					setSumTime();
+					
+				}else{
+					alert("종료 시간은 시작시간 후여야 합니다")	
+				}
+			}
+		})
+		
+		$(document).on('click','#timeSetCover',function(){
+			$("#timeSetCover").hide();
+			$("#timeSet").hide();
+			
+			$(".HtimeSetSel").removeClass("HtimeSetSel")
+			$(".MtimeSetSel").removeClass("MtimeSetSel")
+			$("#timeSet").removeClass("end start")
+
+		})
+		
+		$(window).on('keyup',function(e){
+			if(e.keyCode == 27){
+				$("#timeSetCover").hide();
+				$("#timeSet").hide();
+				
+				$(".HtimeSetSel").removeClass("HtimeSetSel")
+				$(".MtimeSetSel").removeClass("MtimeSetSel")
+				$("#timeSet").removeClass("end")
+			}
+		})
+		
+		function canChange(stH,stM,endH,endM){
+			if(stH < endH){
+				return true;
+			}else if(stH == endH){
+				if(stM < endM){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+		}
+		
+		$(document).on('click','img[id=calImg]',function(){
+			CalSelisRun = false;
+			Core = 0;
+			Ass = 0;
+			
+			PlanSt = 0;
+			PlanLs = 0;
+			
+			CanCheck = false;
+			
+			nowDate = new Date();
+			LeftDate = new Date();
+			RightDate = initRightDate();
+			
+			PlObjArr.length = 0;
+			PlObjArr[0] = '';
+			
+			$("#cover").show();
+			
+			$(".pass").removeClass("pass");
+			
+			ShowCalendar();
+		})
 		
 		function compar(Date1,Date2){
 			if(Date1.getFullYear() > Date2.getFullYear()){
@@ -602,7 +835,7 @@
 		
 		function CNL(Date){
 			var year = String(Date.getFullYear());
-			var month = String(Date.getMonth());
+			var month = String(Date.getMonth() + 1);
 			var date = String(Date.getDate());
 			
 			if(month.length == 1){
@@ -632,7 +865,97 @@
 			$(".indirSel").removeClass("indirSel Sel")
 		}
 		
+		function TimeObject(){
+			var Hour,min;
+		}
 		
+		function initTimeObj(Hour,min){
+			var temp = new TimeObject();
+			temp.Hour = Hour;
+			temp.min = min;
+			
+			return temp;
+		}
+		
+		function plObject(){
+			var StartTime,EndTime,Sum
+		}
+		
+		function cre_plObject(StH,StM,EtH,EtM){
+			var temp = new plObject()
+			temp.StartTime = initTimeObj(StH,StM);
+			temp.EndTime = initTimeObj(EtH,EtM);
+			
+			return temp;
+		}
+		
+		function setSumTime(){
+			var Hour= 0;
+			var min = 0;
+			for(var i = 1; i < PlObjArr.length; i++){
+				
+				console.log(i)
+				
+				var PlObj = PlObjArr[i];
+				
+				var StH = PlObj[SE[0]][HM[0]];
+				var EtH = PlObj[SE[1]][HM[0]];
+				
+				var StM = PlObj[SE[0]][HM[1]]
+				var EtM = PlObj[SE[1]][HM[1]]
+					
+				
+				Hour += (EtH - StH);
+				if(StM > EtM){
+					Hour--;
+					min += (EtM + (60 - StM));
+				}else{
+					min += (EtM - StM)
+				}
+			}
+			
+			if(min >= 60){
+				Hour += Math.floor(min/60);
+				min = min%60;
+			}
+
+			sumTime = "총 " + Hour  + "시간 " + min + "분"
+			
+			$("#sumTime").text(sumTime)
+		}
+		
+		$(document).on('click','div[id=SetFinish-btn]',function(){
+			var HotelExpense = Number($("#hotel>input").val());
+			var StartingPointstr = $("#traffic>input").val();
+			var foodExpense = Number($("#food>input").val());
+			var activityExpense = Number($("#activity>input").val())
+			
+			
+			//값 유효성 검사
+			
+			var geocoder = new kakao.maps.services.Geocoder();
+			
+			geocoder.addressSearch("StartingPointstr",function(result,status){
+				if(status == kakao.maps.services.Status.OK){
+					console.log(result[0].x + ", " + result[0].y)
+				}else{
+					console.log("존재하지 않는 주소")
+				}
+			})
+			
+			if(1==1){
+				
+			}
+			
+			if(1==1){
+				
+			}
+			
+			if(1==1){
+				
+			}
+			////////////////
+		})
 	})
 </script>
 <link href="<c:url value="/resources/css/Creating.css" />"
@@ -650,7 +973,7 @@
 				<div id="calendar">
 					<div id="leftMonth">
 						<div class="Day">
-												<div id="goPrev"></div>
+							<div id="goPrev"></div>
 							<div id="leftY" class="y"></div>
 
 							<div id="leftD" class="d">
@@ -668,7 +991,7 @@
 
 					<div id="rightMonth">
 						<div class="Day">
-					<div id="goNext"></div>
+							<div id="goNext"></div>
 							<div id="rightY" class="y"></div>
 
 							<div id="rightD" class="d">
@@ -687,6 +1010,27 @@
 				<div id="submit">
 					<button id="sub-btn">완료</button>
 				</div>
+			</div>
+		</div>
+		<div id="timeSetCover"></div>
+		<div id="timeSet">
+			<div id="hour">
+				<div id="HList">
+					<c:forEach var="hour" begin="1" end="24" varStatus="index">
+						<div class="HSel" id="H${index.index }">${hour }</div>
+					</c:forEach>
+				</div>
+
+			</div>
+			<div id="min">
+				<div id="MList">
+					<c:forEach var="min" begin="0" end="59" varStatus="index">
+						<div class="MSel" id="M${index.index }">${min }</div>
+					</c:forEach>
+				</div>
+			</div>
+			<div id="apply">
+				<div id="apply-btn">적용</div>
 			</div>
 		</div>
 		<div id="Use">
@@ -717,8 +1061,65 @@
 							날짜별로 일정 시작시간과 종료시간을 설정할 수 있습니다.<br> 기본값은 <b>오전 10시부터
 								오후10시까지 입니다</b>
 						</div>
+						<div id="TravelDays">
+							<div id="columns">
+								<div class="text day" id="cDay">일자</div>
+								<div class="text week" id="cWeek">요일</div>
+								<div class="text stT" id="cSt">일정시작</div>
+								<div class="text fnT" id="cFn">일정종료</div>
+							</div>
+							<div id="PlanDetail"></div>
+						</div>
 					</div>
-					<div id="ChPlace">ChMoney</div>
+					<div id="Chbudget">
+						<div id="setting">
+
+							<div class="expense" id="hotel">
+								<div class="exTitle">숙박비</div>
+								<input placeholder="숙박비를 입력해주세요" type="number" value="0">
+								<div class="won">원</div>
+								<div class="feeNotice">숙박비로 사용할 최대 금액을 적어주세요</div>
+							</div>
+							<div class="expense" id="traffic">
+								<div class="exTitle">출발지 및 자동차 종류</div>
+								<input placeholder="출발지를 입력해주세요" >
+								<select>
+									<option>승용차</option>
+									<option>승합차</option>
+								</select>
+								<div class="feeNotice">출발지는 도로명 주소를 적어주세요.<br> 10인승이하는 승용, 11인승 이상은 승합으로 분류됩니다</div>
+							</div>
+
+							<div class="expense" id="food">
+								<div class="exTitle">식사비용</div>
+								<input placeholder="식비를 입력해주세요" type="number" value="0">
+								<div class="won">원</div>
+								<div class="feeNotice">식비로 사용할 최대 금액을 적어주세요</div>
+							</div>
+
+							<div class="expense" id="activity">
+								<div class="exTitle">활동 비용</div>
+								<input placeholder="활동비를 입력해주세요" type="number" value="0">
+								<div class="won">원</div>
+								<div class="feeNotice">기타 활동비로 사용할 금액을 적어주세요</div>
+							</div>
+
+							<div id="SetFinish">
+								<div id="SetFinish-btn">분석 및 상세조정하기</div>
+							</div>
+						</div>
+
+
+						<div id="result">
+							<div id="moneySum"></div>
+							<div id="Usedetail"></div>
+							<div id="graph"></div>
+							<div>
+								<div id="complete-btn"></div>
+								<div id="reset-btn"></div>
+							</div>
+						</div>
+					</div>
 					<div id="ChLodging">ChPlace</div>
 				</div>
 			</div>

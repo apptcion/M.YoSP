@@ -112,9 +112,8 @@ body {
 	padding: 64px;
 	height: 438px;
 	background-color: white;
-	z-index: 3;
+	z-index: 1001;
 	border-radius: 19px;
-
 	/* margin: auto; */
 }
 
@@ -148,7 +147,7 @@ body {
 	display : none;
 	position: fixed;
 	top: 0px;
-	z-index: 2;
+	z-index: 1000;
 	width: 100vw;
 	height: 100vh;
 	left: 0px;

@@ -41,7 +41,7 @@ footer{
 #view{
 	position : relative;
 	/* top : 130px; */
-	margin: 130px auto;
+	margin: 130px auto 10px;
 	border-top : solid 2px black;
 	border-bottom : solid 2px black;
 	width : 830px;
