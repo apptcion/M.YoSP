@@ -488,7 +488,6 @@ left: 10px;
 	border-radius : 5px;
 	width : 400px;
 	height : 200px;
-	border : solid 0.5px black;
 	justify-content: space-between;
 	overflow : hidden;
 	z-index: 11;
@@ -501,6 +500,15 @@ left: 10px;
 	width : 35%;
 }
 
+#HListTitle, #MListTitle{
+	height : 50px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	font-size : 18px;
+}
+
+	
 #HList{
 	width : 100%;
 	display : flex;
@@ -610,9 +618,16 @@ div[class*=timeSetSel]{
 	flex-wrap: wrap;
 }
 
+#hotel{
+	height: 110px;
+}
+
+#traffic{
+	height : 250px;
+}
+	
 .expense{
 	position : relative;
-	height: 125px;
 	width: 250px;
 	top : 50px;
 	left : 60px;
@@ -620,21 +635,38 @@ div[class*=timeSetSel]{
 	
 .expense>select{
 	position :relative;
-	top : 10px;
+	top: 3px;
+	left: -55px;
 	width : 170px;
 	height : 30px;
 }
 
 #traffic{
-	height : 150px;
+	height: 170px;
 }
 	
 #traffic>.feeNotice{
-	top : 15px;
+	top: 10px;
+	left: 20px;
 }
 
 #traffic>input{
 	width : 200px;
+}
+
+#food,#activity{
+	height : 100px;
+}
+
+#addr-search{
+	position : relative;
+	top: -36px;
+	height: 33px;
+	width: 50px;
+	left: 220px;
+	background-color: white;
+	border: solid 1px;
+	box-shadow: 1px 1px 1px 0.1px rgb(200,200,200);
 }
 	
 .exTitle{
@@ -667,7 +699,7 @@ div[class*=timeSetSel]{
 
 #SetFinish{
 	position : relative;
-	top: 200px;
+	top: 175px;
 	height : 50px;
 	display : flex;
 	justify-content : center;
@@ -677,7 +709,7 @@ div[class*=timeSetSel]{
 #SetFinish-btn{
 	width : 250px;
 	height : 80px;
-	background-color : rgb(214,230,200);
+	background-color: rgb(204,220,188);
 	color : white;
 	font-size : 18px;
 	font-family: math;
@@ -690,27 +722,96 @@ div[class*=timeSetSel]{
 
 
 #result{
-	background-color : rgb(214,230,245);
-	height : 300px;
+	height: 910px;
 	display : none;
 }
 
 #moneySum{
-	background-color : rgb(214,230,214);
 	height : 100px;
-	width : 50%;
+	left: 15px;
+	width: 96%;
 	font-size : 30px;
-	font-weight : 400;
+	font-weight: 600;
 	position : relative;
 	top : 40px;
+	display: flex;
+	justify-content: left;
+	align-items: center;
+}
+
+#moneySum>p{
+	color : RGB(41, 180, 255);
+	font-weight : 200;
+	margin-left : 10px;
+}
+
+#moneyIndiv{
+	position : relative;
+	top : 10px;
+	width: 70%;
+	left: 20px;
+	height: 90px;
+}
+
+#moneyIndiv>ul{
+	color : rgb(100,100,100);
+	font-weight : 200;
 }
 
 #Usedetail{
 	position : relative;
-	top : 50px;
+	top: 30px;
 }
 
 #graph{
-	background-color : rgb(63,204,163);
 	height : 1000px;
+}
+
+.DetailExpense{
+	position: relative;
+	border-bottom : solid 1px black;
+	font-size : 15px;
+	font-weight : 300;
+	left: 30px;
+	width: calc(100% - 50px);
+	min-height: 30px;
+	height : auto;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+div[id*=DetailTitle]{
+	font-size: 1rem;
+	width: calc(100% - 18px);
+}
+.scroll-btn{
+	/* width : 30px; */
+	/* position: relative; */
+	left: -5px;
+	border-bottom: solid 12px rgb(225,225,225);
+	border-left: solid 9px white;
+	border-right: solid 9px white;
+	border-top: solid 9px white;
+	/* width: 0px; */
+}
+
+.statusDown{
+	rotate : 180deg;
+}
+
+.ShowDetail{
+	height: auto;
+	width: 100%;
+	margin-bottom: 15px;
+	margin-top: 5px;
+	/* border-top: solid 1px black; */
+}
+
+.DetailAver, .DetailHeight, .DetailLow, .TrafficShowDetails{
+	position : relative;
+	left : 20px;
+	height: 25px;
+	top : 10px;
+	font-size : 0.85rem;
 }

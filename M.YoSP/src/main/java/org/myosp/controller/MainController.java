@@ -1,7 +1,9 @@
 package org.myosp.controller;
 
+import java.io.Console;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 import org.myosp.domain.AreaDTO;
 import org.myosp.domain.CustomUser;
@@ -9,11 +11,12 @@ import org.myosp.domain.MemberDTO;
 import org.myosp.service.BoardDAOImpl;
 import org.myosp.service.MemberDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -116,5 +119,23 @@ public class MainController {
 			}
 		});
 		
+	}
+	
+	@RequestMapping("/jusoPopup")
+	public void popUp(@RequestParam(value= "inputYn",required = false)String inputYn) {
+		
+	}
+	
+	@RequestMapping("/Sample")
+	public String Sample() {
+		return "test/Sample";
+	}
+	
+	@RequestMapping("/parsing")
+	@ResponseBody
+	public ResponseEntity<String> parsing(@RequestBody Map<String,Object> response) {
+		log.info(response);
+		
+		return ResponseEntity.ok("성공");
 	}
 }

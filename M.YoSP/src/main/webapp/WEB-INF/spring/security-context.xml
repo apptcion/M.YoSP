@@ -9,16 +9,18 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<bean id="CustomPasswordEncoder"
-		class="org.myosp.security.CustomNoOpPasswordEncoder"></bean>
+		class="org.myosp.security.CustomNoOpPasswordEncoder" />
 	<bean id="bcryptPasswordEncoder"
-		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	<bean id="CustomUserDetailsService"
-		class="org.myosp.security.CustomUserDetailsService"></bean>
+		class="org.myosp.security.CustomUserDetailsService" />
 	<bean id="CustomLoginSuccessHandler"
-		class="org.myosp.security.CustomLoginSuccessHandler"></bean>
+		class="org.myosp.security.CustomLoginSuccessHandler" />
+	<bean id="CustomCsrfMatcher" class="org.myosp.security.CustomCsrfMatcher" />
 
 
-	<security:http auto-config="true">
+	<security:http auto-config="true" >
+		<security:csrf request-matcher-ref="CustomCsrfMatcher"/>
 		<security:intercept-url pattern="/login"
 			access="isAnonymous()" />
 		<security:intercept-url pattern="/login/logout"
@@ -32,6 +34,8 @@
 
 		<security:intercept-url pattern="/MyPage"
 			access="isAuthenticated()" />
+			
+		<security:intercept-url pattern="/jusoPopup" access="permitAll"/>
 
 		<security:form-login login-page="/login"
 			login-processing-url="/login"
@@ -64,6 +68,5 @@
 				ref="bcryptPasswordEncoder" />
 		</security:authentication-provider>
 	</security:authentication-manager>
-
-
+	
 </beans>
