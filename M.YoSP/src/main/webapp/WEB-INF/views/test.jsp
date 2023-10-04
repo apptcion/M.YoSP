@@ -12,13 +12,24 @@
 
 
 <script>
-var container = document.getElementById('kakao_map');
-var options = {
-    center: new kakao.maps.LatLng(33.450701, 126.570667),// 지도의 중심좌표
-    level: 3 // 지도의 확대 레벨
-};
 
-var map = new kakao.maps.Map(container, options);
+var map = document.querySelector("#kakao_map")
+
+map.addEventListener('click',async function(){
+	console.log("After")
+	await testCallBack();
+	console.log("Before")	
+})
+
+function testCallBack(){
+	return new Promise((resolve,reject) =>{
+		setTimeout(() => {
+			console.log("CallBack")
+			resolve()
+		},2000)
+		
+	})
+}
 </script>
 </body>
 </html>

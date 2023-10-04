@@ -733,7 +733,7 @@ div[class*=timeSetSel]{
 	font-size : 30px;
 	font-weight: 600;
 	position : relative;
-	top : 40px;
+	/* top : 40px; */
 	display: flex;
 	justify-content: left;
 	align-items: center;
@@ -747,10 +747,10 @@ div[class*=timeSetSel]{
 
 #moneyIndiv{
 	position : relative;
-	top : 10px;
-	width: 70%;
+	/* top : 10px; */
+	width: 75%;
 	left: 20px;
-	height: 90px;
+	height: 150px;
 }
 
 #moneyIndiv>ul{
@@ -760,11 +760,13 @@ div[class*=timeSetSel]{
 
 #Usedetail{
 	position : relative;
-	top: 30px;
+	/* top: 30px; */
 }
 
 #graph{
+	position: relative;
 	height : 1000px;
+	top: 50px;
 }
 
 .DetailExpense{
@@ -815,3 +817,110 @@ div[id*=DetailTitle]{
 	top : 10px;
 	font-size : 0.85rem;
 }
+
+#IndivWarn{
+	font-weight : 200;
+	color : gray;
+	position : relative;
+	top : 5px;
+	left : 20px;
+	width: 274px;
+}
+
+
+#detailSet{
+	/* border-bottom: solid 1px black; */
+	position : relative;
+	top : 50px;
+	height : auto;
+	/* min-height : 400px; */
+	left: 20px;
+	width: calc(100% - 30px);
+}
+
+#detailSet-header{
+	height : 30px;
+	background-color : #F8F9FA;
+	font-weight : 200;
+	font-size : 13px;
+	display : flex;
+	color: #9aa4ab;
+	width: 360px;
+}
+
+#detailSet-Date, #detailSet-Sum{
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#detailSet-Date{
+	width: 95px;
+}
+
+#detailSet-Sum{
+	width: 250px;
+}
+	
+.DetailSet-scroll-btn{
+		border-bottom: solid 12px rgb(225,225,225);
+	border-left: solid 9px white;
+	border-right: solid 9px white;
+	border-top: solid 9px white;
+}
+
+#detailSet-rows{
+	width : 100%;
+}
+	
+.detailSet-row{
+	display: flex;
+	height: auto;
+	width: 100%;
+	flex-wrap: wrap;
+}
+	
+.detailSetDate{
+	width: 95px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+}
+	
+.detailSetSum{
+	width: 245px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+}
+
+.detailSet-scroll{
+	position : relative;
+	top : -8px;
+	right : 20px;
+	border-bottom: solid 12px rgb(225,225,225);
+	border-left: solid 9px white;
+	border-right: solid 9px white;
+	border-top: solid 9px white;
+}
+
+#originSetDetail{
+	display : none;
+}
+.SetDetail{
+	padding: 10px;
+	position : relative;
+	padding-left: 40px;
+	/* top : 10px; */
+	height : 100px;
+	width: calc(100% - 30px);
+	/* left: 30px; */
+	font-weight: 200;
+}
+
+input::-webkit-inner-spin-button {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+

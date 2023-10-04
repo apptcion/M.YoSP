@@ -13,12 +13,6 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
 	$(function() {
-		var TestJson = {
-				"test" : "test",
-				"test2" : "test2"
-		}
-		
-		console.log(Object.keys(TestJson))
 		
 		var sumTime = "총 12시간 0분"
 
@@ -33,7 +27,26 @@
 		var PlanLs;
 
 		var CanCheck = false;
+		
+		var HotelExpense;
+		var StartingPointstr;
+		var foodExpense;
+		var activityExpense;
 
+		var Hotel_max;
+		var Hotel_min;
+		
+		var Food_max;
+		var Food_min;
+		
+		var Activity_max;
+		var Activity_min;
+		
+		var HotelArr = [];
+		var FoodArr = [];
+		var ActivityArr = [];
+		
+		
 		let nowDate = new Date();
 		var LeftDate = new Date();
 		var RightDate = initRightDate();
@@ -47,7 +60,10 @@
 		var PlObjArr = [];
 		PlObjArr[0] = '';
 
-		var goGraph = false;
+		let gasoline = 1873;
+		let diesel = 1780;
+		let LPG = 1454;
+		let CNG =  820;
 
 		$("#period").append(StartDay + " - " + EndDay)
 		$("#sumTime").append(sumTime)
@@ -992,7 +1008,7 @@
 			}
 		}
 
-		$(document).on('click', 'img[id=calImg]', function() {
+		$(document).on('click', 'img[id=calImg]', function() { // 캘린더 초기화
 			CalSelisRun = false;
 			Core = 0;
 			Ass = 0;
@@ -1013,6 +1029,10 @@
 
 			$(".pass").removeClass("pass");
 
+			$("#setting").show();
+			$("#result").hide();
+			
+			
 			ShowCalendar();
 		})
 
@@ -1128,95 +1148,199 @@
 		}
 
 		$(document).on('click', 'div[id=SetFinish-btn]', function() {
-			var HotelExpense = Number($("#hotel>input").val());
-			var StartingPointstr = $("#traffic>input").val();
-			var foodExpense = Number($("#food>input").val());
-			var activityExpense = Number($("#activity>input").val())
+			if($("#traffic>input").val().length != 0){
+				HotelExpense = Number($("#hotel>input").val());
+				StartingPointstr = $("#traffic>input").val();
+				foodExpense = Number($("#food>input").val());
+				activityExpense = Number($("#activity>input").val())
 
-			var StartPointX;
-			var StartPointY;
-			//값 유효성 검사
-			if(HotelExpense == null) HotelExpense = 0; 
-			if(foodExpense == null) foodExpense = 0;
-			if(activityExpense == null) activityExpense = 0;
+				var StartPointX;
+				var StartPointY;
+				
+				var geocoder = new kakao.maps.services.Geocoder();
+				
+				geocoder.addressSearch(StartingPointstr, function(result, status) {
+					if (status == kakao.maps.services.Status.OK) {
+		
+						var GMFA = getMeter4Arrive(result[0].x,result[0].y);
+						var carType = $("#traffic>select").val();
+						GMFA.then(data =>{
+							if(carType == '승용차'){
+								var L = (data/24300)
+							}else{
+								var L = (data/33100)
+							}
+							
+							
+							$("#gasoline").text("가솔린(휘발유) 기준 : " + CMSV1(Math.round(L * gasoline))+ "원")
+							$("#diesel").text("디젤(경유) 기준 : " + CMSV1(Math.round(L * diesel))+"원")
+							$("#LPG").text("LPG기준 : " + CMSV1(Math.round(L * LPG)) + "원")
+							$("#CNG").text( "CNG기준 : " + CMSV1(Math.round(L * LPG)) +  "원")
+						})
+					} else {
+						alert("주소를 확인해주세요")
+					}
+				})
+				
+				if(HotelExpense == null) HotelExpense = 0; 
+				if(foodExpense == null) foodExpense = 0;
+				if(activityExpense == null) activityExpense = 0;
 
-			
+				var SumExpense = HotelExpense + foodExpense + activityExpense;
+				
+				$("#HotelIndiv").text("숙박비 : " + CMSV1(HotelExpense) + "원( 최대 " + CMSV1(HotelExpense) + "원)")
+				$("#FoodIndiv").text("식비 : " + CMSV1(foodExpense) + "원 (최대 " + CMSV1(foodExpense) + "원)")
+				$("#ActiveIndiv").text("활동비 : " + CMSV1(activityExpense) + "원 (최대 " + CMSV1(activityExpense) + "원)")
+				var PlDayLen = PlObjArr.length;
+				
+				if(PlDayLen == 2) PlDayLen = 3;
+				
+				var averActivity = Math.round(activityExpense / (PlDayLen - 1))
 
-			var geocoder = new kakao.maps.services.Geocoder();
+				var averFood = Math.round(foodExpense / (PlDayLen -1))
 
-			
-			geocoder.addressSearch(StartingPointstr, function(result, status) {
-				if (status == kakao.maps.services.Status.OK) {
-					console.log(result[0].x + ", " + result[0].y)
-					getTime4Arrive(result[0].x,result[0].y)
-					goGraph = true;
-				} else {
-					alert("주소를 확인해주세요")
-					return
+				var averHotel = Math.round(HotelExpense / (PlDayLen - 2))
+
+				var averSumExpense = averFood + averActivity + averHotel;
+				
+				Hotel_max = Math.round(averHotel)
+				Hotel_min = Math.round(averHotel)
+				
+				Activity_max = Math.round(averActivity)
+				Activity_min = Math.round(averActivity)
+				
+				Food_max = Math.round(averFood)
+				Food_min = Math.round(averFood)
+				
+				HotelArr.length = PlDayLen - 2;
+				FoodArr.length = PlDayLen - 2;
+				ActivityArr.length = PlDayLen - 3;
+				
+				
+				$("#HotelDetailAver").text("1박 평균 금액 : " + CMSV1(averHotel) + "원")
+				$("#HotelDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(averHotel) + "원")
+				$("#HotelDetailLow").text("일일 최소 소비 금액 : " + CMSV1(averHotel) + "원")
+				
+				$("#FoodDetailAver").text("하루 평균 금액 : " + CMSV1(averFood) + "원")
+				$("#FoodDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(averFood) + "원");
+				$("#FoodDetailLow").text("일일 최소 소비 금액 : " + CMSV1(averFood) + "원");
+				
+				$("#ActiveDetailAver").text("하루 평균 금액 : " + CMSV1(averActivity) + "원")
+				$("#ActiveDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(averActivity) + "원");
+				$("#ActiveDetailLow").text("일일 최소 소비 금액 : " + CMSV1(averActivity) + "원");
+
+				$("#detailSet-rows").empty();
+				
+				var tempDate = new Date(StartDay);
+				
+				var SetDetailDOM = $("#originSetDetail").clone();
+				SetDetailDOM.removeAttr('id')
+				SetDetailDOM.addClass('SetDetail')
+				
+				for(var i = 1;i < PlObjArr.length; i++){
+					$("#detailSet-rows").append("<div class='detailSet-row' id='DSW" + i + "'></div>")
+					$("#DSW" + i).append("<div class='detailSetDate'>" + (tempDate.getMonth() + 1) + "/" + tempDate.getDate() + "</div>")
+					$("#DSW" + i).append("<div class='detailSetSum'>" + CMSV1(averSumExpense) + "원</div>")
+					$("#DSW" + i).append("<div class='detailSet-scroll'></div>");
+					$("#originSetDetail").clone().removeAttr("id").addClass('SetDetail').appendTo("#DSW" + i)
+				
+					$(".Food_Detail_input").val(averFood)
+					$(".Activity_Detail_input").val(averActivity)
+					$(".Hotel_Detail_input").val(averHotel)			
+					
+					HotelArr[i-1] = Math.round(averHotel);
+					FoodArr[i-1] = Math.round(averFood);
+					ActivityArr[i-1] = Math.round(averActivity);
+					
+					if(i == (PlObjArr.length-1) && PlObjArr.length != 2){
+						$("#DSW" + i + ">.SetDetail>.SetDetail-Hotel>.Hotel_Detail_input").val("0");
+						$("#DSW" + i + ">.SetDetail>.SetDetail-Hotel>.Hotel_Detail_input").attr("disabled",true)
+						$("#DSW" + i + ">.detailSetSum").text(CMSV1(averFood + averActivity)+ "원")
+						HotelArr[i-1] = 0;
+					}
+					
+					
+					tempDate.setDate(tempDate.getDate() + 1)
 				}
-			})
-			
-
-			var SumExpense = HotelExpense + foodExpense + activityExpense;
-			$("#HotelIndiv").text("숙박비 : " + CMSV1(HotelExpense) + "원")
-			$("#TrafficIndiv").text(0 + "원")
-			$("#FoodIndiv").text("식비 : " + CMSV1(foodExpense) + "원")
-			$("#ActiveIndiv").text("활동비 : " + CMSV1(activityExpense) + "원")
-			var PlDayLen = PlObjArr.length;
-			
-			CMSV1(SumExpense);
-			
-			var averActivity = Math.round(activityExpense / (PlDayLen - 1))
-
-			var averFood = Math.round(foodExpense / (PlDayLen -1))
-
-			var averHotel = Math.round(HotelExpense / (PlDayLen - 2))
-
-			$("#HotelDetailAver").text("1박 평균 금액 : " + CMSV1(averHotel) + "원")
-			$("#HotelDetailHeight").text("일일 최고 소비 금액 : ")
-			$("#HotelDetailLow").text("일일 최소 소비 금액 : ")
-			
-			$("#gasoline").text("가솔린(휘발유) 기준 : " + "원")
-			$("#diesel").text("디젤(경유) 기준 : " + "원")
-			$("#LPG").text("LPG기준 : " + "원")
-			$("#CNG").text( "CNG기준 : " + "원")
-			$("#electric").text("전기 기준 : " + "원")
-			$("#hydrogen").text("수소 기준 : " + "원")
-			
-			
-			
-			
-			
-			
-			$("#FoodDetailAver").text("하루 평균 금액 : " + CMSV1(averFood) + "원")
-			$("#FoodDetailHeight").text("일일 최고 소비 금액 : ");
-			$("#FoodDetailLow").text("일일 최소 소비 금액 : ");
-			
-			$("#ActiveDetailAver").text("하루 평균 금액 : " + CMSV1(averActivity) + "원")
-			$("#ActiveDetailHeight").text("일일 최고 소비 금액 : ");
-			$("#ActiveDetailLow").text("일일 최소 소비 금액 : ");
-			
-			if (goGraph) {
+				
+				$(".SetDetail").slideUp(0);
+				
 				$("#setting").hide();
 
 				$("#moneySum>p").text(CMSV1(SumExpense))
 				$(".ShowDetail").slideUp(0);
 				$("#result").show();
+			}else{
+				
+				alert("존재하지 않는 주소입니다");
 			}
 			////////////////
 		})
+		
+		
+		$(document).on('keyup','input[class=Hotel_Detail_input]',function(e){
+			
+			$(this).val(toVaildNumber($(this).val(),e));
+			
+			var thisDSWID = $(this).parent().parent().parent().attr("id").substring(3);
+			
+			var HotelSum = 0;
 
+			for(var i =0; i < HotelArr.length; i++){
+				if((i+1) != thisDSWID){
+					HotelSum = HotelSum + HotelArr[i]
+				}
+				console.log(HotelSum)
+			}
+			HotelSum = HotelSum + Number($(this).val())
+			if(HotelSum > HotelExpense){
+				alert("최대 금액을 초과하였습니다");
+				$(this).val(HotelArr[thisDSWID])
+			}else{
+				
+				HotelArr[thisDSWID] = Number($(this).val());
+				
+				tempHotelArr = HotelArr.slice(0,HotelArr.length-1)
+				
+				var testArr = [ 1,2,3,4,5,6,7,8]
+				console.log(testArr)
+				console.log(HotelArr)
+				Hotel_max = Math.max.apply(null,tempHotelArr);
+				$("#HotelDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(Hotel_max) + "원")
+				
+				Hotel_min = Math.min.apply(null,tempHotelArr);
+				$("#HotelDetailLow").text("일일 최소 소비 금액 : " + CMSV1(Hotel_min) + "원")
+			}
+			
+		})
+		$(document).on('keyup','input[class*=Activity_Detail_input]',function(){
+			
+		})
+		$(document).on('keyup','input[class*=Food_Detail_input]',function(){
+			
+		})
+		
+
+		$(document).on('click','div[class*=detailSet-scroll]',function(){
+			if(!$(this).attr("class").includes("statusDown")){ // ^ 상태라면
+				$(this).siblings(".SetDetail").slideDown(50);
+				$(this).parent().css("margin-top","10px")
+				$(this).addClass("statusDown")
+			}else{
+				$(this).siblings(".SetDetail").slideUp(50);
+				$(this).parent().css("margin-top","0px")
+				$(this).removeClass("statusDown")			
+			}
+		})
+		
 		$(document).on('click','div[class*=scroll-btn]',function(){
-			console.log("click!!")
-			console.log($(this).attr("class"))
+			
 			if($(this).attr("class").includes("statusDown")){
 
-				console.log("Down to Up")
 				$(this).siblings(".ShowDetail").slideUp(50);
 				$(this).parent().css("margin-top","0px")
 				$(this).removeClass("statusDown")
 			}else{
-				console.log("up to Down")
 				
 				$(this).addClass("statusDown");
 				$(this).siblings(".ShowDetail").slideDown(50);
@@ -1226,7 +1350,7 @@
 		
 		String.prototype.insertAt = function(index,str){
 			return this.slice(0,index) + str + this.slice(index)
-		}
+		};
 		
 		String.prototype.reverse = function(){
 			var splitString = this.split("");
@@ -1237,8 +1361,6 @@
 		}
 		
 		function CMSV1(OriginNum){
-			
-			var Test = "10000"
 
 			var NumLength = String(OriginNum).length;
 			var NumStr = String(OriginNum).reverse();
@@ -1261,27 +1383,25 @@
 			$("#result").hide();
 		})
 		
-		$('input[type=number]').keyup(function(){
-			var CheckStr = $(this).val();
-			
-			if(CheckStr.length != 0){
-				var FZero = CheckStr.indexOf("0")
-				var FNum = CheckStr.indexOf("1")
-				
-				if(CheckStr.length != 1){
-					
-					if(FNum < FZero && FNum != -1){
-						console.log("유효한 숫자")
-					}else{
-						$(this).val(CheckStr.substring(1));		
-					}
-				}
-			}else{
-				$(this).val(CheckStr.substring(1));
-			}
+		$(document).on('keyup','input[class=Setting_input]',function(e){
+			$(this).val(toVaildNumber($(this).val(),e));
 		})
+		
+		function toVaildNumber(CheckStr,e){			
+			if(e.keyCode == 190 || e.keyCode == 187 || e.keyCode == 189){
+				return '0';
+			}
 
-		function getTime4Arrive(X,Y){
+			if(CheckStr != '0' && CheckStr.indexOf('0') == 0){
+				CheckStr = CheckStr.substring(1)
+				return CheckStr;
+			}
+			
+			return CheckStr;
+
+		}
+
+		function getMeter4Arrive(X,Y){
 			const apiKey = "a4deef496ca0e06141a54eeea561a0d9";
 			
 			const startX = X;
@@ -1294,10 +1414,11 @@
 			
 			var Url = "https://apis-navi.kakaomobility.com/v1/directions"
 			var apiUrl = Url + "?origin="+origin + "&destination=" + destination
-			console.log(apiUrl)
+			
+			var resultVal;
 			
 			
-			const distance = fetch(apiUrl,{
+			const result = fetch(apiUrl,{
 				method : 'GET',
 				headers : {
 					'Authorization' : 'KakaoAK 75bc99a09ba089741f053c9072142bd7'
@@ -1312,9 +1433,12 @@
 				})
 				.then(data =>{
 					var summary = data.routes[0].summary;
-					var summaryKey = Object.keys(summary)
-					return summary[summaryKey[6]] //summary[distance]
+				
+					return summary['distance'];
 				})
+				
+				return result;
+				
 				
 				
 		}
@@ -1393,8 +1517,8 @@
 		<div id="timeSetCover"></div>
 		<div id="timeSet">
 			<div id="hour">
-			
-					<div id="HListTitle">시간</div>
+
+				<div id="HListTitle">시간</div>
 				<div id="HList">
 					<c:forEach var="hour" begin="1" end="24" varStatus="index">
 						<div class="HSel" id="H${index.index }">${hour }</div>
@@ -1457,7 +1581,7 @@
 
 							<div class="expense" id="hotel">
 								<div class="exTitle">숙박비</div>
-								<input placeholder="숙박비를 입력해주세요" type="number" value="0">
+								<input placeholder="숙박비를 입력해주세요" type="number" value="0" min="0" class="Setting_input">
 								<div class="won">원</div>
 								<div class="feeNotice">숙박비로 사용할 최대 금액을 적어주세요</div>
 							</div>
@@ -1476,14 +1600,14 @@
 
 							<div class="expense" id="food">
 								<div class="exTitle">식사비용</div>
-								<input placeholder="식비를 입력해주세요" type="number" value="0">
+								<input placeholder="식비를 입력해주세요" type="number" value="0" min="0" class="Setting_input">
 								<div class="won">원</div>
 								<div class="feeNotice">식비로 사용할 최대 금액을 적어주세요</div>
 							</div>
 
 							<div class="expense" id="activity">
 								<div class="exTitle">활동 비용</div>
-								<input placeholder="활동비를 입력해주세요" type="number" value="0">
+								<input placeholder="활동비를 입력해주세요" type="number" value="0" min="0" class="Setting_input">
 								<div class="won">원</div>
 								<div class="feeNotice">기타 활동비로 사용할 금액을 적어주세요</div>
 							</div>
@@ -1496,66 +1620,87 @@
 
 						<div id="result">
 							<div id="moneySum">
-								총 합계 : <p></p>원
+								총 합계 :
+								<p></p>
+								원
 							</div>
 							<div id="moneyIndiv">
+								<div id="IndivWarn">교통비는 총 합계에 포함되지 않습니다</div>
+
 								<ul>
 									<li id="HotelIndiv"></li>
-									<li id="TrafficIndiv"></li>
 									<li id="FoodIndiv"></li>
 									<li id="ActiveIndiv"></li>
 								</ul>
 							</div>
-							
+
 							<div id="Usedetail">
 								<div id="HotelDetail" class="DetailExpense">
-									<div id="HotelDetailTitle">숙박비</div><div class="scroll-btn"></div>
-									
+									<div id="HotelDetailTitle">숙박비</div>
+									<div class="scroll-btn"></div>
+
 									<div id="HotelShowDetail" class="ShowDetail">
 										<div id="HotelDetailAver" class="DetailAver"></div>
 										<div id="HotelDetailHeight" class="DetailHeight"></div>
 										<div id="HotelDetailLow" class="DetailLow"></div>
 									</div>
-									
+
 								</div>
 								<div id="TrafficDetail" class="DetailExpense">
-									<div id="TrafficDetailTitle">교통비</div><div class="scroll-btn"></div>
-								
+									<div id="TrafficDetailTitle">교통비</div>
+									<div class="scroll-btn"></div>
+
 									<div id="TrafficShowDetail" class="ShowDetail">
 										<div id="gasoline" class="TrafficShowDetails"></div>
 										<div id="diesel" class="TrafficShowDetails"></div>
 										<div id="LPG" class="TrafficShowDetails"></div>
 										<div id="CNG" class="TrafficShowDetails"></div>
-										<div id="electric" class="TrafficShowDetails"></div>
-										<div id="hydrogen" class="TrafficShowDetails"></div>
 									</div>
-								
+
 								</div>
 								<div id="FoodDetail" class="DetailExpense">
-									<div id="FoodDetailTitle">식사비</div><div class="scroll-btn"></div>
-								
+									<div id="FoodDetailTitle">식사비</div>
+									<div class="scroll-btn"></div>
+
 									<div id="FoodShowDetail" class="ShowDetail">
-									
+
 										<div id="FoodDetailAver" class="DetailAver"></div>
 										<div id="FoodDetailHeight" class="DetailHeight"></div>
 										<div id="FoodDetailLow" class="DetailLow"></div>
 									</div>
-								
+
 								</div>
 								<div id="ActiveDetail" class="DetailExpense">
-									<div id="ActiveDetailTitle">활동비</div><div class="scroll-btn"></div>
-								
+									<div id="ActiveDetailTitle">활동비</div>
+									<div class="scroll-btn"></div>
+
 									<div id="ActiveShowDetail" class="ShowDetail">
 										<div id="ActiveDetailAver" class="DetailAver"></div>
 										<div id="ActiveDetailHeight" class="DetailHeight"></div>
 										<div id="ActiveDetailLow" class="DetailLow"></div>
 									</div>
-								
+
 								</div>
 
 							</div>
+							<!-- For CLone -->
+							<div id="originSetDetail">
+								<div class="SetDetail-Hotel">숙박비 : <input type="number" min="0" class="Hotel_Detail_input"></div>
+								<div class="SetDetail-Food">식사비 : <input type="number" min="0" class="Food_Detail_input"></div>
+								<div class="SetDetail-Activity">활동비 : <input type="number" min="0" class="Activity_Detail_input"></div>
+								</div>
+							<!-- End For Clone -->
+							<div id="detailSet">
+								<div id="detailSet-header">
+									<div id="detailSet-Date">일자</div>
+									<div id="detailSet-Sum">사용금액</div>
+								</div>	
+								<div id="detailSet-rows"></div>
+							
+							
+							</div>
 							<div id="graph"></div>
-							<div>
+							<div id="CR-btn">
 								<div id="complete-btn"></div>
 								<div id="reset-btn"></div>
 							</div>
