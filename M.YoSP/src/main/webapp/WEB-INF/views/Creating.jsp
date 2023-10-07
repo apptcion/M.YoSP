@@ -26,12 +26,17 @@
 		var PlanSt;
 		var PlanLs;
 
-		var CanCheck = false;
+		var averActivity;
+		var averFood;
+		var averHotel;
+
+		var SumExpense = 0;
+		var averSumExpense;
 		
-		var HotelExpense;
+		var HotelExpense,HotelExpenseMax;
 		var StartingPointstr;
-		var foodExpense;
-		var activityExpense;
+		var foodExpense,foodExpenseMax;
+		var activityExpense,activityExpenseMax;
 
 		var Hotel_max;
 		var Hotel_min;
@@ -45,6 +50,8 @@
 		var HotelArr = [];
 		var FoodArr = [];
 		var ActivityArr = [];
+		
+		var StartCity;
 		
 		
 		let nowDate = new Date();
@@ -60,6 +67,8 @@
 		var PlObjArr = [];
 		PlObjArr[0] = '';
 
+		var GMFA;
+		
 		let gasoline = 1873;
 		let diesel = 1780;
 		let LPG = 1454;
@@ -68,29 +77,117 @@
 		$("#period").append(StartDay + " - " + EndDay)
 		$("#sumTime").append(sumTime)
 
-		$("#steps>div").click(function() {
-
-			$("#steps>div").removeClass();
-			$("#steps>div").addClass("noSel");
-
-			if ($(this).attr("id") == 'step1') {
-
-				$(this).removeClass("noSel")
-				$(this).addClass("select")
-				$("#StepImplList").css("top", "0vh");
-			} else if ($(this).attr("id") == 'step2') {
-
-				$(this).removeClass("noSel")
-				$(this).addClass("select")
-				$("#StepImplList").css("top", "-100vh");
-			} else {
-
-				$(this).removeClass("noSel")
-				$(this).addClass("select")
-				$("#StepImplList").css("top", "-200vh");
+		$("#step1, #step2, #step3").click(function() {
+			
+			$(".select").addClass("noSel")
+			$(".select").removeClass("select")
+			
+			$("#StepImplList").children().hide();
+			
+			var go = $(this).attr('id').substring(4)
+			
+			
+			switch(go){
+			case '1':
+				$("#ChDate").show();
+				break;
+			case '2':
+				$("#Chcash").show();
+				break;
+			case '3':
+				createStep3();
+				$("#Final_confirmation").show();
+				break;
 			}
 
+			$(this).removeClass("noSel")
+			$(this).addClass("select")
 		})
+		
+		
+		
+		
+		$("#detailSet-complete").click(function(){
+			$("#step2").removeClass("select")
+			$("#step2").addClass("noSel")
+			
+			$("#step3").addClass("select")
+			$("#step3").removeClass("noSel")
+			
+			$("#Chcash").hide();
+			$("#Final_confirmation").show();
+			createStep3();
+		})
+		
+		$('#next').click(function(){
+			var go = Number($(".select").attr('id').substring(4)) + 1;
+			
+			$("#StepImplList").children().hide();
+			$(".select").addClass("noSel")
+			$(".select").removeClass("select")
+			
+			
+			switch(go){
+			case 4: // 3 + 1 TODO /////////////////////////////////
+				$("#ChDate").show();
+				$("#step1").removeClass("noSel")
+				$("#step1").addClass("select")
+				break;
+			case 2:
+				$("#Chcash").show();
+				$("#step2").removeClass("noSel")
+				$("#step2").addClass("select")
+				break;
+			case 3:
+				$("#Final_confirmation").show();
+				$("#step3").removeClass("noSel")
+				$("#step3").addClass("select")
+				
+				createStep3();
+				break;
+			}
+			
+		})
+		
+		function canCreatePlan(){
+			if(typeof HotelExpense == 'undefined' || typeof foodExpense == 'undefined' || typeof activityExpense == 'undefined'){
+				return false;
+			}else if(typeof StartingPointstr == 'undefined'){
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		function createStep3(){
+			$("#Plperiod").text(StartDay + " - " + EndDay);
+			try{
+			var carType = $("#traffic>select").val();
+			GMFA.then(data =>{
+				$("#distance").html("거리 : <p>" + (data/10) + "km</p>");
+				
+				if(carType == '승용차'){
+					var L = (data/24300)
+				}else{
+					var L = (data/33100)
+				}			
+							
+				$("#Final_gasoline").html("가솔린(휘발유) 기준 : <p>" + CMSV1(Math.round(L * gasoline))+ "원</p>")
+				$("#Final_diesel").html("디젤(경유) 기준 : <p>" + CMSV1(Math.round(L * diesel))+"원</p>")
+				$("#Final_LPG").html("LPG기준 : <p>" + CMSV1(Math.round(L * LPG)) + "원</p>")
+				$("#Final_CNG").html( "CNG기준 : <p>" + CMSV1(Math.round(L * CNG)) +  "원</p>")
+				
+				$("#Final_sumExpense").html("총 비용 : <p>" + CMSV1(SumExpense) + "원</p>")
+				
+				$("#Final_HotelExpense").html("숙박비 : <p>" + CMSV1(HotelExpense) + "원</p>");
+				$("#Final_FoodExpense").html("식사비 : <p>" + CMSV1(foodExpense) + "원</p>");
+				$("#Final_ActivityExpense").html("활동비 : <p>" + CMSV1(activityExpense) + "원</p>");
+			})
+			}catch{
+				//NOTHING
+			}
+			
+		}
 
 		$("#goPrev").click(function() {
 			if (!isMin()) {
@@ -118,6 +215,8 @@
 
 		})
 
+		
+		
 		$("#goNext").click(function() {
 			LeftDate.setFullYear(RightDate.getFullYear());
 			LeftDate.setMonth(RightDate.getMonth());
@@ -1016,8 +1115,6 @@
 			PlanSt = 0;
 			PlanLs = 0;
 
-			CanCheck = false;
-
 			nowDate = new Date();
 			LeftDate = new Date();
 			RightDate = initRightDate();
@@ -1162,7 +1259,7 @@
 				geocoder.addressSearch(StartingPointstr, function(result, status) {
 					if (status == kakao.maps.services.Status.OK) {
 		
-						var GMFA = getMeter4Arrive(result[0].x,result[0].y);
+						GMFA = getMeter4Arrive(result[0].x,result[0].y);
 						var carType = $("#traffic>select").val();
 						GMFA.then(data =>{
 							if(carType == '승용차'){
@@ -1175,7 +1272,7 @@
 							$("#gasoline").text("가솔린(휘발유) 기준 : " + CMSV1(Math.round(L * gasoline))+ "원")
 							$("#diesel").text("디젤(경유) 기준 : " + CMSV1(Math.round(L * diesel))+"원")
 							$("#LPG").text("LPG기준 : " + CMSV1(Math.round(L * LPG)) + "원")
-							$("#CNG").text( "CNG기준 : " + CMSV1(Math.round(L * LPG)) +  "원")
+							$("#CNG").text( "CNG기준 : " + CMSV1(Math.round(L * CNG)) +  "원")
 						})
 					} else {
 						alert("주소를 확인해주세요")
@@ -1185,23 +1282,27 @@
 				if(HotelExpense == null) HotelExpense = 0; 
 				if(foodExpense == null) foodExpense = 0;
 				if(activityExpense == null) activityExpense = 0;
-
-				var SumExpense = HotelExpense + foodExpense + activityExpense;
 				
-				$("#HotelIndiv").text("숙박비 : " + CMSV1(HotelExpense) + "원( 최대 " + CMSV1(HotelExpense) + "원)")
-				$("#FoodIndiv").text("식비 : " + CMSV1(foodExpense) + "원 (최대 " + CMSV1(foodExpense) + "원)")
-				$("#ActiveIndiv").text("활동비 : " + CMSV1(activityExpense) + "원 (최대 " + CMSV1(activityExpense) + "원)")
+				HotelExpenseMax = HotelExpense;
+				foodExpenseMax = foodExpense;
+				activityExpenseMax = activityExpense;
+				
+				SumExpense = HotelExpense + foodExpense + activityExpense;
+				
+				$("#HotelIndiv").text("숙박비 : " + CMSV1(HotelExpense) + "원 (최대 " + CMSV1(HotelExpenseMax) + "원)")
+				$("#FoodIndiv").text("식비 : " + CMSV1(foodExpense) + "원 (최대 " + CMSV1(foodExpenseMax) + "원)")
+				$("#ActiveIndiv").text("활동비 : " + CMSV1(activityExpense) + "원 (최대 " + CMSV1(activityExpenseMax) + "원)")
 				var PlDayLen = PlObjArr.length;
 				
 				if(PlDayLen == 2) PlDayLen = 3;
 				
-				var averActivity = Math.round(activityExpense / (PlDayLen - 1))
+				averActivity = Math.round(activityExpense / (PlDayLen - 1))
 
-				var averFood = Math.round(foodExpense / (PlDayLen -1))
+				averFood = Math.round(foodExpense / (PlDayLen -1))
 
-				var averHotel = Math.round(HotelExpense / (PlDayLen - 2))
+				averHotel = Math.round(HotelExpense / (PlDayLen - 2))
 
-				var averSumExpense = averFood + averActivity + averHotel;
+				averSumExpense = averFood + averActivity + averHotel;
 				
 				Hotel_max = Math.round(averHotel)
 				Hotel_min = Math.round(averHotel)
@@ -1215,7 +1316,6 @@
 				HotelArr.length = PlDayLen - 2;
 				FoodArr.length = PlDayLen - 2;
 				ActivityArr.length = PlDayLen - 3;
-				
 				
 				$("#HotelDetailAver").text("1박 평균 금액 : " + CMSV1(averHotel) + "원")
 				$("#HotelDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(averHotel) + "원")
@@ -1277,6 +1377,24 @@
 			////////////////
 		})
 		
+		$('#Reset>a').click(function(){
+			
+			$("#hotel>input").val()
+			
+			$(".statusDown").siblings(".ShowDetail").slideUp(0)
+			
+			$(".statusDown").removeClass("statusDown")
+			
+			$("#setting").show();
+			$("#result").hide();
+		})
+		
+		
+		$(document).on('keyup','input',function(e){
+			if(e.keyCode == 38 || e.keyCode == 40){
+				$(this).val(0)
+			}
+		})
 		
 		$(document).on('keyup','input[class=Hotel_Detail_input]',function(e){
 			
@@ -1290,34 +1408,146 @@
 				if((i+1) != thisDSWID){
 					HotelSum = HotelSum + HotelArr[i]
 				}
-				console.log(HotelSum)
 			}
 			HotelSum = HotelSum + Number($(this).val())
-			if(HotelSum > HotelExpense){
+			if(HotelSum > HotelExpenseMax){
 				alert("최대 금액을 초과하였습니다");
 				$(this).val(HotelArr[thisDSWID])
 			}else{
 				
 				HotelArr[thisDSWID] = Number($(this).val());
 				
-				tempHotelArr = HotelArr.slice(0,HotelArr.length-1)
+				var tempHotelArr = [];
+				if(HotelArr.length != 1){
+					tempHotelArr = HotelArr.slice(0,HotelArr.length-1)
+						
+				}else{
+					tempHotelArr = HotelArr;
+				}
 				
-				var testArr = [ 1,2,3,4,5,6,7,8]
-				console.log(testArr)
-				console.log(HotelArr)
 				Hotel_max = Math.max.apply(null,tempHotelArr);
 				$("#HotelDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(Hotel_max) + "원")
 				
 				Hotel_min = Math.min.apply(null,tempHotelArr);
 				$("#HotelDetailLow").text("일일 최소 소비 금액 : " + CMSV1(Hotel_min) + "원")
+			
+				
+				HotelExpense = 0;
+				for(var i = 0; i < HotelArr.length;i++){
+					HotelExpense = HotelExpense + HotelArr[i]
+				}
+				averHotel = Math.round(HotelExpense / HotelArr.length);
+			
+				SumExpense = HotelExpense + foodExpense + activityExpense;
+				
+				$("#HotelDetailAver").text("1박 평균 금액 : " + CMSV1(averHotel) + "원")
+				
+				$("#HotelIndiv").text("숙박비 : " + CMSV1(HotelExpense) + "원 (최대 " + CMSV1(HotelExpenseMax) + "원)")
+			
+				$("#moneySum>p").text(CMSV1(SumExpense))
 			}
-			
 		})
-		$(document).on('keyup','input[class*=Activity_Detail_input]',function(){
+		$(document).on('keyup','input[class*=Activity_Detail_input]',function(e){
+			$(this).val(toVaildNumber($(this).val(),e));
 			
+			var thisDSWID = $(this).parent().parent().parent().attr("id").substring(3);
+			
+			var ActivitySum = 0;
+
+			for(var i =0; i < ActivityArr.length; i++){
+				if((i+1) != thisDSWID){
+					ActivitySum = ActivitySum + ActivityArr[i]
+				}
+			}
+			ActivitySum = ActivitySum + Number($(this).val())
+			
+			if(ActivitySum > activityExpenseMax){
+				alert("최대 금액을 초과하였습니다");
+				$(this).val(ActivityArr[thisDSWID])
+			}else{
+				
+				ActivityArr[thisDSWID] = Number($(this).val());
+				
+				var tempActivityArr = [];
+				if(ActivityArr.length != 1){
+					tempActivityArr = ActivityArr.slice(0,HotelArr.length-1)
+						
+				}else{
+					tempActivityArr = ActivityArr;
+				}
+				
+				Activity_max = Math.max.apply(null,tempActivityArr);
+				$("#ActiveDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(Activity_max) + "원")
+				
+				Activity_min = Math.min.apply(null,tempActivityArr);
+				$("#ActiveDetailLow").text("일일 최소 소비 금액 : " + CMSV1(Activity_min) + "원")
+			
+				
+				activityExpense = 0;
+				for(var i = 0; i < ActivityArr.length;i++){
+					activityExpense = activityExpense + ActivityArr[i]
+				}
+				averActivity = Math.round(activityExpense / ActivityArr.length);
+			
+				SumExpense = HotelExpense + foodExpense + activityExpense;
+				
+				$("#ActiveDetailAver").text("하루 평균 금액 : " + CMSV1(averActivity) + "원")
+				 
+				$("#ActiveIndiv").text("활동비 : " + CMSV1(activityExpense) + "원 (최대 " + CMSV1(activityExpenseMax) + "원)")
+			
+				$("#moneySum>p").text(CMSV1(SumExpense))
+			}
 		})
 		$(document).on('keyup','input[class*=Food_Detail_input]',function(){
+			$(this).val(toVaildNumber($(this).val(),e));
 			
+			var thisDSWID = $(this).parent().parent().parent().attr("id").substring(3);
+			
+			var FoodSum = 0;
+
+			for(var i =0; i < FoodArr.length; i++){
+				if((i+1) != thisDSWID){
+					FoodSum = FoodSum + FoodArr[i]
+				}
+			}
+			FoodSum = FoodSum + Number($(this).val())
+			
+			if(FoodSum > foodExpenseMax){
+				alert("최대 금액을 초과하였습니다");
+				$(this).val(FoodArr[thisDSWID])
+			}else{
+				
+				FoodArr[thisDSWID] = Number($(this).val());
+				
+				var tempFoodArr = [];
+				if(FoodArr.length != 1){
+					tempFoodArr = FoodArr.slice(0,HotelArr.length-1)
+						
+				}else{
+					tempFoodArr = FoodArr;
+				}
+				
+				Food_max = Math.max.apply(null,tempFoodArr);
+				$("#FoodDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(Food_max) + "원")
+				
+				Food_min = Math.min.apply(null,tempFoodArr);
+				$("#FoodDetailLow").text("일일 최소 소비 금액 : " + CMSV1(Food_min) + "원")
+			
+				
+				foodExpense = 0;
+				for(var i = 0; i < FoodArr.length;i++){
+					foodxpense = foodExpense + FoodArr[i]
+				}
+				averFood = Math.round(foodExpense / FoodArr.length);
+			
+				SumExpense = HotelExpense + foodExpense + activityExpense;
+				
+				$("#FoodDetailAver").text("하루 평균 금액 : " + CMSV1(averFood) + "원")
+				 
+				$("#FoodIndiv").text("활동비 : " + CMSV1(foodExpense) + "원 (최대 " + CMSV1(foodExpenseMax) + "원)")
+			
+				$("#moneySum>p").text(CMSV1(SumExpense))
+			}
 		})
 		
 
@@ -1379,6 +1609,10 @@
 			
 			$("#hotel>input").val()
 			
+			$(".statusDown").siblings(".ShowDetail").slideUp(0)
+			
+			$(".statusDown").removeClass("statusDown")
+			
 			$("#setting").show();
 			$("#result").hide();
 		})
@@ -1392,9 +1626,8 @@
 				return '0';
 			}
 
-			if(CheckStr != '0' && CheckStr.indexOf('0') == 0){
+			while(CheckStr != '0' && CheckStr.indexOf('0') == 0){
 				CheckStr = CheckStr.substring(1)
-				return CheckStr;
 			}
 			
 			return CheckStr;
@@ -1454,9 +1687,10 @@
 		//var pop = window.open("/popup/jusoPopup.jsp","pop","scrollbars=yes, resizable=yes"); 
 	}
 
-	function jusoCallBack(roadFullAddr) {
+	function jusoCallBack(roadFullAddr,siNm) {
 		// 팝업페이지에서 주소입력한 정보를 받아서, 현 페이지에 정보를 등록합니다.
 		$("#traffic>input").val(roadFullAddr);
+		$("#StartingPoint").html("출발지 : <p>" + siNm + "</p>")
 
 	}
 </script>
@@ -1576,7 +1810,7 @@
 							<div id="PlanDetail"></div>
 						</div>
 					</div>
-					<div id="Chbudget">
+					<div id="Chcash">
 						<div id="setting">
 
 							<div class="expense" id="hotel">
@@ -1699,14 +1933,39 @@
 							
 							
 							</div>
-							<div id="graph"></div>
 							<div id="CR-btn">
-								<div id="complete-btn"></div>
-								<div id="reset-btn"></div>
+								<div id="detailSet-complete">세부설정 완료</div>
+								<div id="Reset"><a>예산 재설정</a></div>
 							</div>
 						</div>
 					</div>
-					<div id="ChLodging">ChPlace</div>
+					<div id="Final_confirmation">
+						<div id="confir_Title">최종확인 및 일정 생성</div>
+						<div id="Plperiod"></div>
+						<div id="StartingPoint">출발지 : <p>설정되지 않음</p></div>
+						<div id="EndPoint">도착지 : <p>${local.getKoreanName() }</p></div>
+						<div id="distance">거리 : <p>계산 중 ...</p></div>
+						
+						<div id="Final_sumExpense">총 합계 : <p>계산 불가</p></div>
+						<div id="IndivExpense">
+							<div id="Final_HotelExpense">숙박비 : <p>입력되지 않음</p></div>
+							<div id="Final_FoodExpense">식사비 : <p>입력되지 않음</p></div>
+							<div id="Final_ActivityExpense">활동비 : <p>입력되지 않음</p></div>
+							<div id="Final_TrafficExpense">
+								<div id="TrafficTitle">교통비</div>
+								<ul>
+									<li id="Final_gasoline">계산중 ...</li>
+									<li id="Final_diesel">계산중 ...</li>
+									<li id="Final_LPG">계산중 ...</li>
+									<li id="Final_CNG">계산중 ...</li>
+								</ul>		
+							</div>
+							<div id="Final_warn">교통비는 유가에 따라 <b>정확하지 않을 수</b> 있으며, 제주도의 경우 <b>유효하지 않습니다.</b></div>
+						</div>
+						
+						<div id="Creat">생성하기</div>
+
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1736,21 +1995,6 @@
 	//지도에 마커를 표시합니다
 	marker.setMap(map);
 
-	//지도에 클릭 이벤트를 등록합니다
-	//지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-	kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-
-		// 클릭한 위도, 경도 정보를 가져옵니다 
-		var latlng = mouseEvent.latLng;
-
-		// 마커 위치를 클릭한 위치로 옮깁니다
-		marker.setPosition(latlng);
-
-		var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-		message += '경도는 ' + latlng.getLng() + ' 입니다';
-
-		console.log(message)
-	});
 	kakao.maps.event.addListener(map, 'zoom_changed', function() {
 
 		// 지도의 현재 레벨을 얻어옵니다

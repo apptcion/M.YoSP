@@ -28,7 +28,6 @@ main{
 	height : 100vh;
 	width: 500px;
 	font-weight: 600;
-	/* background-color : #a3cca2; */
 }
 #steps{
 	height : 100vh;
@@ -107,7 +106,6 @@ main{
 	left : 0px;
 	height : 100vh;
 	width: 400px;
-	/* background-color : skyblue; */
 }
 
 
@@ -115,6 +113,7 @@ main{
 	position :relative;
 	height : 100%;
 	width : 100%;
+	overflow: auto;
 }
 
 
@@ -212,7 +211,6 @@ main{
 
 #tP{
 	position : relative;
-	/* top : -30px; */
 	text-decoration : underline;
 	margin: 0px;
 	height: 20px;
@@ -224,7 +222,6 @@ main{
 }
 	
 #calendar{
-	/* border : Solid 1px black; */
 	width : 100%;
 	height : 440px;
 	margin-top : 0.5rem;
@@ -244,9 +241,6 @@ main{
 	width  :100px;
 	height : 50px;
 	border-radius : 8px;
-	/* position : relative; */
-	/* top : 20px; */
-	/* left : 337px; */
 }
 
 .pass{
@@ -264,7 +258,6 @@ main{
 	
 #leftMonth, #rightMonth{
 	width: 350px;
-	/* height: 440px; */
 	height: auto;
 }
 
@@ -275,7 +268,6 @@ main{
 .Day>.y{
 	width : calc(100% - 32px);
 	height: 33px;
-	/* border : solid 1px black; */
 	display: flex;
 	font-weight: 400;
 	font-size: 25px;
@@ -288,7 +280,6 @@ main{
 .Day>.d{
 	width : 100%;
 	height: 40px;
-	/* border : solid 1px black; */
 	display: flex;
 	font-size: 20px;
 	justify-content: space-around;
@@ -589,16 +580,16 @@ div[class*=timeSetSel]{
 	border-radius : 8px;
 }
 
-#Chbudget{
+#Chcash{
 	height : 910px;
 	overflow : auto;
 }
 
-#Chbudget::-webkit-scrollbar{
+#Chcash::-webkit-scrollbar{
 	width : 13px;
 }
 
-#Chbudget::-webkit-scrollbar-thumb{
+#Chcash::-webkit-scrollbar-thumb{
 	width : 5px;
 	border-radius : 20px;
 	background-color : rgb(200,230,200);
@@ -606,14 +597,13 @@ div[class*=timeSetSel]{
     border: 3px solid transparent;
 }
 
-#Chbudget::-webkit-scrollbar-track{
+#Chcash::-webkit-scrollbar-track{
 	width : 10px;
 	border-radius : 10px;
 }
 
 #setting{
 	height : 910px;
-	/* display: flex; */
 	justify-content: center;
 	flex-wrap: wrap;
 }
@@ -690,7 +680,6 @@ div[class*=timeSetSel]{
 	position : relative;
 	top: -16px;
 	width: 300px;
-	/* margin-top : 10px; */
 	left : 20px;
 	color : #868e96;
 	font-weight : 200;
@@ -722,7 +711,7 @@ div[class*=timeSetSel]{
 
 
 #result{
-	height: 910px;
+	height: auto;
 	display : none;
 }
 
@@ -733,7 +722,6 @@ div[class*=timeSetSel]{
 	font-size : 30px;
 	font-weight: 600;
 	position : relative;
-	/* top : 40px; */
 	display: flex;
 	justify-content: left;
 	align-items: center;
@@ -747,7 +735,6 @@ div[class*=timeSetSel]{
 
 #moneyIndiv{
 	position : relative;
-	/* top : 10px; */
 	width: 75%;
 	left: 20px;
 	height: 150px;
@@ -760,7 +747,6 @@ div[class*=timeSetSel]{
 
 #Usedetail{
 	position : relative;
-	/* top: 30px; */
 }
 
 #graph{
@@ -788,8 +774,6 @@ div[id*=DetailTitle]{
 	width: calc(100% - 18px);
 }
 .scroll-btn{
-	/* width : 30px; */
-	/* position: relative; */
 	left: -5px;
 	border-bottom: solid 12px rgb(225,225,225);
 	border-left: solid 9px white;
@@ -807,7 +791,6 @@ div[id*=DetailTitle]{
 	width: 100%;
 	margin-bottom: 15px;
 	margin-top: 5px;
-	/* border-top: solid 1px black; */
 }
 
 .DetailAver, .DetailHeight, .DetailLow, .TrafficShowDetails{
@@ -829,11 +812,9 @@ div[id*=DetailTitle]{
 
 
 #detailSet{
-	/* border-bottom: solid 1px black; */
 	position : relative;
 	top : 50px;
 	height : auto;
-	/* min-height : 400px; */
 	left: 20px;
 	width: calc(100% - 30px);
 }
@@ -911,10 +892,8 @@ div[id*=DetailTitle]{
 	padding: 10px;
 	position : relative;
 	padding-left: 40px;
-	/* top : 10px; */
 	height : 100px;
 	width: calc(100% - 30px);
-	/* left: 30px; */
 	font-weight: 200;
 }
 
@@ -924,3 +903,236 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
+
+#CR-btn{
+	position : relative;
+	top: 80px;
+	width : 100%;
+	display : flex;
+	justify-content : center;
+	flex-wrap : wrap;
+	padding-bottom: 40px;
+}
+
+#detailSet-complete{
+	width : 70%;
+	display : flex;
+	justify-content : center;
+	height : 50px;
+	align-items : center;
+    background-color: rgb(204,220,188);
+	font-weight : 200;
+	border-radius : 15px;
+	color : white;
+	top : 50px;
+}
+
+
+#Reset{
+	font-weight : 200;
+	font-size : 15px;
+	padding-top: 15px;
+	padding-left: 25px;
+	padding-right: 25px;
+	color : #adb5bd;
+	text-decoration : underline;
+}
+
+#confir_Title{
+	    font-size: 2rem;
+
+	position : relative;
+	top : 50px;
+	left : 10px;
+	width : calc(100% - 50px);
+}
+
+#Plperiod{
+	position: relative;
+	top : 80px;
+	left : 50px;
+	width : 300px;
+	height: 45px;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+#StartingPoint{
+		position: relative;
+		top : 90px;
+		font-weight : 200;
+		left : 50px;
+		width: 320px;
+		height: 30px;
+}
+
+#StartingPoint>p{
+	position: relative;
+	top: -39px;
+	left: 60px;
+	font-weight: 600;
+	font-size: 18px;
+	width: fit-content;
+}
+	
+#EndPoint{
+		position: relative;
+		top: 90px;
+		left : 50px;
+		font-weight : 200;
+		width: 320px;
+		height: 30px;
+}
+
+#EndPoint>p{
+	position : relative;
+	top : -39px;
+	left : 60px;
+	font-weight : 600;
+	font-size : 18px;
+	width: fit-content;
+}
+	
+#distance{
+	position: relative;
+	top: 100px;
+	left: 65px;
+	font-weight : 300;
+	width : 200px;
+	height: 30px;
+}
+
+#distance>p{
+	position : relative;
+	top : -39px;
+	left: 45px;
+	font-weight : 500;
+	font-size : 18px;
+}
+	
+#Final_sumExpense{
+		position: relative;
+		left: 44px;
+		top: 130px;
+		width: 320px;
+		font-weight : 200;
+		height: 30px;
+}
+
+#Final_sumExpense>p{
+	width: fit-content;
+	position: relative;
+	top: -39px;
+	left: 65px;
+	font-weight: 500;
+	font-size: 18px;
+}
+
+#IndivExpense{
+	position: relative;
+	top: 130px;
+	height: 250px;
+}
+
+#IndivExpense>div{
+	font-weight: 400;
+	height: 30px;
+}
+
+#IndivExpense>div>p{
+	position : relative;
+	top : -39px;
+	font-weight: 500;
+	font-size : 18px;
+	left : 60px;
+	width: fit-content;
+}
+
+#Final_HotelExpense{
+		position: relative;
+		left : 70px;
+		width: 285px;
+}
+
+#Final_FoodExpense{
+		position: relative;
+			left : 70px;
+		width: 285px;
+}
+
+#Final_ActivityExpense{
+	position: relative;
+			left : 70px;
+		width: 285px;
+}
+
+#Final_TrafficExpense{
+		position: relative;
+		left : 70px;
+		width: 285px;
+}
+
+#Final_TrafficExpense>ul{
+	position : relative;
+	top : -15px;
+}
+
+#Final_TrafficExpense>ul>li{
+	height : 30px;
+	font-weight : 200;
+}
+
+#Final_TrafficExpense p{
+	position : relative;
+	top : -40px;
+	font-size : 18px;
+	font-weight : 500;
+	width: fit-content;
+}
+
+#Final_gasoline>p{
+	left : 160px;
+}
+
+#Final_diesel>p{
+	left : 125px;
+}
+
+#Final_LPG>p{
+	left : 75px;
+}
+
+#Final_CNG>p{
+	left : 75px;
+}
+	
+#Final_warn{
+		position: relative;
+		top: 120px;
+		left : 90px;
+		width : 290px;
+		word-break: break-word;
+		height: 80px !important;
+		color: #737e8a;
+		text-decoration: underline;
+		font-size: 13px;
+}
+
+#Final_warn>b{
+	color : rgb(104,112,120);
+}
+	
+#Creat{
+	position: relative;
+	top : 200px;
+	margin : 0 auto;
+	width : 270px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	height : 60px;
+	border-radius : 15px;
+	background-color : rgb(204,220,188);
+	color : white;
+	font-weight : 400;
+}
