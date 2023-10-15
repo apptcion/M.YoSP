@@ -497,4 +497,5 @@ public class BoardController {
 	public void insert() {
 		log.info("너 대체 누구야");
 	}
+	
 }

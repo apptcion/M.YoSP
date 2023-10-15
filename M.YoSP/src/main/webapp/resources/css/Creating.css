@@ -14,20 +14,22 @@ main{
 
 #Map{
 	position : absolute;
-	width : calc(100vw - 450px)!important;
+	width: calc(100vw - 500px)!important;
 	right : 0px;
 	height : 100vh;
+	/* z-index: 1; */
 }
 
 #Use{
 	position : absolute;
 	top : 0px;
 	left : 0px;
-	background-color : white;
+	/* background-color : white; */
 	z-index: 10;
 	height : 100vh;
 	width: 500px;
 	font-weight: 600;
+	display: flex;
 }
 #steps{
 	height : 100vh;
@@ -91,17 +93,18 @@ main{
 }
 
 #StepImplOutPut{
-	position : absolute;
-	top : 0px;
-	right : 0px;
+	/* position: relative; */
+	/* left: 7px; */
+	/* top : 0px; */
+	/* right : 0px; */
 	height : 100vh;
 	width: 400px;
-	overflow : hidden;
+	/* overflow : hidden; */
 }
 
 
 #StepImplList{
-	position : relative;
+	/* position : relative; */
 	top : 0px;
 	left : 0px;
 	height : 100vh;
@@ -112,7 +115,7 @@ main{
 #StepImplList>div{
 	position :relative;
 	height : 100%;
-	width : 100%;
+	/* width : 100%; */
 	overflow: auto;
 }
 
@@ -581,8 +584,9 @@ div[class*=timeSetSel]{
 }
 
 #Chcash{
-	height : 910px;
-	overflow : auto;
+	width: 400px !important;
+	/* height : 910px; */
+	/* overflow : auto; */
 }
 
 #Chcash::-webkit-scrollbar{
@@ -603,7 +607,7 @@ div[class*=timeSetSel]{
 }
 
 #setting{
-	height : 910px;
+	height: 100%;
 	justify-content: center;
 	flex-wrap: wrap;
 }
@@ -774,7 +778,6 @@ div[id*=DetailTitle]{
 	width: calc(100% - 18px);
 }
 .scroll-btn{
-	left: -5px;
 	border-bottom: solid 12px rgb(225,225,225);
 	border-left: solid 9px white;
 	border-right: solid 9px white;
@@ -937,202 +940,671 @@ input::-webkit-inner-spin-button {
 	color : #adb5bd;
 	text-decoration : underline;
 }
+#addPlace{
+	width: 900px;
+	display: flex;
+	/* z-index: 10; */
+	overflow : hidden !important;
+}
 
-#confir_Title{
-	    font-size: 2rem;
+#showLeft{
+	    background-color: rgb(248,248,248);
+	    width: 430px;
+	    overflow-y : auto;
+	    overflow-x: hidden;
+	    height: 100%;
+}
 
-	position : relative;
-	top : 50px;
-	left : 10px;
-	width : calc(100% - 50px);
+#showLeft::-webkit-scrollbar{
+	width : 13px;
+}
+
+#showLeft::-webkit-scrollbar-thumb{
+	width : 5px;
+	border-radius : 20px;
+	background-color : rgb(200,230,200);
+	  background-clip: padding-box;
+    border: 3px solid transparent;
+}
+
+#showLeft::-webkit-scrollbar-track{
+	width : 10px;
+	border-radius : 10px;
+}
+
+
+	
+
+#showRight{
+	width: 420px;
+	/* background-color: black; */
+	height: 100%;
+	/* color: black; */
+}	
+	
+#addPlace_Title{
+	    font-size: 1.2rem;
+	    position : relative;
+	    top : 50px;
+	    left : 10px;
+	    width : calc(100% - 50px);
 }
 
 #Plperiod{
 	position: relative;
-	top : 80px;
-	left : 50px;
+	top : 65px;
+	left : 30px;
 	width : 300px;
 	height: 45px;
-    font-size: 1.5rem;
-    font-weight: 400;
-}
-
-#StartingPoint{
-		position: relative;
-		top : 90px;
-		font-weight : 200;
-		left : 50px;
-		width: 320px;
-		height: 30px;
-}
-
-#StartingPoint>p{
-	position: relative;
-	top: -39px;
-	left: 60px;
-	font-weight: 600;
-	font-size: 18px;
-	width: fit-content;
-}
-	
-#EndPoint{
-		position: relative;
-		top: 90px;
-		left : 50px;
-		font-weight : 200;
-		width: 320px;
-		height: 30px;
-}
-
-#EndPoint>p{
-	position : relative;
-	top : -39px;
-	left : 60px;
-	font-weight : 600;
-	font-size : 18px;
-	width: fit-content;
-}
-	
-#distance{
-	position: relative;
-	top: 100px;
-	left: 65px;
-	font-weight : 300;
-	width : 200px;
-	height: 30px;
-}
-
-#distance>p{
-	position : relative;
-	top : -39px;
-	left: 45px;
-	font-weight : 500;
-	font-size : 18px;
-}
-	
-#Final_sumExpense{
-		position: relative;
-		left: 44px;
-		top: 130px;
-		width: 320px;
-		font-weight : 200;
-		height: 30px;
-}
-
-#Final_sumExpense>p{
-	width: fit-content;
-	position: relative;
-	top: -39px;
-	left: 65px;
-	font-weight: 500;
-	font-size: 18px;
-}
-
-#IndivExpense{
-	position: relative;
-	top: 130px;
-	height: 250px;
-}
-
-#IndivExpense>div{
+	font-size: 1rem;
 	font-weight: 400;
+	font-family : sans-serif;
+	color: #AAB1B8;
+}
+
+#TravelPlace{
+	position : relative;
+	width : fit-content;
+	top : 60px;
+	font-size: 1.25rem;
+	left : 30px;
+	font-weight: 700;
+}
+
+#addPlace-warn{
+	position: relative;
+	top: 90px;
+	left: 35px;
+	color: #adb5bd;
+	font-size: small;
+}
+
+#addPlaceHeader{
+	background-color: white;
+	/* border  :solid; */
+	display : flex;
+	width: 350px;
+	/* position: relative; */
+	/* left: 15px; */
+	font-size: 13px;
+	font-weight: 200;
+	color: #9aa4ab;
+	border-bottom: solid 1px black;
 	height: 30px;
 }
 
-#IndivExpense>div>p{
-	position : relative;
-	top : -39px;
-	font-weight: 500;
-	font-size : 18px;
-	left : 60px;
-	width: fit-content;
+#PLDay{
+	width: 100px;
+	display : flex;
+	align-items: center;
+	justify-content : center;
 }
 
-#Final_HotelExpense{
-		position: relative;
-		left : 70px;
-		width: 285px;
+#PlaceCount{
+	width : 250px;
+	display : flex;
+	justify-content : center;
+	align-items: center;
 }
 
-#Final_FoodExpense{
-		position: relative;
-			left : 70px;
-		width: 285px;
-}
-
-#Final_ActivityExpense{
-	position: relative;
-			left : 70px;
-		width: 285px;
-}
-
-#Final_TrafficExpense{
-		position: relative;
-		left : 70px;
-		width: 285px;
-}
-
-#Final_TrafficExpense>ul{
-	position : relative;
-	top : -15px;
-}
-
-#Final_TrafficExpense>ul>li{
-	height : 30px;
-	font-weight : 200;
-}
-
-#Final_TrafficExpense p{
-	position : relative;
-	top : -40px;
-	font-size : 18px;
-	font-weight : 500;
-	width: fit-content;
-}
-
-#Final_gasoline>p{
-	left : 160px;
-}
-
-#Final_diesel>p{
-	left : 125px;
-}
-
-#Final_LPG>p{
-	left : 75px;
-}
-
-#Final_CNG>p{
-	left : 75px;
-}
 	
-#Final_warn{
-		position: relative;
-		top: 120px;
-		left : 90px;
-		width : 290px;
-		word-break: break-word;
-		height: 80px !important;
-		color: #737e8a;
-		text-decoration: underline;
-		font-size: 13px;
+#PlanDays{
+	border: solid 1.5px black;
+	position : relative;
+	width: 350px;
+	left: 25px;
+	top : 100px;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
-#Final_warn>b{
-	color : rgb(104,112,120);
+.addPlaceColumnBody{
+	/* border : solid 1px black; */
+	/* position : relative; */
+	height: auto;
+	top : 100px;
+	width : 350px;
+	left : 26px;
+	margin-top: 10px;
+	margin-bottom: 5px;
 }
+
+.plainInfo{
+	display : flex;
 	
-#Creat{
-	position: relative;
-	top : 200px;
+}
+
+	.PlDayInfo{
+		display : flex;;
+		justify-content : center;
+		align-items : center;
+		width : 100px;
+	}
+	.CountInfo{
+		display : flex;
+		justify-content : center;
+		align-items : center;
+		width : 250px;
+	}
+
+	.detailInfo{
+		width : 300px;
+		position : relative;
+		left : 50px;
+		/* top : 10px; */
+		margin-top: 10px;
+	}
+
+	.HotelExp, .FoodExp, .ActivityExp{
+		height : 30px;
+		font-size : 14px;
+		font-weight : 300;
+	}
+
+	.HotelExp>p, .FoodExp>p, .ActivityExp>p{
+		position : relative;
+		font-size : 18px;
+		font-weight : 400;
+		top : -39px;
+		left : 55px;
+		width: fit-content;
+	}
+
+	.addHotel{
+		height: 130px;
+	}
+
+	.addFood{
+		height: 300px;
+	}
+	
+	.addActivityPlace{
+		height : auto;
+		margin-bottom: 20px;
+	}
+		
+	.addHotelTitle, .addFoodTitle, .addActivityPlaceTitle{
+		font-weight : 400;
+		font-size : 20px;
+	}
+
+	.addHotelBody{
+		border : dashed 2px #adb5bd;
+		position : relative;
+		top : 10px;
+		width : 270px;
+		left : 10px;
+		height: 72px;
+		border-radius : 10px;
+		background-color: white;
+		box-shadow: 0 2px 8px 0 rgba(31,38,135, 0.15);
+	}
+
+	.breakfast, .lunch, .dinner{
+		border : dashed 2px #adb5bd;
+		height: 72px;
+		border-radius : 10px;
+		width : 270px;
+		position : relative;
+		left : 10px;
+		margin-top : 10px;
+		background-color: white;
+		box-shadow: 0 2px 8px 0 rgba(31,38,135,0.15);
+	}
+		
+	.breakfast{
+		
+	}
+
+	.lunch{
+		
+	}
+
+	.dinner{
+		
+	}
+
+	.addActivityPlaceBody{
+		border : dashed 2px #adb5bd;
+		width : 270px;
+		position : relative;
+		left : 10px;
+		border-radius : 10px;
+		height: 72px;
+		background-color: white;
+		box-shadow: 0 2px 8px 0 rgba(31,38,135,0.15);
+	}
+
+	.addActivityPlaceBody{
+		/* position : relative; */
+		/* top : 10px; */
+		margin-top: 10px;
+	}
+
+#addPlace::-webkit-scrollbar{
+	width : 13px;
+}
+
+#addPlace::-webkit-scrollbar-thumb{
+	width : 5px;
+	border-radius : 20px;
+	background-color : rgb(200,230,200);
+	  background-clip: padding-box;
+    border: 3px solid transparent;
+}
+
+#addPlace::-webkit-scrollbar-track{
+	width : 10px;
+	border-radius : 10px;
+}
+
+#addPlaceColumns{
+	background-color : white;
+}
+
+.Plus{
+	/* border : solid; */
+	position : relative;
+	top: 12px;
 	margin : 0 auto;
-	width : 270px;
+	width : 50px;
+	height : 50px;
+}
+
+.stripe{
+	border: solid 1.8px #ced4da;
+	position : absolute;
+	left : 24px;
+	width: 0px;
+	top : 13px;
+	height : 20px;
+}
+		
+.rank{
+	width : 20px;
+	border : solid 1.8px #ced4da;
+	position : absolute;
+	top : 23px;
+	left : 14px;
+	
+}
+
+.addPlaceScroll{
+	border-bottom: solid 12px rgb(225,225,225);
+	border-left: solid 9px white;
+	border-right: solid 9px white;
+	border-top: solid 9px white;
+	width : 0px;
+	position : relative;
+	top: -25px;
+	left : 330px;
+	height : 0px;
+	background-color: #FAFAFA;
+}
+
+#addPlaceOrigin{
+	display : none;
+}
+
+#creMapWrap{
+	position : relative;
+	top: 130px;
+	width : 100%;
 	display : flex;
 	justify-content : center;
 	align-items : center;
-	height : 60px;
+}
+		
+#creMap{
+	/* margin-bottom : 50px; */
+	width : 70%;
+	height : 50px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	color : white;
+	font-weight : 200;
 	border-radius : 15px;
 	background-color : rgb(204,220,188);
-	color : white;
-	font-weight : 400;
+	margin-bottom: 50px !important;
+	position: relative;
+	left: 5px;
+}
+
+#ShowPlaceOrigin{
+	display : none;
+}
+
+
+#showList{
+	background-color : white;
+	height: 100%;
+}
+
+.SHC{
+	height: 100%;
+}
+		
+.ShowHotel{
+	height: 100%;
+	width: 100%;
+}
+
+.ShowFood{
+	height: 100%;
+	width: 100%;
+}
+
+.ShowActivity{
+	height: 100%;
+	width: 100%;
+}
+
+.ShowHotelTitle{
+	position : relative;
+	top : 70px;
+	font-size : 25px;
+	left : 40px;
+	width: fit-content;
+}
+.HotelSearch{
+	position : relative;
+	top : 100px;
+}
+
+.HotelSearch>input{
+    position: relative;
+    color: black;
+    border: none;
+    border-radius: 5px;
+	height : 40px;
+	width : 240px;
+	padding-right : 40px;
+	left : 40px;
+    font-size: 23px;
+    box-shadow: 1px 1px 10px 1px #ced4da;
+    outline: none;
+	
+}
+
+.HotelSearch>svg{
+	width : 25px;
+	position : relative;
+	top : 5px;
+	
+}
+
+.HotelSearchResult{
+	/* border : solid; */
+	position : relative;
+	top : 150px;
+	overflow: auto;
+	height: calc(100% - 270px);
+	width: calc(100% - 70px);
+	left: 20px;
+}
+
+.ShowFoodTitle{
+	position : relative;
+	top : 70px;
+	font-size : 25px;
+	left : 40px;
+}
+.FoodSearch{
+	position : relative;
+	top : 100px;
+}
+
+.FoodSearch>input{
+    position: relative;
+    color: black;
+    border: none;
+    border-radius: 5px;
+	height : 40px;
+	width : 240px;
+	padding-right : 40px;
+	left : 40px;
+    font-size: 23px;
+    box-shadow: 1px 1px 10px 1px #ced4da;
+    outline: none;
+	
+}
+
+.FoodSearch>svg{
+	width : 25px;
+	position : relative;
+	top : 5px;
+	
+}
+
+.FoodSearchResult{
+	/* border : solid; */
+	position : relative;
+	top : 150px;
+	/* height : auto; */
+	overflow: auto;
+	height: calc(100% - 270px);
+	width: calc(100% - 70px);
+	left: 20px;
+}
+
+.ShowActivityTitle{
+	position : relative;
+	top : 70px;
+	font-size : 25px;
+	left : 40px;
+}
+.ActivitySearch{
+	position : relative;
+	top : 100px;
+}
+
+.ActivitySearch>input{
+    position: relative;
+    color: black;
+    border: none;
+    border-radius: 5px;
+	height : 40px;
+	width : 240px;
+	padding-right : 40px;
+	left : 40px;
+    font-size: 23px;
+    box-shadow: 1px 1px 10px 1px #ced4da;
+    outline: none;
+	
+}
+
+.ActivitySearch>svg{
+	width : 25px;
+	position : relative;
+	top : 5px;
+	
+}
+
+.ActivitySearchResult{
+	/* border : solid; */
+	position : relative;
+	top : 150px;
+	/* height : auto; */
+	overflow: auto;
+	height: calc(100% - 270px);
+	width: calc(100% - 70px);
+	left: 20px;
+}
+
+.ShowPlaceDate{
+	position : relative;
+	top: 40px;
+	left: 275px;
+	font-size : 20px;
+	width: fit-content;
+	/* color: rgb(220,220,220); */
+}
+
+#slideToLeft{
+	height : 100%;
+	left: 685px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	width : 50px;
+}
+
+#slideCircle{
+	width : 60px;
+	height : 60px;
+	border-radius : 100%;
+	background-color: rgb(204,220,188);
+	position : relative;
+	right: 25px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#slideCircle>svg{
+	width: 60px;
+	height: 60px;
+}
+.markerbg{
+    display: block;
+    height: 37px;
+    width: 36px;
+    background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
+}
+
+.marker_1{
+	background-position : 0 -10px;
+}
+
+.marker_2{
+	background-position : 0 -56px;
+}
+
+.marker_3{
+	background-position : 0 -102px;
+}
+	
+.marker_4{
+	background-position : 0 -148px;
+}
+
+.marker_5{
+	background-position : 0 -194px;		
+}
+	
+.marker_6{
+	background-position : 0 -240px;
+}
+	
+.marker_7{
+	background-position : 0 -286px;
+}
+
+.marker_8{
+	background-position : 0 -332px;
+}
+	
+.marker_9{
+	background-position : 0 -378px;
+}
+
+.marker_10{
+	background-position : 0 -424px;
+}
+	
+.marker_11{
+	background-position : 0 -470px;
+}
+	
+.marker_12{
+	background-position : 0 -516px;
+}
+	
+.marker_13{
+	background-position : 0 -562px;
+}
+	
+.marker_14{
+	background-position : 0 -608px;
+}
+
+.marker_15{
+	background-position : 0 -654px;
+}
+
+.jibun{
+	padding-left: 30px;
+	background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+	font-size: 12px;
+	font-family: 'Malgun Gothic',dotum,'돋움',sans-serif;
+	color: #8a8a8a;
+	height: 20px;
+	display: block;
+	position: relative;
+	top: -26px;
+	left: 40px;
+	width : fit-content;
+}
+
+.phone{
+	    color: #009900;
+	    font-family: 'Malgun Gothic',dotum,'돋움',sans-serif;
+	    font-size: 12px;
+	    position: relative;
+	    top: -30px;
+	    left: 40px;
+	    width : fit-content;
+}
+
+.placeName{
+	font-weight: bold;
+	font-family: 'Malgun Gothic',dotum,'돋움',sans-serif;
+	font-size: 14px;
+	position: relative;
+	top: -32px;
+	left: 40px;
+	width: 240px;
+}
+
+.SearchItem{
+	margin-top : 10px;
+	height: 60px;
+	padding-left: 11px;
+}
+
+div[class*=SearchResult]::-webkit-scrollbar{
+	width : 13px;
+}
+
+div[class*=SearchResult]::-webkit-scrollbar-thumb{
+	width : 5px;
+	border-radius : 20px;
+	background-color : rgb(200,230,200);
+	  background-clip: padding-box;
+    border: 3px solid transparent;
+}
+
+div[class*=SearchResult]::-webkit-scrollbar-track{
+	width : 10px;
+	border-radius : 10px;
+}
+
+.PlusSVG{
+	    position: relative;
+    top: -75px;
+    left: 280px;
+}
+
+.HotelselectSVG, .FoodselectSVG, .ActivityselectSVG{
+	position : relative;
+	top : -75px;
+	left : 280px;
+}
+
+.HotelselectSVGInBody, .FoodselectSVGInBody, .ActivityselectSVGInBody{
+	position : relative;
+	top: -45px;
+	left: 230px;
 }

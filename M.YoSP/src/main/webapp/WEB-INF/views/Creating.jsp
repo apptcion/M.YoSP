@@ -53,6 +53,7 @@
 		
 		var StartCity;
 		
+		var finInitNumber = false;
 		
 		let nowDate = new Date();
 		var LeftDate = new Date();
@@ -96,7 +97,7 @@
 				break;
 			case '3':
 				createStep3();
-				$("#Final_confirmation").show();
+				$("#addPlace").show();
 				break;
 			}
 
@@ -113,10 +114,9 @@
 			
 			$("#step3").addClass("select")
 			$("#step3").removeClass("noSel")
-			
-			$("#Chcash").hide();
-			$("#Final_confirmation").show();
 			createStep3();
+			$("#Chcash").hide();
+			$("#addPlace").show();
 		})
 		
 		$('#next').click(function(){
@@ -139,11 +139,11 @@
 				$("#step2").addClass("select")
 				break;
 			case 3:
-				$("#Final_confirmation").show();
+				createStep3();
+				$("#addPlace").show();
 				$("#step3").removeClass("noSel")
 				$("#step3").addClass("select")
 				
-				createStep3();
 				break;
 			}
 			
@@ -160,35 +160,105 @@
 		}
 		
 		function createStep3(){
-			$("#Plperiod").text(StartDay + " - " + EndDay);
-			try{
-			var carType = $("#traffic>select").val();
-			GMFA.then(data =>{
-				$("#distance").html("거리 : <p>" + (data/10) + "km</p>");
+			
+			if($("#traffic>input").val() != '' && finInitNumber){
 				
-				if(carType == '승용차'){
-					var L = (data/24300)
-				}else{
-					var L = (data/33100)
-				}			
-							
-				$("#Final_gasoline").html("가솔린(휘발유) 기준 : <p>" + CMSV1(Math.round(L * gasoline))+ "원</p>")
-				$("#Final_diesel").html("디젤(경유) 기준 : <p>" + CMSV1(Math.round(L * diesel))+"원</p>")
-				$("#Final_LPG").html("LPG기준 : <p>" + CMSV1(Math.round(L * LPG)) + "원</p>")
-				$("#Final_CNG").html( "CNG기준 : <p>" + CMSV1(Math.round(L * CNG)) +  "원</p>")
+				$("#addPlaceColumns").empty();
 				
-				$("#Final_sumExpense").html("총 비용 : <p>" + CMSV1(SumExpense) + "원</p>")
+				$("#creMapWrap").detach();
 				
-				$("#Final_HotelExpense").html("숙박비 : <p>" + CMSV1(HotelExpense) + "원</p>");
-				$("#Final_FoodExpense").html("식사비 : <p>" + CMSV1(foodExpense) + "원</p>");
-				$("#Final_ActivityExpense").html("활동비 : <p>" + CMSV1(activityExpense) + "원</p>");
-			})
-			}catch{
-				//NOTHING
+				$("#Plperiod").text(StartDay + " - " + EndDay);
+				
+				var tempDate = new Date(StartDay)
+				for(var i = 1;i < PlObjArr.length;i++){
+					var thisaPCB = $("#addPlaceOrigin>.addPlaceColumnBody").clone().attr('id','aPCB' + i).appendTo("#addPlaceColumns")
+					
+					
+					
+					
+					$(thisaPCB).children(".plainInfo").children(".PlDayInfo").text((tempDate.getMonth() +1)+ "/" + tempDate.getDate())
+
+					$(thisaPCB).children(".detailInfo").children(".HotelExp").children("p").text(CMSV1(HotelArr[i-1]) + "원")
+					$(thisaPCB).children(".detailInfo").children(".FoodExp").children("p").text(CMSV1(FoodArr[i-1]) + "원")
+					$(thisaPCB).children(".detailInfo").children(".ActivityExp").children("p").text(CMSV1(ActivityArr[i-1]) + "원")
+
+					$("#ShowPlaceOrigin").clone().attr('id','SHC' + i).addClass("SHC").appendTo("#showList")
+					$("#SHC" + i).children().children('.ShowPlaceDate').text((tempDate.getMonth() + 1) + "." + tempDate.getDate() + " (" + getKoreanDay(tempDate.getDay()) + ")")
+					
+					addPlaceObjArr.push(cre_addPlaceObj(tempDate,i-1,null,null,null,null,null));
+					dayMarkers.push(cre_dayMarkers([],[],[]));
+					
+					
+					tempDate.setDate(tempDate.getDate() + 1)
+				}
+				
+				LoadMarker('Hotelmarkers');
+				
+				$("#addPlace>#showLeft").append("<div id='creMapWrap'><div id='creMap'>지도 생성하기</div></div>")
+			}else{
+				alert("이전 설정부터 완료해주세요")
 			}
 			
 		}
+		
+		$(document).on('click','div[class*=addPlaceScroll]',function(){
+			if($(this).attr("class").includes("statusDown")){
+				$(this).removeClass("statusDown")
+				$(this).siblings(".detailInfo").slideUp(50)
+				$(this).parent().css("height","20px")
+				$(this).parent().css("margin-top","5px")
+			}else{
+				$(this).addClass("statusDown")
+				$(this).parent().css("height","auto")
+				$(this).parent().css("margin-top","10px")
+				$(this).siblings(".detailInfo").slideDown(50)
+			}
+			
+		})
+		
+		$(document).on('click','div[class=addHotelBody]',function(){
+			var thisaPCBID = $(this).parent().parent().parent().attr('id').substring(4)
+			
+			$("#showList").children().hide();
+			$("#SHC" + thisaPCBID).show();
+			
+			$("#SHC" + thisaPCBID).children().hide();
+			$("#SHC" + thisaPCBID + ">.ShowHotel").show();
+			
+			SearchCategoryCode = 'AD5' // 숙박
+			SHCID = thisaPCBID;
+			LoadMarker('Hotelmarkers');
+		})
+		
+		$(document).on('click','div[class=addFoodBody]',function(){
+			var thisaPCBID = $(this).parent().parent().parent().attr('id').substring(4)
+			
+			$("#showList").children().hide();
+			$("#SHC" + thisaPCBID).show();
 
+			$("#SHC" + thisaPCBID).children().hide();
+			$("#SHC" + thisaPCBID + ">.ShowFood").show();
+			
+			SearchCategoryCode = 'FD6' // 음식점
+			SHCID = thisaPCBID;
+			LoadMarker('Foodmarkers');
+		})
+
+		$(document).on('click','div[class*=addActivityPlaceBody]',function(){
+			var thisaPCBID = $(this).parent().parent().parent().attr('id').substring(4)
+			
+			$("#showList").children().hide();
+			$("#SHC" + thisaPCBID).show();
+			
+			$("#SHC" + thisaPCBID).children().hide();
+			$("#SHC" + thisaPCBID + ">.ShowActivity").show();
+			
+			SearchCategoryCode = 'anything'
+			SHCID = thisaPCBID;
+			LoadMarker('Activitymarkers');
+		})
+		
+		
 		$("#goPrev").click(function() {
 			if (!isMin()) {
 				RightDate.setFullYear(LeftDate.getFullYear());
@@ -1201,7 +1271,7 @@
 		}
 
 		function plObject() {
-			var StartTime, EndTime, Sum
+			var StartTime, EndTime;
 		}
 
 		function cre_plObject(StH, StM, EtH, EtM) {
@@ -1246,6 +1316,8 @@
 
 		$(document).on('click', 'div[id=SetFinish-btn]', function() {
 			if($("#traffic>input").val().length != 0){
+				
+				finInitNumber = true;
 				HotelExpense = Number($("#hotel>input").val());
 				StartingPointstr = $("#traffic>input").val();
 				foodExpense = Number($("#food>input").val());
@@ -1333,10 +1405,6 @@
 				
 				var tempDate = new Date(StartDay);
 				
-				var SetDetailDOM = $("#originSetDetail").clone();
-				SetDetailDOM.removeAttr('id')
-				SetDetailDOM.addClass('SetDetail')
-				
 				for(var i = 1;i < PlObjArr.length; i++){
 					$("#detailSet-rows").append("<div class='detailSet-row' id='DSW" + i + "'></div>")
 					$("#DSW" + i).append("<div class='detailSetDate'>" + (tempDate.getMonth() + 1) + "/" + tempDate.getDate() + "</div>")
@@ -1415,7 +1483,7 @@
 				$(this).val(HotelArr[thisDSWID])
 			}else{
 				
-				HotelArr[thisDSWID] = Number($(this).val());
+				HotelArr[thisDSWID-1] = Number($(this).val());
 				
 				var tempHotelArr = [];
 				if(HotelArr.length != 1){
@@ -1445,6 +1513,9 @@
 				$("#HotelIndiv").text("숙박비 : " + CMSV1(HotelExpense) + "원 (최대 " + CMSV1(HotelExpenseMax) + "원)")
 			
 				$("#moneySum>p").text(CMSV1(SumExpense))
+				
+				var tempDetailSetSumExpense = HotelArr[thisDSWID-1] + FoodArr[thisDSWID -1] + ActivityArr[thisDSWID -1]
+				$("#DSW" + thisDSWID).children('.detailSetSum').text(CMSV1(tempDetailSetSumExpense) + "원")
 			}
 		})
 		$(document).on('keyup','input[class*=Activity_Detail_input]',function(e){
@@ -1466,7 +1537,7 @@
 				$(this).val(ActivityArr[thisDSWID])
 			}else{
 				
-				ActivityArr[thisDSWID] = Number($(this).val());
+				ActivityArr[thisDSWID-1] = Number($(this).val());
 				
 				var tempActivityArr = [];
 				if(ActivityArr.length != 1){
@@ -1496,9 +1567,12 @@
 				$("#ActiveIndiv").text("활동비 : " + CMSV1(activityExpense) + "원 (최대 " + CMSV1(activityExpenseMax) + "원)")
 			
 				$("#moneySum>p").text(CMSV1(SumExpense))
+				
+								var tempDetailSetSumExpense = HotelArr[thisDSWID-1] + FoodArr[thisDSWID -1] + ActivityArr[thisDSWID -1]
+				$("#DSW" + thisDSWID).children('.detailSetSum').text(CMSV1(tempDetailSetSumExpense) + "원")
 			}
 		})
-		$(document).on('keyup','input[class*=Food_Detail_input]',function(){
+		$(document).on('keyup','input[class*=Food_Detail_input]',function(e){
 			$(this).val(toVaildNumber($(this).val(),e));
 			
 			var thisDSWID = $(this).parent().parent().parent().attr("id").substring(3);
@@ -1517,7 +1591,7 @@
 				$(this).val(FoodArr[thisDSWID])
 			}else{
 				
-				FoodArr[thisDSWID] = Number($(this).val());
+				FoodArr[thisDSWID-1] = Number($(this).val());
 				
 				var tempFoodArr = [];
 				if(FoodArr.length != 1){
@@ -1547,6 +1621,9 @@
 				$("#FoodIndiv").text("활동비 : " + CMSV1(foodExpense) + "원 (최대 " + CMSV1(foodExpenseMax) + "원)")
 			
 				$("#moneySum>p").text(CMSV1(SumExpense))
+				
+								var tempDetailSetSumExpense = HotelArr[thisDSWID-1] + FoodArr[thisDSWID -1] + ActivityArr[thisDSWID -1]
+				$("#DSW" + thisDSWID).children('.detailSetSum').text(CMSV1(tempDetailSetSumExpense) + "원")
 			}
 		})
 		
@@ -1621,6 +1698,188 @@
 			$(this).val(toVaildNumber($(this).val(),e));
 		})
 		
+		$(document).on('click','.HotelPlusSVG',function(){
+			if(addPlaceObjArr[SHCID -1]['HotelObj']['placeData'] == null){
+				
+				$("#aPCB" + SHCID + " .addHotelBody").empty();
+				
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addHotelBody")
+				$("#aPCB" + SHCID + " .addHotelBody").append('<svg class="HotelselectSVGInBody" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+						
+				$(this).parent().append('<svg class="HotelselectSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+						
+				$("#aPCB" + SHCID + " .addHotelBody .HotelPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addHotelBody .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempPlaceData = dayMarkers[SHCID - 1]['Hotelmarkers'][tempIndex - 1];
+					addPlaceObjArr[SHCID -1]['HotelObj']['placeData'] = cre_addHotel(tempPlaceData)
+				
+				$(this).remove();
+				
+				$("#aPCB" + SHCID + " .addHotelBody").css("border","solid 1px green")
+				
+				}
+		})
+		
+		$(document).on('click','svg[class*=HotelselectSVG]',function(){
+			$("#aPCB" + SHCID + " .addHotelBody").empty();
+			$("#aPCB" + SHCID + " .addHotelBody").html('<div class="Plus">'
+					+ '<div class="stripe"></div>'
+					+ '<div class="rank"></div>'
+				+ '</div>')
+			$("#aPCB" + SHCID + " .addHotelBody").css("border","dashed 2px #adb5bd")
+			$("#SHC" + SHCID + " .HotelselectSVG").parent().append('<svg class="PlusSVG HotelPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+						+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+					+ '</svg>')
+			$("#SHC" + SHCID + " .HotelselectSVG").remove();
+			addPlaceObjArr[SHCID -1]['HotelObj']['placeData'] = null;
+		})
+		
+		$(document).on('click','.FoodPlusSVG',function(){
+			if(addPlaceObjArr[SHCID -1]['FoodObj']['breakfast'] == null){
+			
+				$("#aPCB" + SHCID + " .addFoodBody>.breakfast").empty();
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addFoodBody>.breakfast")
+				$("#aPCB" + SHCID + " .addFoodBody>.breakfast").append('<svg class="FoodselectSVGInBody breakfastSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+				$(this).parent().append('<svg class="FoodselectSVG breakfastSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+					+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+					+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+					+ '</svg>')
+					
+				$("#aPCB" + SHCID + " .addFoodBody>.breakfast .FoodPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addFoodBody>.breakfast .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempBreakFastData = dayMarkers[SHCID - 1]['Foodmarkers'][tempIndex - 1];
+				var tempLunchData = addPlaceObjArr[SHCID - 1]['FoodObj']['lunch'];
+				var tempDinnerData = addPlaceObjArr[SHCID - 1]['FoodObj']['dinner'];
+				addPlaceObjArr[SHCID -1]['FoodObj'] = cre_addFood(tempBreakFastData,tempLunchData,tempDinnerData)
+				
+				console.log(cre_addFood(tempBreakFastData,tempLunchData,tempDinnerData))
+				
+				$(this).remove();
+				$("#aPCB" + SHCID + " .addFoodBody>.breakfast").css("border","solid 1px green")
+				
+			}else if(addPlaceObjArr[SHCID -1]['FoodObj']['lunch'] == null){
+				
+				$("#aPCB" + SHCID + " .addFoodBody>.lunch").empty();
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addFoodBody>.lunch")
+				$("#aPCB" + SHCID + " .addFoodBody>.lunch").append('<svg class="FoodselectSVGInBody lunchSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+				$(this).parent().append('<svg class="FoodselectSVG lunchSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+					+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+					+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+					+ '</svg>')
+					
+				$("#aPCB" + SHCID + " .addFoodBody>.lunch .FoodPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addFoodBody>.lunch .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempBreakFastData = addPlaceObjArr[SHCID - 1]['FoodObj']['breakfast'];
+				var tempLunchData = dayMarkers[SHCID - 1]['Foodmarkers'][tempIndex - 1];
+				var tempDinnerData = addPlaceObjArr[SHCID - 1]['FoodObj']['dinner'];
+				addPlaceObjArr[SHCID -1]['FoodObj'] = cre_addFood(tempBreakFastData,tempLunchData,tempDinnerData)
+				
+				$(this).remove();
+				$("#aPCB" + SHCID + " .addFoodBody>.lunch").css("border","solid 1px green")
+				
+			}else if(addPlaceObjArr[SHCID -1]['FoodObj']['dinner'] == null){
+				$("#aPCB" + SHCID + " .addFoodBody>.dinner").empty();
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addFoodBody>.dinner")
+				$("#aPCB" + SHCID + " .addFoodBody>.dinner").append('<svg class="FoodselectSVGInBody dinnerSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+				$(this).parent().append('<svg class="FoodselectSVG dinnerSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+					+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+					+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+					+ '</svg>')
+					
+				$("#aPCB" + SHCID + " .addFoodBody>.dinner .FoodPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addFoodBody>.dinner .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempBreakFastData = addPlaceObjArr[SHCID - 1]['FoodObj']['breakfast'];
+				var tempLunchData = addPlaceObjArr[SHCID - 1]['FoodObj']['lunch'];
+				var tempDinnerData = dayMarkers[SHCID - 1]['Foodmarkers'][tempIndex - 1];
+				addPlaceObjArr[SHCID -1]['FoodObj'] = cre_addFood(tempBreakFastData,tempLunchData,tempDinnerData)
+				
+				$(this).remove();
+				$("#aPCB" + SHCID + " .addFoodBody>.dinner").css("border","solid 1px green")
+			}
+		})
+		
+		
+		$(document).on('click','.breakfastSVG',function(){
+			$("#aPCB" + SHCID + " .addFoodBody>.breakfast").empty();
+			$("#aPCB" + SHCID + " .addFoodBody>.breakfast").html('<div class="Plus">'
+					+ '<div class="stripe"></div>'
+					+ '<div class="rank"></div>'
+				+ '</div>')
+			$("#aPCB" + SHCID + " .addFoodBody>.breakfast").css("border","dashed 2px #adb5bd")
+			$("#SHC" + SHCID + " .breakfastSVG").parent().append('<svg class="PlusSVG FoodPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+						+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+					+ '</svg>')
+			$("#SHC" + SHCID + " .breakfastSVG").remove();
+			addPlaceObjArr[SHCID -1]['FoodObj']['breakfast'] = null;
+		})
+		
+		$(document).on('click','.lunchSVG',function(){
+			$("#aPCB" + SHCID + " .addFoodBody>.lunch").empty();
+			$("#aPCB" + SHCID + " .addFoodBody>.lunch").html('<div class="Plus">'
+					+ '<div class="stripe"></div>'
+					+ '<div class="rank"></div>'
+				+ '</div>')
+			$("#aPCB" + SHCID + " .addFoodBody>.lunch").css("border","dashed 2px #adb5bd")
+			$("#SHC" + SHCID + " .lunchSVG").parent().append('<svg class="PlusSVG FoodPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+						+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+					+ '</svg>')
+			$("#SHC" + SHCID + " .lunchSVG").remove();
+			addPlaceObjArr[SHCID -1]['FoodObj']['lunch'] = null;
+		})
+		
+		$(document).on('click','.dinnerSVG',function(){
+			$("#aPCB" + SHCID + " .addFoodBody>.dinner").empty();
+			$("#aPCB" + SHCID + " .addFoodBody>.dinner").html('<div class="Plus">'
+					+ '<div class="stripe"></div>'
+					+ '<div class="rank"></div>'
+				+ '</div>')
+			$("#aPCB" + SHCID + " .addFoodBody>.dinner").css("border","dashed 2px #adb5bd")
+			$("#SHC" + SHCID + " .dinnerSVG").parent().append('<svg class="PlusSVG FoodPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+						+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+					+ '</svg>')
+			$("#SHC" + SHCID + " .dinnerSVG").remove();
+			addPlaceObjArr[SHCID -1]['FoodObj']['dinner'] = null;
+		})
+		
+		$(document).on('click','.ActivityPlusSVG',function(){
+			if(addPlaceObjArr[SHCID - 1]['Activity']){
+				
+			}
+			
+		})
+		
+		
 		function toVaildNumber(CheckStr,e){			
 			if(e.keyCode == 190 || e.keyCode == 187 || e.keyCode == 189){
 				return '0';
@@ -1661,19 +1920,21 @@
 					if(!response.ok){
 						throw new Error("네트워크 오류 : " + response.status)
 					}
-					
 					return response.json()
 				})
 				.then(data =>{
-					var summary = data.routes[0].summary;
-				
-					return summary['distance'];
+					if(data.routes[0]['result_code'] != 0){
+						alert("길찾기 과정중 오류가 발생했습니다.\n 오류의 내용은 다음과 같습니다\n " + data.routes[0]['result_msg'])
+						return 0
+					}else{
+						var summary = data.routes[0].summary;
+						return summary['distance'];	
+					}
 				})
 				
 				return result;
-				
-				
-				
+					
+			
 		}
 	})
 
@@ -1697,6 +1958,8 @@
 <link href="<c:url value="/resources/css/Creating.css" />"
 	rel="stylesheet">
 </head>
+
+
 <body>
 	<main>
 		<div id="cover">
@@ -1815,7 +2078,8 @@
 
 							<div class="expense" id="hotel">
 								<div class="exTitle">숙박비</div>
-								<input placeholder="숙박비를 입력해주세요" type="number" value="0" min="0" class="Setting_input">
+								<input placeholder="숙박비를 입력해주세요" type="number" value="0" min="0"
+									class="Setting_input">
 								<div class="won">원</div>
 								<div class="feeNotice">숙박비로 사용할 최대 금액을 적어주세요</div>
 							</div>
@@ -1834,14 +2098,16 @@
 
 							<div class="expense" id="food">
 								<div class="exTitle">식사비용</div>
-								<input placeholder="식비를 입력해주세요" type="number" value="0" min="0" class="Setting_input">
+								<input placeholder="식비를 입력해주세요" type="number" value="0" min="0"
+									class="Setting_input">
 								<div class="won">원</div>
 								<div class="feeNotice">식비로 사용할 최대 금액을 적어주세요</div>
 							</div>
 
 							<div class="expense" id="activity">
 								<div class="exTitle">활동 비용</div>
-								<input placeholder="활동비를 입력해주세요" type="number" value="0" min="0" class="Setting_input">
+								<input placeholder="활동비를 입력해주세요" type="number" value="0" min="0"
+									class="Setting_input">
 								<div class="won">원</div>
 								<div class="feeNotice">기타 활동비로 사용할 금액을 적어주세요</div>
 							</div>
@@ -1919,52 +2185,178 @@
 							</div>
 							<!-- For CLone -->
 							<div id="originSetDetail">
-								<div class="SetDetail-Hotel">숙박비 : <input type="number" min="0" class="Hotel_Detail_input"></div>
-								<div class="SetDetail-Food">식사비 : <input type="number" min="0" class="Food_Detail_input"></div>
-								<div class="SetDetail-Activity">활동비 : <input type="number" min="0" class="Activity_Detail_input"></div>
+								<div class="SetDetail-Hotel">
+									숙박비 : <input type="number" min="0" class="Hotel_Detail_input">
 								</div>
+								<div class="SetDetail-Food">
+									식사비 : <input type="number" min="0" class="Food_Detail_input">
+								</div>
+								<div class="SetDetail-Activity">
+									활동비 : <input type="number" min="0"
+										class="Activity_Detail_input">
+								</div>
+							</div>
 							<!-- End For Clone -->
 							<div id="detailSet">
 								<div id="detailSet-header">
 									<div id="detailSet-Date">일자</div>
 									<div id="detailSet-Sum">사용금액</div>
-								</div>	
+								</div>
 								<div id="detailSet-rows"></div>
-							
-							
+
+
 							</div>
 							<div id="CR-btn">
 								<div id="detailSet-complete">세부설정 완료</div>
-								<div id="Reset"><a>예산 재설정</a></div>
+								<div id="Reset">
+									<a>예산 재설정</a>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div id="Final_confirmation">
-						<div id="confir_Title">최종확인 및 일정 생성</div>
-						<div id="Plperiod"></div>
-						<div id="StartingPoint">출발지 : <p>설정되지 않음</p></div>
-						<div id="EndPoint">도착지 : <p>${local.getKoreanName() }</p></div>
-						<div id="distance">거리 : <p>계산 중 ...</p></div>
-						
-						<div id="Final_sumExpense">총 합계 : <p>계산 불가</p></div>
-						<div id="IndivExpense">
-							<div id="Final_HotelExpense">숙박비 : <p>입력되지 않음</p></div>
-							<div id="Final_FoodExpense">식사비 : <p>입력되지 않음</p></div>
-							<div id="Final_ActivityExpense">활동비 : <p>입력되지 않음</p></div>
-							<div id="Final_TrafficExpense">
-								<div id="TrafficTitle">교통비</div>
-								<ul>
-									<li id="Final_gasoline">계산중 ...</li>
-									<li id="Final_diesel">계산중 ...</li>
-									<li id="Final_LPG">계산중 ...</li>
-									<li id="Final_CNG">계산중 ...</li>
-								</ul>		
+					<div id="addPlace">
+						<!-- addPlace Clone origin -->
+						<div id="addPlaceOrigin">
+
+							<div class="addPlaceColumnBody">
+								<div class="plainInfo">
+									<div class="PlDayInfo"></div>
+									<div class="CountInfo">0/5</div>
+								</div>
+								<div class="addPlaceScroll statusDown"></div>
+								<div class="detailInfo">
+									<div class="HotelExp">
+										숙박비 :
+										<p></p>
+									</div>
+									<div class="FoodExp">
+										식사비 :
+										<p></p>
+									</div>
+									<div class="ActivityExp">
+										활동비 :
+										<p></p>
+									</div>
+
+									<div class="addHotel">
+										<div class="addHotelTitle">숙소</div>
+										<div class="addHotelBody">
+											<div class="Plus">
+												<div class="stripe"></div>
+												<div class="rank"></div>
+											</div>
+										</div>
+									</div>
+									<div class="addFood">
+										<div class="addFoodTitle">식당</div>
+										<div class="addFoodBody">
+											<div class="breakfast">
+												<div class="Plus">
+													<div class="stripe"></div>
+													<div class="rank"></div>
+												</div>
+											</div>
+											<div class="lunch">
+												<div class="Plus">
+													<div class="stripe"></div>
+													<div class="rank"></div>
+												</div>
+											</div>
+											<div class="dinner">
+												<div class="Plus">
+													<div class="stripe"></div>
+													<div class="rank"></div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+									<div class="addActivityPlace">
+										<div class="addActivityPlaceTitle">관광</div>
+										<div class="addActivityPlaceBody act1">
+											<div class="Plus">
+												<div class="stripe"></div>
+												<div class="rank"></div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
-							<div id="Final_warn">교통비는 유가에 따라 <b>정확하지 않을 수</b> 있으며, 제주도의 경우 <b>유효하지 않습니다.</b></div>
+						</div>
+						<!-- end addPlace Clone origin -->
+
+
+						<div id="showLeft">
+
+							<div id="addPlace_Title">숙소 및 장소 설정</div>
+							<div id="TravelPlace">${local.getKoreanName() }</div>
+							<div id="Plperiod"></div>
+
+							<div id="addPlace-warn">* 숙소와 여행지를 예산에 맞게 설정해주세요</div>
+							<div id="PlanDays">
+								<div id="addPlaceHeader">
+									<div id="PLDay">날짜</div>
+									<div id="PlaceCount">선택된 장소 수</div>
+								</div>
+								<div id="addPlaceColumns"></div>
+							</div>
+						</div>
+						<div id="showRight">
+							<div id="ShowPlaceOrigin"> <!--  for Clone -->
+								<div class="ShowHotel">
+									<div class="ShowHotelTitle">숙소 선택 </div>
+									<div class="ShowPlaceDate"></div>									
+									<div class="HotelSearch">
+										<input class="search">
+										<svg class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" viewBox="0 0 56.966 56.966"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
+										<button class="CheckaddPlaceObjArr">확인</button>
+									</div>
+
+									<div class="HotelSearchResult"></div>
+
+								</div>
+								<div class="ShowFood">
+									<div class="ShowFoodTitle">식당 선택</div>
+									<div class="ShowPlaceDate"></div>
+									<div class="FoodSearch">
+										<input class="search">
+										<svg class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" viewBox="0 0 56.966 56.966"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
+										<button class="CheckaddPlaceObjArr">확인</button>
+										
+									</div>
+
+									<div class="FoodSearchResult"></div>
+								</div>
+
+
+								<div class="ShowActivity">
+									<div class="ShowActivityTitle">관광 선택</div>
+									<div class="ShowPlaceDate"></div>
+									<div class="ActivitySearch">
+										<input class="search">
+										<svg class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" viewBox="0 0 56.966 56.966"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
+																			<button class="CheckaddPlaceObjArr">확인</button>
+									</div>
+
+									<div class="ActivitySearchResult"></div>
+								</div>
+							</div>
+							
+							
+							
+							<div id="showList">
+							</div>
 						</div>
 						
-						<div id="Creat">생성하기</div>
-
+							<div id="slideToLeft">
+								<div id="slideCircle">
+									<svg class="slideSVG" onclick="slideSVG()">
+										<path d="M38 15 l -15 15 l 15 15" fill="transparent" stroke="white" stroke-width="3"></path>
+									</svg>
+								</div>
+							</div>
+						
+						
 					</div>
 				</div>
 			</div>
@@ -1976,6 +2368,115 @@
 </body>
 <script>
 	var mapContainer = document.getElementById('Map'); // 지도를 표시할 div 
+	var SearchCategoryCode = 'AD5'; // 검색 결과 필터
+	var dayMarkers = [];
+	var showMarkers = [];
+	
+	var Foodmarkers = [];
+	var Hotelmarkers = [];
+	var Activitymarkers = [];
+	
+	var resultData = [];
+	
+	function dayMarkerObj(){
+		var Foodmarkers = [];
+		var Hotelmarkers = [];
+		var Activitymarkers = [];
+	}
+	
+	function cre_dayMarkers(FoodMarkers, HotelMarkers, ActivityMarkers){
+		var tempDayMarkers = new dayMarkerObj();
+		tempDayMarkers.Foodmarkers = FoodMarkers;
+		tempDayMarkers.Hotelmarkers = HotelMarkers;
+		tempDayMarkers.Activitymarkers = ActivityMarkers;
+		
+		return tempDayMarkers;
+	}
+	
+	var addPlaceObjArr = [];
+	
+	
+	$(document).on('click','button[class=CheckaddPlaceObjArr]',function(){
+		console.log(addPlaceObjArr)
+		console.log(dayMarkers)
+		console.log(SearchCategoryCode)
+		console.log(showMarkers)
+		console.log(SHCID)
+	})
+	
+	function slideSVG(){
+		if($("#showRight").css("display") != 'none'){
+			$("#showRight").hide();
+			$(".slideSVG>path").attr("d","M23 15 l 15 15 l -15 15");
+			$("#addPlace").css("width","500px")
+		}else{
+			$("#showRight").show();
+			$(".slideSVG>path").attr("d","M38 15 l -15 15 l 15 15");
+			$("#addPlace").css("width","950px")
+		}
+	}
+	
+	
+	
+	function addPlaceFoodObj(){
+		var breakfast, lunch, dinner;
+	}
+	
+	function cre_addFood(breakfast, lunch, dinner){
+		var resultObj = new addPlaceFoodObj();
+		resultObj.breakfast = breakfast;
+		resultObj.lunch = lunch;
+		resultObj.dinner = dinner;
+
+		return resultObj;
+	};
+	
+	function addPlaceHotelObj(){
+		var placeData;
+	}
+	
+	function cre_addHotel(placeData){
+		var resultObj = new addPlaceHotelObj();
+		resultObj.placeData = placeData;
+	
+		return resultObj;
+	}
+	
+	function addPlaceActivityObj(){
+		var placeData;
+	}
+	
+	function cre_addActivity(placeData){
+		var result = new addPlaceActivityObj();
+		result.placeData = placeData;
+		
+		return result;
+	}
+	
+	function addPlaceObj(){
+		var date;
+		var index;
+		var FoodObj, HotelObj,ActivityObj;
+	}
+	
+	function cre_addPlaceObj(date, index, breakfast, lunch, dinner, HotelPlace, activityPlace){
+		var ResultPlaceObj = new addPlaceObj();
+		ResultPlaceObj.date = date;
+		ResultPlaceObj.index = index;
+		
+		ResultPlaceObj.FoodObj = cre_addFood(breakfast,lunch,dinner)
+		ResultPlaceObj.HotelObj = cre_addHotel(HotelPlace)
+		ResultPlaceObj.ActivityObj = cre_addActivity(activityPlace);
+		
+		return ResultPlaceObj
+	}
+	
+	
+	
+	var SHCID = 1;
+	
+	
+	
 	let CenterLng = $("#lng").val();
 	let CenterLat = $("#lat").val();
 	mapOption = {
@@ -1983,24 +2484,219 @@
 		level : 9
 	// 지도의 확대 레벨
 	};
+	
+	var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_red.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+    imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+    markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
 	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+	
+	var markerPosition  = new kakao.maps.LatLng(CenterLat, CenterLng); 
 
-	//지도를 클릭한 위치에 표출할 마커입니다
-	var marker = new kakao.maps.Marker({
-		// 지도 중심좌표에 마커를 생성합니다 
-		position : map.getCenter()
+	// 마커를 생성합니다
+	var Centermarker = new kakao.maps.Marker({
+	    position: markerPosition
 	});
+	
+	Centermarker.setMap(map)
+	
+	var ps = new kakao.maps.services.Places();  
 
-	//지도에 마커를 표시합니다
-	marker.setMap(map);
+	$(document).on('click','svg[class*=searchIcon]',function(){
+		
+		var keyword = $(this).siblings('input').val();
+		
+	    if (!keyword.replace(/^\s+|\s+$/g, '')) {
+	        alert('키워드를 입력해주세요!');
+	    }else{
+			searchPlaces(keyword);
+			SHCID = $(this).parent().parent().parent().attr("id").substring(3);
+	    }
+	})
+	
+	$(document).on('keyup','input[class="search"]',function(e){
+		if(e.keyCode == 13){
+			var keyword = $(this).val();
+			
+		    if (!keyword.replace(/^\s+|\s+$/g, '')) {
+		        alert('키워드를 입력해주세요!');
+		    }else{
+				searchPlaces(keyword);
+				SHCID = $(this).parent().parent().parent().attr("id").substring(3);
+		    }
+		}
+	})
+	
+	
+	function searchPlaces(keyWord){
+		
+		var searchOption = {
+				location : new kakao.maps.LatLng(CenterLat,CenterLng),
+				radius : 12000 // 반지름 12km
+		};
+		
+		ps.keywordSearch(keyWord,placeSearchCB, searchOption)
+	}
+	
+	
+	function placeSearchCB(data, status, pagination){
+		if(status == kakao.maps.services.Status.OK){
+			
+			resultData = [];
+			for(var i = 0; i < data.length; i++){
+				if(data[i].category_group_code == SearchCategoryCode || SearchCategoryCode == 'anything'){
+					resultData.push(data[i])
+				}
+			}
+			
+			if(resultData.length != 0 ){
+				displayPlaces(resultData)	
+			}else{
+				alert("검색결과가 없습니다.")
+			}
 
-	kakao.maps.event.addListener(map, 'zoom_changed', function() {
-
-		// 지도의 현재 레벨을 얻어옵니다
-		var level = map.getLevel();
-
-		console.log(level)
-	});
+		}else{
+			alert("카카오 지도 api에 오류가 발생하였습니다. 잠시 후 시도하여주십시오")
+		}
+	}
+	
+	function displayPlaces(data){
+		
+		removeMarkerAndEle();
+		for(var i = 0; i < data.length; i++){
+			var pos = new kakao.maps.LatLng(data[i].y,data[i].x)
+			addMarker(pos,i)
+			addElement(data[i],i)
+		}
+	}
+	
+	function removeMarkerAndEle(){
+		var CategoryCodeKor;
+		switch (SearchCategoryCode){
+			case 'AD5':
+				CategoryCodeKor = 'Hotelmarkers'
+				break;
+			case 'FD6':
+				CategoryCodeKor = 'Foodmarkers'
+				break;
+			case 'anything' : 
+			CategoryCodeKor = 'Activitymarkers'
+		}	
+		for(var i = 0; i < dayMarkers[SHCID - 1][CategoryCodeKor].length; i++){
+			dayMarkers[SHCID - 1][CategoryCodeKor][i].setMap(null)
+		}
+		
+		dayMarkers[SHCID -1][CategoryCodeKor] = [];
+		showMarkers = [];
+		
+		
+		if(SearchCategoryCode == 'AD5'){
+			$("#SHC" + SHCID).children(".ShowHotel").children(".HotelSearchResult").empty();
+			
+		}else if(SearchCategoryCode == 'FD6'){
+			$("#SHC" + SHCID).children(".ShowFood").children(".FoodSearchResult").empty();			
+		}else{
+			$("#SHC" + SHCID).children(".ShowActivity").children(".ActivitySearchResult").empty();
+		}
+		
+	}
+	
+	function LoadMarker(type){
+		
+		for(var i = 0; i < showMarkers.length;i++){
+			showMarkers[i].setMap(null)
+		}
+		
+		showMarkers = [];
+		if(dayMarkers[SHCID - 1][type].length){
+			console.log(SHCID)
+			for(var i = 0; i < dayMarkers[SHCID - 1][type].length;i++){
+				dayMarkers[SHCID - 1][type][i].setMap(map);
+				showMarkers.push(dayMarkers[SHCID - 1][type][i])
+			}
+		}else{
+			if(type == 'Hotelmarkers'){
+				
+				searchPlaces('숙소')
+			}else if(type == 'Foodmarkers'){
+				
+				searchPlaces('식당')
+			}else{
+				
+				searchPlaces('관광')
+			}
+		}
+	}
+	
+	function addElement(data,index){
+		
+		var SearchType;
+		switch(SearchCategoryCode){
+			case 'AD5' :
+				SearchType = 'Hotel'
+				break;
+			case 'FD6' : 
+				SearchType = 'Food'
+				break;
+			case 'anything' :
+				SearchType = 'Activity'
+				break;
+		}
+		var targetDOM = $("#SHC" + SHCID).children(".Show" + SearchType).children("." + SearchType + "SearchResult");
+		
+		var eleStr;
+		
+		itemStr = "<span class='markerbg marker_" + (index+1) + "'></span>"
+					+ "<div class='placeName'><a href='" + data.place_url + "' target='_blank'>" + data.place_name + "</a></div>"
+					
+					if(data.road_address_name){
+						itemStr += "<span class='jibun'>" + data.road_address_name + "</span>"
+					}else{
+						itemStr += "<span class='jibun'>" + data.address_name + "</span>"
+					}
+		itemStr += "<div class='phone'>" + data.phone + "</div>"
+		
+		itemStr += '<svg class="PlusSVG ' + SearchType + 'PlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+			 			+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+						+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+					+ '</svg>' 
+		
+		eleStr = "<div class='SearchItem'>" + itemStr + "</div>";
+		
+		targetDOM.append(eleStr)
+	
+	}
+	
+	function addMarker(position,index){
+		var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+        imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+        imgOptions =  {
+            spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+            spriteOrigin : new kakao.maps.Point(0, (index*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+            offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+        },
+        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+        marker = new kakao.maps.Marker({
+            position: position, // 마커의 위치
+            image: markerImage 
+        });
+		
+		marker.setMap(map)
+		var CategoryCodeKor;
+		switch (SearchCategoryCode){
+			case 'AD5':
+				CategoryCodeKor = 'Hotelmarkers'
+				break;
+			case 'FD6':
+				CategoryCodeKor = 'Foodmarkers'
+				break;
+			case 'anything' : 
+				CategoryCodeKor = 'Activitymarkers'
+		}
+		
+		dayMarkers[SHCID -1][CategoryCodeKor].push(marker)
+		showMarkers.push(marker)
+	}
+	
 </script>
 </html>
