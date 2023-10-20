@@ -163,9 +163,25 @@
 			
 			if($("#traffic>input").val() != '' && finInitNumber){
 				
-				$("#addPlaceColumns").empty();
+				addPlaceObjArr = [];
+				for(var i = 0; i < dayMarkers.length; i++){
+					for(var i2 = 0; i2 < dayMarkers[i]['Activitymarkers'].length; i2++){
+						dayMarkers[i]['Activitymarkers'][i2].setMap(null);
+					}
+					for(var i2 = 0; i2 < dayMarkers[i]['Foodmarkers'].length; i2++){
+						dayMarkers[i]['Foodmarkers'][i2].setMap(null);
+					}
+					
+					for(var i2 = 0; i2 < dayMarkers[i]['Hotelmarkers'].length; i2++){
+						dayMarkers[i]['Hotelmarkers'][i2].setMap(null);
+					}
+				}
+				dayMarkers = [];
 				
-				$("#creMapWrap").detach();
+				$("#addPlaceColumns").empty();
+				$("#showList").empty();
+				
+				$("#creMapWrap").remove();
 				
 				$("#Plperiod").text(StartDay + " - " + EndDay);
 				
@@ -185,14 +201,14 @@
 					$("#ShowPlaceOrigin").clone().attr('id','SHC' + i).addClass("SHC").appendTo("#showList")
 					$("#SHC" + i).children().children('.ShowPlaceDate').text((tempDate.getMonth() + 1) + "." + tempDate.getDate() + " (" + getKoreanDay(tempDate.getDay()) + ")")
 					
-					addPlaceObjArr.push(cre_addPlaceObj(tempDate,i-1,null,null,null,null,null));
+					addPlaceObjArr.push(cre_addPlaceObj(tempDate,i-1,null,null,null,null,[null,null,null,null,null]));
 					dayMarkers.push(cre_dayMarkers([],[],[]));
 					
 					
 					tempDate.setDate(tempDate.getDate() + 1)
 				}
-				
 				LoadMarker('Hotelmarkers');
+				
 				
 				$("#addPlace>#showLeft").append("<div id='creMapWrap'><div id='creMap'>지도 생성하기</div></div>")
 			}else{
@@ -200,6 +216,109 @@
 			}
 			
 		}
+		
+		$(document).on('click','#creMap',function(){
+			
+			if(CheckPlan()){
+					if(confirm("일정은 위쪽부터 순서대로 만들어집니다. 진행하시겠습니까?")){
+						var SortedPlan = SortPlanArr();
+					}else{
+						alert("일정 생성이 취소되었습니다")	
+					}
+			}else{
+				alert("날짜당 1개의 숙소, 3개의 식당, 1개 이상의 관광지를 선택해주세요")
+			}
+		})
+		
+		function SortPlanArr(){
+			
+			//PlObjArr, addPlaceObjArr
+			
+			PlObjArr.shift();
+			
+			var resultArr = [];
+			
+			for(var i = 0; i < PlObjArr.length; i++){
+				var dayActs = [];
+				resultArr[i] = {
+						'StartPoint' : addPlaceObjArr[i]['HotelObj'].placeData,
+						'Acts' : dayActs
+				}
+				
+				if(i + 1 != PlObjArr.length || PlObjArr.length == 1){
+					resultArr[i].endPoint = addPlaceObjArr[i + 1]['HotelObj'].placeData;
+				}else{
+					resultArr[i].endPoint = null;
+				}
+				
+				var tempHour = PlObjArr[i].EndTime.Hour - PlObjArr[i].StartTime.Hour;
+				if (PlObjArr[i].StartTime.min > PlObjArr[i].EndTime.min) {
+					tempHour--;
+					min = PlObjArr[i].EndTime.min + (60 - PlObjArr[i].StartTime.min)
+				} else {
+					min = PlObjArr[i].EndTime.min - PlObjArr[i].StartTime.min;
+				}
+				
+				tempMin = tempHour * 60 + min;
+				
+				resultArr[i].time = tempMin;
+				
+				if(PlObjArr[i].StartTime.Hour <= 5){
+					
+					if(addPlaceObjArr[i]['ActivityObj']){
+						
+					}
+					
+				}else if(5 <  PlObjArr[i].StartTime.Hour <= 9){
+					
+				}else if(9 < PlObjArr[i].StartTime.Hour <= 3){
+					
+				}else{
+					
+				}
+				
+				
+			}
+			
+			console.log(resultArr)
+			
+			
+			
+			console.log(PlObjArr)
+			//TODO
+			
+			return true;
+			
+		}
+		
+		function CheckPlan(){
+			for(var i = 0; i < addPlaceObjArr.length; i++){
+				var Activity = false;
+				var Food = false;
+				var Hotel = false;
+				
+				if(addPlaceObjArr[i]['HotelObj'].placeData != null){
+					Hotel = true;
+				}
+				
+				if(addPlaceObjArr[i]['FoodObj']['breakfast'] != null || addPlaceObjArr[i]['FoodObj']['lunch']  != null || addPlaceObjArr[i]['FoodObj']['dinner'] != null ){
+					Food = true;
+				}
+				
+				for(var i2 = 0; i2 < addPlaceObjArr[i]['ActivityObj']['placeDataArr'].length; i2++){
+					if(addPlaceObjArr[i]['ActivityObj']['placeDataArr'][i2] != null){
+						Activity = true;
+					}
+				}
+				
+				if(!Hotel || !Food || !Activity) return false;
+				
+			}
+			
+			
+			return true;
+		}
+		
 		
 		$(document).on('click','div[class*=addPlaceScroll]',function(){
 			if($(this).attr("class").includes("statusDown")){
@@ -1768,8 +1887,6 @@
 				var tempDinnerData = addPlaceObjArr[SHCID - 1]['FoodObj']['dinner'];
 				addPlaceObjArr[SHCID -1]['FoodObj'] = cre_addFood(tempBreakFastData,tempLunchData,tempDinnerData)
 				
-				console.log(cre_addFood(tempBreakFastData,tempLunchData,tempDinnerData))
-				
 				$(this).remove();
 				$("#aPCB" + SHCID + " .addFoodBody>.breakfast").css("border","solid 1px green")
 				
@@ -1873,11 +1990,317 @@
 		})
 		
 		$(document).on('click','.ActivityPlusSVG',function(){
-			if(addPlaceObjArr[SHCID - 1]['Activity']){
+			if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][0] == null){
+				
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act1").empty();
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addActivityPlaceBody>.act1")
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act1").append('<svg class="ActselectSVGInBody ActSVG1" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+				$(this).parent().append('<svg class="ActselectSVG ActSVG1" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+					+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+					+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+					+ '</svg>')
+					
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act1 .ActivityPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act1 .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempAct1 = dayMarkers[SHCID - 1]['Activitymarkers'][tempIndex - 1]
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][0] = tempAct1;
+				
+				
+				$(this).remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act1").css("border","solid 1px green")
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+			
+			}else if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][1] == null){
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act2").empty();
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addActivityPlaceBody>.act2")
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act2").append('<svg class="ActselectSVGInBody ActSVG2" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+				$(this).parent().append('<svg class="ActselectSVG ActSVG2" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+					+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+					+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+					+ '</svg>')
+					
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act2 .ActivityPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act2 .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempAct1 = dayMarkers[SHCID - 1]['Activitymarkers'][tempIndex - 1]
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][1] = tempAct1;
+				
+				
+				$(this).remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act2").css("border","solid 1px green")
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+			
+				
+			}else if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][2] == null){
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act3").empty();
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addActivityPlaceBody>.act3")
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act3").append('<svg class="ActselectSVGInBody ActSVG3" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+				$(this).parent().append('<svg class="ActselectSVG ActSVG3" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+					+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+					+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+					+ '</svg>')
+					
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act3 .ActivityPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act3 .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempAct1 = dayMarkers[SHCID - 1]['Activitymarkers'][tempIndex - 1]
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][2] = tempAct1;
+				
+				
+				$(this).remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act3").css("border","solid 1px green")
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+				
+			}else if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][3] == null){
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act4").empty();
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addActivityPlaceBody>.act4")
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act4").append('<svg class="ActselectSVGInBody ActSVG4" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+				$(this).parent().append('<svg class="ActselectSVG ActSVG4" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+					+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+					+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+					+ '</svg>')
+					
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act4 .ActivityPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act4 .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempAct1 = dayMarkers[SHCID - 1]['Activitymarkers'][tempIndex - 1]
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][3] = tempAct1;
+				
+				
+				$(this).remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act4").css("border","solid 1px green")
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+			
+				
+			}else if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][4] == null){
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act5").empty();
+				
+				$(this).parent().clone().appendTo("#aPCB" + SHCID + " .addActivityPlaceBody>.act5")
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act5").append('<svg class="ActselectSVGInBody ActSVG5" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+						+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+						+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+						+ '</svg>')
+				$(this).parent().append('<svg class="ActselectSVG ActSVG5" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+					+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="#84d191"/>'
+					+ '<path d="M18.6223 9.71611L11.1223 17.2161C11.057 17.2817 10.9794 17.3337 10.8939 17.3692C10.8084 17.4046 10.7168 17.4229 10.6243 17.4229C10.5317 17.4229 10.4401 17.4046 10.3546 17.3692C10.2692 17.3337 10.1915 17.2817 10.1262 17.2161L6.84497 13.9349C6.77957 13.8695 6.72768 13.7918 6.69229 13.7064C6.65689 13.6209 6.63867 13.5293 6.63867 13.4368C6.63867 13.3443 6.65689 13.2527 6.69229 13.1673C6.72768 13.0818 6.77957 13.0042 6.84497 12.9388C6.91037 12.8734 6.98802 12.8215 7.07348 12.7861C7.15893 12.7507 7.25052 12.7325 7.34302 12.7325C7.43551 12.7325 7.5271 12.7507 7.61256 12.7861C7.69801 12.8215 7.77566 12.8734 7.84106 12.9388L10.6249 15.7226L17.6274 8.72119C17.7595 8.5891 17.9386 8.51489 18.1254 8.51489C18.3122 8.51489 18.4914 8.5891 18.6235 8.72119C18.7556 8.85328 18.8298 9.03243 18.8298 9.21924C18.8298 9.40604 18.7556 9.58519 18.6235 9.71728L18.6223 9.71611Z" fill="white"/>'
+					+ '</svg>')
+					
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act5 .ActivityPlusSVG").remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act5 .phone").remove();
+				
+				var tempIndex = Number($(this).siblings(".markerbg").attr("class").substring(16));
+				var tempAct1 = dayMarkers[SHCID - 1]['Activitymarkers'][tempIndex - 1]
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][4] = tempAct1;
+				
+				
+				$(this).remove();
+				$("#aPCB" + SHCID + " .addActivityPlaceBody>.act5").css("border","solid 1px green")
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+			
 				
 			}
 			
 		})
+		
+		$(document).on('click','.ActselectSVG, .ActselectSVGInBody',function(){
+			if($(this).attr("class").includes("ActSVG1")){
+				$("#aPCB" + SHCID + " .act1").empty();
+				$("#aPCB" + SHCID + " .act1").html('<div class="Plus">'
+						+ '<div class="stripe"></div>'
+						+ '<div class="rank"></div>'
+					+ '</div>');
+
+				$("#aPCB" + SHCID + " .act1").css("border","dashed 2px #adb5bd")
+				
+				$("#SHC" + SHCID + " .ActSVG1").parent().append('<svg class="PlusSVG ActivityPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+				+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+				+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+			+ '</svg>')
+			
+			$("#SHC" + SHCID + " .ActSVG1").remove();
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][0] = null;
+			
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+				
+				
+			}else if($(this).attr("class").includes("ActSVG2")){
+				             
+				$("#aPCB" + SHCID + " .act2").empty();
+				$("#aPCB" + SHCID + " .act2").html('<div class="Plus">'
+						+ '<div class="stripe"></div>'
+						+ '<div class="rank"></div>'
+					+ '</div>');
+
+				$("#aPCB" + SHCID + " .act2").css("border","dashed 2px #adb5bd")
+				
+				$("#SHC" + SHCID + " .ActSVG2").parent().append('<svg class="PlusSVG ActivityPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+				+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+				+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+			+ '</svg>')
+			
+			$("#SHC" + SHCID + " .ActSVG2").remove();
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][1] = null;
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+				
+			}else if($(this).attr("class").includes("ActSVG3")){
+				                                     
+				$("#aPCB" + SHCID + " .act3").empty();
+				$("#aPCB" + SHCID + " .act3").html('<div class="Plus">'
+						+ '<div class="stripe"></div>'
+						+ '<div class="rank"></div>'
+					+ '</div>');
+
+				$("#aPCB" + SHCID + " .act3").css("border","dashed 2px #adb5bd")
+				
+				$("#SHC" + SHCID + " .ActSVG3").parent().append('<svg class="PlusSVG ActivityPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+				+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+				+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+			+ '</svg>')
+			
+			$("#SHC" + SHCID + " .ActSVG3").remove();
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][2] = null;
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+			}else if($(this).attr("class").includes("ActSVG4")){
+				
+				$("#aPCB" + SHCID + " .act4").empty();
+				$("#aPCB" + SHCID + " .act4").html('<div class="Plus">'
+						+ '<div class="stripe"></div>'
+						+ '<div class="rank"></div>'
+					+ '</div>');
+
+				$("#aPCB" + SHCID + " .act4").css("border","dashed 2px #adb5bd")
+				
+				$("#SHC" + SHCID + " .ActSVG4").parent().append('<svg class="PlusSVG ActivityPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+				+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+				+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+			+ '</svg>')
+			
+			$("#SHC" + SHCID + " .ActSVG4").remove();
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][3] = null;
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+			}else if($(this).attr("class").includes("ActSVG5")){
+				
+				$("#aPCB" + SHCID + " .act5").empty();
+				$("#aPCB" + SHCID + " .act5").html('<div class="Plus">'
+						+ '<div class="stripe"></div>'
+						+ '<div class="rank"></div>'
+					+ '</div>');
+
+				$("#aPCB" + SHCID + " .act5").css("border","dashed 2px #adb5bd")
+				
+				$("#SHC" + SHCID + " .ActSVG5").parent().append('<svg class="PlusSVG ActivityPlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
+				+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
+				+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
+			+ '</svg>')
+			
+			$("#SHC" + SHCID + " .ActSVG5").remove();
+				addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][4] = null;
+				
+				var tempcount = 0;
+				for(var i = 0; i < addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'].length; i++){
+					if(addPlaceObjArr[SHCID - 1]['ActivityObj']['placeDataArr'][i] != null){
+						tempcount++;
+					}
+				}
+				
+				$("#aPCB" + SHCID +" .CountInfo").text(tempcount + "/5")
+			}
+		})
+		
+		
+		
 		
 		
 		function toVaildNumber(CheckStr,e){			
@@ -2273,10 +2696,36 @@
 									</div>
 									<div class="addActivityPlace">
 										<div class="addActivityPlaceTitle">관광</div>
-										<div class="addActivityPlaceBody act1">
-											<div class="Plus">
-												<div class="stripe"></div>
-												<div class="rank"></div>
+										<div class="addActivityPlaceBody">
+											<div class="act1">
+												<div class="Plus">
+													<div class="stripe"></div>
+													<div class="rank"></div>
+												</div>
+											</div>
+											<div class="act2">
+												<div class="Plus">
+													<div class="stripe"></div>
+													<div class="rank"></div>
+												</div>
+											</div>
+											<div class="act3">
+												<div class="Plus">
+													<div class="stripe"></div>
+													<div class="rank"></div>
+												</div>
+											</div>
+											<div class="act4">
+												<div class="Plus">
+													<div class="stripe"></div>
+													<div class="rank"></div>
+												</div>
+											</div>
+											<div class="act5">
+												<div class="Plus">
+													<div class="stripe"></div>
+													<div class="rank"></div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -2296,19 +2745,25 @@
 							<div id="PlanDays">
 								<div id="addPlaceHeader">
 									<div id="PLDay">날짜</div>
-									<div id="PlaceCount">선택된 장소 수</div>
+									<div id="PlaceCount">선택된 관광지 수</div>
 								</div>
 								<div id="addPlaceColumns"></div>
 							</div>
 						</div>
 						<div id="showRight">
-							<div id="ShowPlaceOrigin"> <!--  for Clone -->
+							<div id="ShowPlaceOrigin">
+								<!--  for Clone -->
 								<div class="ShowHotel">
-									<div class="ShowHotelTitle">숙소 선택 </div>
-									<div class="ShowPlaceDate"></div>									
+									<div class="ShowHotelTitle">숙소 선택</div>
+									<div class="ShowPlaceDate"></div>
 									<div class="HotelSearch">
 										<input class="search">
-										<svg class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" viewBox="0 0 56.966 56.966"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
+										<svg
+											class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5"
+											xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1"
+											viewBox="0 0 56.966 56.966">
+											<path
+												d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
 										<button class="CheckaddPlaceObjArr">확인</button>
 									</div>
 
@@ -2320,9 +2775,14 @@
 									<div class="ShowPlaceDate"></div>
 									<div class="FoodSearch">
 										<input class="search">
-										<svg class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" viewBox="0 0 56.966 56.966"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
+										<svg
+											class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5"
+											xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1"
+											viewBox="0 0 56.966 56.966">
+											<path
+												d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
 										<button class="CheckaddPlaceObjArr">확인</button>
-										
+
 									</div>
 
 									<div class="FoodSearchResult"></div>
@@ -2334,29 +2794,34 @@
 									<div class="ShowPlaceDate"></div>
 									<div class="ActivitySearch">
 										<input class="search">
-										<svg class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" viewBox="0 0 56.966 56.966"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
-																			<button class="CheckaddPlaceObjArr">확인</button>
+										<svg
+											class="searchIcon w-4 h-4 fill-current text-lightScheme-primary md:w-5 md:h-5"
+											xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1"
+											viewBox="0 0 56.966 56.966">
+											<path
+												d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
+										<button class="CheckaddPlaceObjArr">확인</button>
 									</div>
 
 									<div class="ActivitySearchResult"></div>
 								</div>
 							</div>
-							
-							
-							
-							<div id="showList">
+
+
+
+							<div id="showList"></div>
+						</div>
+
+						<div id="slideToLeft">
+							<div id="slideCircle">
+								<svg class="slideSVG" onclick="slideSVG()">
+										<path d="M38 15 l -15 15 l 15 15" fill="transparent"
+										stroke="white" stroke-width="3"></path>
+									</svg>
 							</div>
 						</div>
-						
-							<div id="slideToLeft">
-								<div id="slideCircle">
-									<svg class="slideSVG" onclick="slideSVG()">
-										<path d="M38 15 l -15 15 l 15 15" fill="transparent" stroke="white" stroke-width="3"></path>
-									</svg>
-								</div>
-							</div>
-						
-						
+
+
 					</div>
 				</div>
 			</div>
@@ -2443,12 +2908,12 @@
 	}
 	
 	function addPlaceActivityObj(){
-		var placeData;
+		var placeDataArr = [];
 	}
 	
 	function cre_addActivity(placeData){
 		var result = new addPlaceActivityObj();
-		result.placeData = placeData;
+		result.placeDataArr = placeData;
 		
 		return result;
 	}
@@ -2459,14 +2924,14 @@
 		var FoodObj, HotelObj,ActivityObj;
 	}
 	
-	function cre_addPlaceObj(date, index, breakfast, lunch, dinner, HotelPlace, activityPlace){
+	function cre_addPlaceObj(date, index, breakfast, lunch, dinner, HotelPlace, activityPlaceArr){
 		var ResultPlaceObj = new addPlaceObj();
 		ResultPlaceObj.date = date;
 		ResultPlaceObj.index = index;
 		
 		ResultPlaceObj.FoodObj = cre_addFood(breakfast,lunch,dinner)
 		ResultPlaceObj.HotelObj = cre_addHotel(HotelPlace)
-		ResultPlaceObj.ActivityObj = cre_addActivity(activityPlace);
+		ResultPlaceObj.ActivityObj = cre_addActivity(activityPlaceArr);
 		
 		return ResultPlaceObj
 	}
@@ -2510,7 +2975,6 @@
 	        alert('키워드를 입력해주세요!');
 	    }else{
 			searchPlaces(keyword);
-			SHCID = $(this).parent().parent().parent().attr("id").substring(3);
 	    }
 	})
 	
@@ -2541,7 +3005,6 @@
 	
 	function placeSearchCB(data, status, pagination){
 		if(status == kakao.maps.services.Status.OK){
-			
 			resultData = [];
 			for(var i = 0; i < data.length; i++){
 				if(data[i].category_group_code == SearchCategoryCode || SearchCategoryCode == 'anything'){
@@ -2552,11 +3015,12 @@
 			if(resultData.length != 0 ){
 				displayPlaces(resultData)	
 			}else{
-				alert("검색결과가 없습니다.")
+				alert("현재 검색 설정에 맞는 검색결과가 없습니다. + 버튼을 눌러 숙소, 식당, 관광지중 올바른 검색 설정 후 다시 시도해주세요\n"
+						+ "* 관광지의 경우 모든 검색이 포함됩니다")
 			}
 
-		}else{
-			alert("카카오 지도 api에 오류가 발생하였습니다. 잠시 후 시도하여주십시오")
+		}else if(status == kakao.maps.services.Status.ZERO_RESULT){
+				alert("검색결과가 없습니다")
 		}
 	}
 	
@@ -2609,7 +3073,6 @@
 		
 		showMarkers = [];
 		if(dayMarkers[SHCID - 1][type].length){
-			console.log(SHCID)
 			for(var i = 0; i < dayMarkers[SHCID - 1][type].length;i++){
 				dayMarkers[SHCID - 1][type][i].setMap(map);
 				showMarkers.push(dayMarkers[SHCID - 1][type][i])

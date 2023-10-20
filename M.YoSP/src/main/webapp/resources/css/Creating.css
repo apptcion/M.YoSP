@@ -27,7 +27,7 @@ main{
 	/* background-color : white; */
 	z-index: 10;
 	height : 100vh;
-	width: 500px;
+	width: auto;
 	font-weight: 600;
 	display: flex;
 }
@@ -98,8 +98,9 @@ main{
 	/* top : 0px; */
 	/* right : 0px; */
 	height : 100vh;
-	width: 400px;
-	/* overflow : hidden; */
+	width: auto;
+	overflow-y: hidden;
+	overflow-x: visible;
 }
 
 
@@ -108,7 +109,7 @@ main{
 	top : 0px;
 	left : 0px;
 	height : 100vh;
-	width: 400px;
+	width: auto;
 }
 
 
@@ -119,7 +120,9 @@ main{
 	overflow: auto;
 }
 
-
+#ChDate{
+	overflow: hidden !important;
+}
 
 #localName{
 	width: 350px;
@@ -1139,6 +1142,7 @@ input::-webkit-inner-spin-button {
 		border-radius : 10px;
 		background-color: white;
 		box-shadow: 0 2px 8px 0 rgba(31,38,135, 0.15);
+		overflow: hidden;
 	}
 
 	.breakfast, .lunch, .dinner{
@@ -1151,6 +1155,7 @@ input::-webkit-inner-spin-button {
 		margin-top : 10px;
 		background-color: white;
 		box-shadow: 0 2px 8px 0 rgba(31,38,135,0.15);
+		overflow: hidden;
 	}
 		
 	.breakfast{
@@ -1165,21 +1170,27 @@ input::-webkit-inner-spin-button {
 		
 	}
 
-	.addActivityPlaceBody{
+	div[class*=act]{
 		border : dashed 2px #adb5bd;
 		width : 270px;
 		position : relative;
-		left : 10px;
 		border-radius : 10px;
 		height: 72px;
 		background-color: white;
 		box-shadow: 0 2px 8px 0 rgba(31,38,135,0.15);
+		left: 10px;
+		margin-top: 10px;
+		overflow: hidden;
 	}
 
+		
+
 	.addActivityPlaceBody{
-		/* position : relative; */
-		/* top : 10px; */
-		margin-top: 10px;
+		position: relative;
+		/* left : 10px; */
+		height : auto;
+		/* margin-top: 10px; */
+		/* width: 270px; */
 	}
 
 #addPlace::-webkit-scrollbar{
@@ -1597,13 +1608,13 @@ div[class*=SearchResult]::-webkit-scrollbar-track{
     left: 280px;
 }
 
-.HotelselectSVG, .FoodselectSVG, .ActivityselectSVG{
+.HotelselectSVG, .FoodselectSVG, .ActselectSVG{
 	position : relative;
 	top : -75px;
 	left : 280px;
 }
 
-.HotelselectSVGInBody, .FoodselectSVGInBody, .ActivityselectSVGInBody{
+.HotelselectSVGInBody, .FoodselectSVGInBody, .ActselectSVGInBody{
 	position : relative;
 	top: -45px;
 	left: 230px;
