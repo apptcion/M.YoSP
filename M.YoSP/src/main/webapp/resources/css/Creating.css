@@ -512,7 +512,7 @@ left: 10px;
 	justify-content : center;
 	flex-wrap: wrap;
 	overflow : auto;
-	height : 200px;
+	height: 150px;
 }
 
 #HList::-webkit-scrollbar{
@@ -540,7 +540,7 @@ left: 10px;
 	display : flex;
 	justify-content : center;
 	flex-wrap : wrap;
-	height : 200px;
+	height: 150px;
 	overflow : auto;
 }
 

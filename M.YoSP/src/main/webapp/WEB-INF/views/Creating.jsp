@@ -70,6 +70,9 @@
 
 		var GMFA;
 		
+		var HomeMarker;
+		var actCount = [];
+		
 		let gasoline = 1873;
 		let diesel = 1780;
 		let LPG = 1454;
@@ -163,6 +166,9 @@
 			
 			if($("#traffic>input").val() != '' && finInitNumber){
 				
+				
+				
+				
 				addPlaceObjArr = [];
 				for(var i = 0; i < dayMarkers.length; i++){
 					for(var i2 = 0; i2 < dayMarkers[i]['Activitymarkers'].length; i2++){
@@ -222,11 +228,20 @@
 			if(CheckPlan()){
 					if(confirm("일정은 위쪽부터 순서대로 만들어집니다. 진행하시겠습니까?")){
 						var SortedPlan = SortPlanArr();
+						
+						
+						// 지도  표시
+						$("#resultMap").css("width","100vw")
+						$("#resultMap").css("height","100vh")
+						$("#resultMap").css("z-index","11")
+						
+						
+						
 					}else{
 						alert("일정 생성이 취소되었습니다")	
 					}
 			}else{
-				alert("날짜당 1개의 숙소, 3개의 식당, 1개 이상의 관광지를 선택해주세요")
+				alert("날짜당 1개의 숙소, 3개의 식당, 2개 이상의 관광지를 선택해주세요")
 			}
 		})
 		
@@ -234,22 +249,66 @@
 			
 			//PlObjArr, addPlaceObjArr
 			
-			PlObjArr.shift();
+			PlObjArr.shift(); // [ '' , .......] -> [........] | '' 제거
 			
 			var resultArr = [];
+			resultArr.length == addPlaceObjArr.length;
 			
 			for(var i = 0; i < PlObjArr.length; i++){
 				var dayActs = [];
 				resultArr[i] = {
 						'StartPoint' : addPlaceObjArr[i]['HotelObj'].placeData,
-						'Acts' : dayActs
+						'EndPoint' : null,
+						'Acts' : null,
+						'time' : null
+				}
+
+				if(i == 0){ // 첫날
+					resultArr[i].StartPoint = HomeMarker;
+					if(PlObjArr.length != 1){ // 하루짜리 여행이 아님
+						resultArr[i].EndPoint = addPlaceObjArr[i]['HotelObj'].placeData
+					
+						dayActs.push({
+							'number' : dayActs.length+1,
+							'type' : 'hotel',
+							'marker' : addPlaceObjArr[i]['HotelObj'].placeData
+						})
+						
+					}else if(addPlaceObjArr[i]['HotelObj'].placeData == null){ // 하루짜리 여행이고 숙소가 없음
+						resultArr[i].EndPoint = HomeMarker;
+					
+					
+					}else{ // 하루짜리 여행이지만 숙소가 있음
+						resultArr[i].EndPoint = HomeMarker;
+						
+						dayActs.push({
+							'number' : dayActs.length+1,
+							'type' : 'hotel',
+							'marker' : addPlaceObjArr[i]['HotelObj'].placeData.placeData
+						})
+					}
+				}else if((i + 1) == PlObjArr.length){ // 마지막 날
+					resultArr[i].StartPoint = addPlaceObjArr[i-1]['HotelObj'].placeData.placeData
+					resultArr[i].EndPoint = HomeMarker;
+				
+					dayActs.push({
+						'number' : dayActs.length+1,
+						'type' : 'hotel',
+						'marker' : addPlaceObjArr[i]['HotelObj'].placeData.placeData
+					})
+				}else{  // 평범한 날
+					resultArr[i].StartPoint = addPlaceObjArr[i-1]['HotelObj'].placeData.placeData;
+					resultArr[i].EndPoint = addPlaceObjArr[i]['HotelObj'].placeData.placeData;
+					
+					dayActs.push({
+						'number' : dayActs.length+1,
+						'type' : 'hotel',
+						'marker' : addPlaceObjArr[i]['HotelObj'].placeData.placeData
+					})					
+					
 				}
 				
-				if(i + 1 != PlObjArr.length || PlObjArr.length == 1){
-					resultArr[i].endPoint = addPlaceObjArr[i + 1]['HotelObj'].placeData;
-				}else{
-					resultArr[i].endPoint = null;
-				}
+				
 				
 				var tempHour = PlObjArr[i].EndTime.Hour - PlObjArr[i].StartTime.Hour;
 				if (PlObjArr[i].StartTime.min > PlObjArr[i].EndTime.min) {
@@ -263,41 +322,104 @@
 				
 				resultArr[i].time = tempMin;
 				
-				if(PlObjArr[i].StartTime.Hour <= 5){
+				if(PlObjArr[i].StartTime.Hour < 11){
 					
-					if(addPlaceObjArr[i]['ActivityObj']){
-						
+					var am = Math.floor(tempMin / 60) * 0.4;
+					var pm = Math.floor(tempMin / 60) * 0.6;
+					
+					if(Number(String(am)[2]) >=5){ //소수점 1자리수 *.***,,,,,,,
+						am = Math.ceil(am)
+						pm = Math.floor(pm)
+					}else{
+						am = Math.floor(am)
+						pm = Math.ceil(pm)	
 					}
 					
-				}else if(5 <  PlObjArr[i].StartTime.Hour <= 9){
+					console.log(am)
+					console.log(pm)
 					
-				}else if(9 < PlObjArr[i].StartTime.Hour <= 3){
+					dayActs.push({
+							'number' : dayActs.length+1,
+							'type' : 'breakfast',
+							'marker' : addPlaceObjArr[i]['FoodObj']['breakfast']
+					})
+					console.log(actCount[i])
 					
-				}else{
+					var AmActCount = 0;
+					var PmActCount = 0;
+					
+					switch(actCount[i]){
+					case 2:
+						AmActCount = 1;
+						PmActCount = 1;
+						break;
+					case 3:
+						
+						AmActCount = 1;
+						PmActCount = 2;
+						break;
+					case 4:
+						
+						AmActCount = 2;
+						PmActCount = 2;
+						break;
+					case 5:
+						
+						AmActCount = 2;
+						PmActCount = 3;
+						break;
+					}
+					
+					for(var i2 = 0; i2 < AmActCount; i2++){
+						dayActs.push({
+							'number' : dayActs.length+1,           // 오전 일정
+							'type' : 'tour',
+							'marker' : addPlaceObjArr[i]['ActivityObj'].placeDataArr[i2]
+						})
+					}
+					
+					dayActs.push({
+						'number' : dayActs.length+1,
+						'type' : 'lunch',							// 점심
+						'marker' : addPlaceObjArr[i]['FoodObj']['lunch']
+					})
+
+					for(var i2 = 0; i2 < PmActCount; i2++){
+						dayActs.push({
+							'number' : dayActs.length+1, 		// 오후 일정
+							'type' : 'tour',
+							'marker' : addPlaceObjArr[i]['ActivityObj'].placeDataArr[i2 + AmActCount]
+						})
+					}
+					
+					dayActs.push({
+						'number' : dayActs.length+1,                // 저녁
+						'type' : 'dinner',
+						'marker' : addPlaceObjArr[i]['FoodObj']['dinner']
+					})
+					
+					console.log(AmActCount)
+					console.log(PmActCount)
 					
 				}
-				
-				
+				resultArr[i].Acts = dayActs;
 			}
 			
 			console.log(resultArr)
 			
-			
-			
-			console.log(PlObjArr)
-			//TODO
-			
-			return true;
+			return resultArr;
 			
 		}
 		
 		function CheckPlan(){
 			for(var i = 0; i < addPlaceObjArr.length; i++){
-				var Activity = false;
+				actCount[i] = 0;
 				var Food = false;
 				var Hotel = false;
 				
 				if(addPlaceObjArr[i]['HotelObj'].placeData != null){
+					Hotel = true;				
+				}else if(addPlaceObjArr.length == 1){
 					Hotel = true;
 				}
 				
@@ -307,11 +429,11 @@
 				
 				for(var i2 = 0; i2 < addPlaceObjArr[i]['ActivityObj']['placeDataArr'].length; i2++){
 					if(addPlaceObjArr[i]['ActivityObj']['placeDataArr'][i2] != null){
-						Activity = true;
+						actCount[i] = actCount[i] + 1;
 					}
 				}
 				
-				if(!Hotel || !Food || !Activity) return false;
+				if(!Hotel || !Food || actCount[i] < 2) return false;
 				
 			}
 			
@@ -1082,10 +1204,10 @@
 															+ getKoreanDay(tempDate
 																	.getDay())
 															+ "</div>"
-															+ "<div class='stT'>10:00<img class='clockImg start' src='/resources/img/clock.png'></div>"
-															+ "<div class='fnT'>22:00<img class='clockImg end' src='/resources/img/clock.png'></div>")
+															+ "<div class='stT'>8:00<img class='clockImg start' src='/resources/img/clock.png'></div>"
+															+ "<div class='fnT'>20:00<img class='clockImg end' src='/resources/img/clock.png'></div>")
 
-									PlObjArr[i] = cre_plObject(10, 0, 22, 0);
+									PlObjArr[i] = cre_plObject(8, 0, 20, 0);
 
 								}
 
@@ -1124,7 +1246,7 @@
 			$("#timeSetCover").show();
 			$("#timeSet").css("display", "flex");
 
-			$("#HList").scrollTop((H - 1) * 68)
+			$("#HList").scrollTop((H - 7) * 68)
 			$("#MList").scrollTop((M - 1) * 68)
 
 		})
@@ -1168,7 +1290,7 @@
 								var endH = plObj[SE[1]][HM[0]];
 								var endM = plObj[SE[1]][HM[1]];
 
-								if (canChange(stH, stM, endH, endM)) {
+								if (canChange(stH, endH)) {
 									var newPlobj = initTimeObj(stH, stM)
 
 									PlObjArr[PwwId][SE[0]] = newPlobj;
@@ -1204,7 +1326,7 @@
 
 									setSumTime();
 								} else {
-									alert("시작 시간은 종료시간 전이어야 합니다")
+									alert("시작시간은 최소 종료시간 8시간 전이어야합니다.")
 								}
 							} else {
 								var endH = Number($(".HtimeSetSel").attr("id")
@@ -1219,7 +1341,7 @@
 								var stH = plObj[SE[0]][HM[0]];
 								var stM = plObj[SE[0]][HM[1]];
 
-								if (canChange(stH, stM, endH, endM)) {
+								if (canChange(stH, endH)) {
 									var newPlobj = initTimeObj(endH, endM);
 									PlObjArr[PwwId][SE[1]] = newPlobj;
 
@@ -1256,70 +1378,76 @@
 									setSumTime();
 
 								} else {
-									alert("종료 시간은 시작시간 후여야 합니다")
+									alert("종료시간은 최소 시작시간부터 8시간 이후여야합니다.")
 								}
 							}
 						})
 
 		$(document).on('click', '#timeSetCover', function() {
-			$("#timeSetCover").hide();
-			$("#timeSet").hide();
-
-			$(".HtimeSetSel").removeClass("HtimeSetSel")
-			$(".MtimeSetSel").removeClass("MtimeSetSel")
-			$("#timeSet").removeClass("end start")
-
-		})
-
-		$(window).on('keyup', function(e) {
-			if (e.keyCode == 27) {
+			
+			if(confirm("취소하시겠습니까?")){
+				
 				$("#timeSetCover").hide();
 				$("#timeSet").hide();
 
 				$(".HtimeSetSel").removeClass("HtimeSetSel")
 				$(".MtimeSetSel").removeClass("MtimeSetSel")
-				$("#timeSet").removeClass("end")
+				$("#timeSet").removeClass("end start")
+	
+			}
+			
+		})
+
+		$(window).on('keyup', function(e) {
+			if (e.keyCode == 27) {
+				if(confirm("취소하시겠습니까?")){
+					
+					$("#timeSetCover").hide();
+					$("#timeSet").hide();
+
+					$(".HtimeSetSel").removeClass("HtimeSetSel")
+					$(".MtimeSetSel").removeClass("MtimeSetSel")
+					$("#timeSet").removeClass("end start")
+		
+				}
 			}
 		})
 
-		function canChange(stH, stM, endH, endM) {
-			if (stH < endH) {
+		function canChange(stH, endH) {
+			if (endH - stH > 7){
 				return true;
-			} else if (stH == endH) {
-				if (stM < endM) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
+			}else{
 				return false;
 			}
 		}
 
 		$(document).on('click', 'img[id=calImg]', function() { // 캘린더 초기화
-			CalSelisRun = false;
-			Core = 0;
-			Ass = 0;
-
-			PlanSt = 0;
-			PlanLs = 0;
-
-			nowDate = new Date();
-			LeftDate = new Date();
-			RightDate = initRightDate();
-
-			PlObjArr.length = 0;
-			PlObjArr[0] = '';
-
-			$("#cover").show();
-
-			$(".pass").removeClass("pass");
-
-			$("#setting").show();
-			$("#result").hide();
 			
-			
-			ShowCalendar();
+			if(confirm("날짜 재설정시 모두 초기화됩니다. 진행하시겠습니까?")){
+				CalSelisRun = false;
+				Core = 0;
+				Ass = 0;
+
+				PlanSt = 0;
+				PlanLs = 0;
+
+				nowDate = new Date();
+				LeftDate = new Date();
+				RightDate = initRightDate();
+
+				PlObjArr.length = 0;
+				PlObjArr[0] = '';
+
+				$("#cover").show();
+
+				$(".pass").removeClass("pass");
+
+				$("#setting").show();
+				$("#result").hide();
+				
+				
+				ShowCalendar();	
+			}
 		})
 
 		function compar(Date1, Date2) {
@@ -1450,6 +1578,10 @@
 				geocoder.addressSearch(StartingPointstr, function(result, status) {
 					if (status == kakao.maps.services.Status.OK) {
 		
+						HomeMarker = new kakao.maps.Marker({
+							position : new kakao.maps.LatLng(result[0].y,result[0].x)
+						})
+						
 						GMFA = getMeter4Arrive(result[0].x,result[0].y);
 						var carType = $("#traffic>select").val();
 						GMFA.then(data =>{
@@ -2440,7 +2572,7 @@
 
 				<div id="HListTitle">시간</div>
 				<div id="HList">
-					<c:forEach var="hour" begin="1" end="24" varStatus="index">
+					<c:forEach var="hour" begin="7" end="22" varStatus="index">
 						<div class="HSel" id="H${index.index }">${hour }</div>
 					</c:forEach>
 				</div>
@@ -2829,10 +2961,13 @@
 		<div id="Map" style="height: 100vh; width: 100vw;"></div>
 		<input type="hidden" id="lng" value="${local.getLng() }"> <input
 			type="hidden" id="lat" value="${local.getLat() }">
+			
+		<div id="resultMap"></div>
 	</main>
 </body>
 <script>
 	var mapContainer = document.getElementById('Map'); // 지도를 표시할 div 
+	var resultMapContainer = document.getElementById('resultMap')
 	var SearchCategoryCode = 'AD5'; // 검색 결과 필터
 	var dayMarkers = [];
 	var showMarkers = [];
@@ -2950,11 +3085,19 @@
 	// 지도의 확대 레벨
 	};
 	
+	resultMapOption = {
+			center : new kakao.maps.LatLng(CenterLat, CenterLng),
+			level : 1	}
+	
+	
+	
 	var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_red.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
     imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
     markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
 	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+	var resultMap = new kakao.maps.Map(resultMapContainer, resultMapOption);
+	
 	
 	var markerPosition  = new kakao.maps.LatLng(CenterLat, CenterLng); 
 
