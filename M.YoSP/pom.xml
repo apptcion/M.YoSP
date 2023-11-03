@@ -230,12 +230,21 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.5.6</version>
-		</dependency>
+<!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
+<dependency>
+    <groupId>com.sun.mail</groupId>
+    <artifactId>javax.mail</artifactId>
+    <version>1.5.6</version>
+</dependency>
 
+
+		<!-- https://mvnrepository.com/artifact/net.sf.json-lib/json-lib -->
+<dependency>
+    <groupId>net.sf.json-lib</groupId>
+    <artifactId>json-lib</artifactId>
+    <version>2.4</version>
+    <classifier>jdk15</classifier>
+</dependency>
 
 
 	</dependencies>

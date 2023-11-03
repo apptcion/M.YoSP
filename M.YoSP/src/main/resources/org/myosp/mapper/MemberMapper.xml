@@ -52,4 +52,22 @@
 		<update id="modifyEmail">
 			update member set email = #{email} where userName = #{userName}
 		</update>
+		
+		<insert id="registration" parameterType="Map">
+			insert into registeredMap (userName, parameter,StartDay, EndDay, LocalKoreanName, LocalEnglishName) values (#{userName},#{parameter}, #{StartDay}, #{EndDay}, #{LocalKoreanName},#{LocalEnglishName})
+		</insert>
+		
+				<resultMap type="org.myosp.domain.MyPageMapDTO" id="mapsMap">
+			<result property="userName" column="userName" />
+			<result property="parameter" column="parameter" />
+			<result property="StartDay" column="StartDay" />
+			<result property="EndDay" column="EndDay" />
+			<result property="localKoreanName" column="LocalKoreanName" />
+			<result property="localEnglishName" column="LocalEnglishName" />
+		</resultMap>
+		
+		<select id="readMaps" resultMap="mapsMap">
+			select * from registeredMap where userName = #{userName}
+		</select>
+		
 	</mapper>

@@ -49,7 +49,7 @@
 			<a href="/board">여행후기</a>
 		</li>
 		<li id="menu2">
-			<a href="#">TRIP</a>
+			<a href="/CreateMap">TRIP</a>
 		</li>
 		<li id="menu3">
 			<security:authorize access="isAnonymous()">

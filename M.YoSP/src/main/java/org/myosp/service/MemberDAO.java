@@ -1,8 +1,11 @@
 package org.myosp.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.myosp.domain.MemberDTO;
+import org.myosp.domain.MyPageMapDTO;
 
 public interface MemberDAO {
 
@@ -19,4 +22,7 @@ public interface MemberDAO {
 	public void resign(String userName);
 	
 	public void modifyEmail(String userName, String email);
+	
+	public List<MyPageMapDTO> readMaps(String userName);
+
 }

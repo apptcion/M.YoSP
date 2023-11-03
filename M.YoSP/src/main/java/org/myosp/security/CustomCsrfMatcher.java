@@ -8,7 +8,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class CustomCsrfMatcher implements RequestMatcher{
 
 	private static final String[] CSRF_DISABLED_METHODS = {"GET","HEAD","TRACE","OPTIONS"};
-	private static final String[] CSRF_DISABLED_URI = {"/jusoPopup","/parsing"};
+	private static final String[] CSRF_DISABLED_URI = {"/jusoPopup","/storeMap"};
 
 	@Override
 	public boolean matches(HttpServletRequest request) {

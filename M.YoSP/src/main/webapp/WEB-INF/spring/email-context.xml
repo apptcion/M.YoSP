@@ -7,7 +7,6 @@
         <property name="host" value="smtp.gmail.com" />
         <property name="port" value="587" />
         <property name="username" value="mail4m.yosp@gmail.com"/>
-        <property name="password" value="hsvdwefskjxvsgbb" />
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.transport.protocol">smtp</prop>
@@ -18,6 +17,6 @@
                 <prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
             </props>
         </property>
-	
+		<property name="password" value="hsvdwefskjxvsgbb" />
 	</bean>
 </beans>

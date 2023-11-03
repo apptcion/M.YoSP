@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="org.myosp.mapper.StoreMapper">
+		<insert id="store" parameterType="org.myosp.domain.StoreMapDTO">
+		 insert into storeMap (userName, StartPoint, EndPoint, parameter, orderNum, Acts, StartTime, EndTime) values (#{UserId},#{StartPoint},#{EndPoint},#{parameter},#{order},#{acts}, #{StartTime}, #{EndTime})
+		
+		</insert>
+		
+		<resultMap type="org.myosp.domain.StoreMapDTO" id="StoreMapDTO">
+			<id property="order" column="orderNum" />
+			<result property="UserId" column="Username" />
+			<result property="StartPoint" column="StartPoint" />
+			<result property="EndPoint" column="EndPoint" />
+			<result property="parameter" column="parameter" />
+			<result property="acts" column="Acts" />
+			<result property="StartTime" column="StartTime" />
+			<result property="EndTime" column="EndTime" />
+		</resultMap>
+		
+		<select id="read" parameterType="String" resultMap="StoreMapDTO">
+			select * from storeMap where parameter = #{parameter}
+		</select>
+		
+		<insert id="storeBudget" parameterType="Map">
+		
+			insert into budget (parameter, HotelArr, FoodArr, ActivityArr) values (#{parameter}, #{HotelArr}, #{FoodArr}, #{ActivityArr})
+		</insert>
+		
+		<resultMap type="org.myosp.domain.BudgetArr" id="BudgetArr">
+			<id property="parameter" column="parameter"/>
+			<result property="HotelArr" column="HotelArr" />
+			<result property="FoodArr" column="FoodArr" />
+			<result property="ActivityArr" column="ActivityArr" />
+		</resultMap>
+		
+		<select id="readBudget" resultMap="BudgetArr">
+			select * from Budget where parameter = #{parameter}
+		</select>
+		
+	</mapper>
+	

@@ -12,6 +12,7 @@
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a4deef496ca0e06141a54eeea561a0d9&libraries=services"></script>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
+
 	$(function() {
 		
 		var sumTime = "총 12시간 0분"
@@ -47,9 +48,9 @@
 		var Activity_max;
 		var Activity_min;
 		
-		var HotelArr = [];
-		var FoodArr = [];
-		var ActivityArr = [];
+		var	HotelArr = [];
+		var	FoodArr = [];
+		var	ActivityArr = [];
 		
 		var StartCity;
 		
@@ -73,6 +74,13 @@
 		var HomeMarker;
 		var actCount = [];
 		
+		var lines = [];
+		
+		var resultMap;
+		
+		var SortedPlan = [];
+		
+		
 		let gasoline = 1873;
 		let diesel = 1780;
 		let LPG = 1454;
@@ -80,7 +88,13 @@
 
 		$("#period").append(StartDay + " - " + EndDay)
 		$("#sumTime").append(sumTime)
-
+		
+		$("#header>#logo>a>h2").empty();
+		$("#header>#logo>a>p").empty();
+		$("#header>#menus>li>a").css("color","black")
+		$("#header").css("z-index","2")
+		
+		
 		$("#step1, #step2, #step3").click(function() {
 			
 			$(".select").addClass("noSel")
@@ -100,7 +114,7 @@
 				break;
 			case '3':
 				createStep3();
-				$("#addPlace").show();
+				$("#addPlace").css("display","flex");
 				break;
 			}
 
@@ -119,7 +133,7 @@
 			$("#step3").removeClass("noSel")
 			createStep3();
 			$("#Chcash").hide();
-			$("#addPlace").show();
+			$("#addPlace").css("display","flex")
 		})
 		
 		$('#next').click(function(){
@@ -143,7 +157,7 @@
 				break;
 			case 3:
 				createStep3();
-				$("#addPlace").show();
+				$("#addPlace").css("display","flex")
 				$("#step3").removeClass("noSel")
 				$("#step3").addClass("select")
 				
@@ -165,10 +179,7 @@
 		function createStep3(){
 			
 			if($("#traffic>input").val() != '' && finInitNumber){
-				
-				
-				
-				
+					
 				addPlaceObjArr = [];
 				for(var i = 0; i < dayMarkers.length; i++){
 					for(var i2 = 0; i2 < dayMarkers[i]['Activitymarkers'].length; i2++){
@@ -226,17 +237,73 @@
 		$(document).on('click','#creMap',function(){
 			
 			if(CheckPlan()){
-					if(confirm("일정은 위쪽부터 순서대로 만들어집니다. 진행하시겠습니까?")){
-						var SortedPlan = SortPlanArr();
+					if(confirm("선택된 장소에 따라 이동거리가 길어질 수 있으며 리셋만 가능합니다. 진행하시겠습니까?")){
+						SortedPlan = SortPlanArr();
 						
-						
+						$("#Map").hide();
+						$("#Use").hide();
+					
 						// 지도  표시
-						$("#resultMap").css("width","100vw")
-						$("#resultMap").css("height","100vh")
-						$("#resultMap").css("z-index","11")
+						$("#resultMap").show();
+						$("#downLoadBtn").css("display","flex")
+						
+						$("#header>#logo>a>h2").text("Trip");
+						$("#header>#logo>a>p").text("Trip Route Itinerary Planner");	
+						
+						for(var i = 1; i <= SortedPlan.length; i++){
+							
+							$("#checkList").append(
+								'<div class="ShowDays selDay" id="day' + i +'">' + i + '일차</div>'
+							)
+						}
+						
+						resultMapOption = {
+								center : SortedPlan[0].Acts[0].marker.getPosition(),
+								level : 5}
+						resultMap = new kakao.maps.Map(resultMapContainer, resultMapOption);
+						
+						lines = []
+						var paths = [];
+						var colors = ['#e54b4b','#e5794b','#e5c34b','#4be56d','#4bc9e5','#4b76e5','#b83dbb','#c25540','#58ac15','#153fab']
 						
 						
-						
+						for(var i = 0; i < SortedPlan.length; i++){
+							var tmpPath = [];
+							var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+					        imageSize = new kakao.maps.Size(36, 37)  // 마커 이미지의 크기
+					    	SortedPlan[i].StartPoint.setMap(resultMap)
+							tmpPath.push(SortedPlan[i].StartPoint.getPosition())
+							var acts = 0;
+							for(var i2 = 0; i2 < SortedPlan[i].Acts.length; i2++){
+								imgOptions =  {
+							            spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+							            spriteOrigin : new kakao.maps.Point(0, (acts*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+							            offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+							        }
+							    markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions)
+								if(SortedPlan[i].Acts[i2].type != 'hotel'){
+									SortedPlan[i].Acts[i2].marker.setImage(markerImage)
+									acts++;
+								}
+								SortedPlan[i].Acts[i2].marker.setMap(resultMap)
+								tmpPath.push(SortedPlan[i].Acts[i2].marker.getPosition())
+							}
+							SortedPlan[i].EndPoint.setMap(resultMap)
+							tmpPath.push(SortedPlan[i].EndPoint.getPosition())
+							tmpLine = new kakao.maps.Polyline({
+								map : resultMap,
+								path : null,
+	        		    		strokeWeight: 2, // 선의 두께입니다 .
+	       		     			strokeColor: colors[i], // 선의 색깔입니다.
+	       	     				strokeOpacity: 0.8, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다.
+	       	   					strokeStyle: 'solid' // 선의 스타일입니다.
+							})
+							paths.push(tmpPath);
+							lines.push(tmpLine)
+						}
+						for(var i = 0; i < lines.length; i++){
+							lines[i].setPath(paths[i])
+						}
 					}else{
 						alert("일정 생성이 취소되었습니다")	
 					}
@@ -244,6 +311,31 @@
 				alert("날짜당 1개의 숙소, 3개의 식당, 2개 이상의 관광지를 선택해주세요")
 			}
 		})
+		
+		
+		
+		$(document).on('click','div[class*=selDay]',function(){
+			var dayId = Number($(this).attr("id").substring(3));
+			
+			$(this).removeClass("selDay")
+			$(this).addClass("noSelDay")
+			
+			lines[dayId - 1].setMap(null);
+			
+			
+		})
+		
+		$(document).on('click','div[class*=noSelDay]',function(){
+			var dayId = Number($(this).attr("id").substring(3));
+			
+			lines[dayId - 1].setMap(resultMap)
+			
+			$(this).addClass("selDay")
+			$(this).removeClass("noSelDay")
+			
+			
+		})
+		
 		
 		function SortPlanArr(){
 			
@@ -256,160 +348,212 @@
 			
 			for(var i = 0; i < PlObjArr.length; i++){
 				var dayActs = [];
-				resultArr[i] = {
-						'StartPoint' : addPlaceObjArr[i]['HotelObj'].placeData,
-						'EndPoint' : null,
+
+resultArr[i] = {
+		'StartPoint' : null,
+		'EndPoint' : null,
+		'Acts' : null,
+		'time' : null
+}
+
+if(i == 0){ // 첫날
+	resultArr[i].StartPoint = HomeMarker;
+	if(PlObjArr.length != 1){ // 하루짜리 여행이 아님
+		resultArr[i].EndPoint = addPlaceObjArr[i]['HotelObj'].placeData.placeData
+		var tempHotelMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['HotelObj'].placeData.placeData.getPosition() })
+		dayActs.push({
+			'number' : dayActs.length+1,
+			'type' : 'hotel',
+			'marker' : tempHotelMarker
+		})
+	}else if(addPlaceObjArr[i]['HotelObj'].placeData == null){ // 하루짜리 여행이고 숙소가 없음
+	var newHome = new kakao.maps.Marker({
+			position : HomeMarker.getPosition()
+		})
+		resultArr[i].StartPoint = newHome;
+		resultArr[i].EndPoint = newHome;
+	}else{ // 하루짜리 여행이지만 숙소가 있음
+		resultArr[i].StartPoint = new kakao.maps.Marker({ position : addPlaceObjArr[i]['HotelObj'].placeData.placeData.getPosition() })
+		var newHome = new kakao.maps.Marker({ position : HomeMarker.getPosition() })
+		resultArr[i].EndPoint = newHome;
+		var tempHotelMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['HotelObj'].placeData.placeData.getPosition() })
+		dayActs.push({
+			'number' : dayActs.length+1,
+			'type' : 'hotel',
+			'marker' : tempHotelMarker
+		})
+	}
+}else if((i + 1) == PlObjArr.length){ // 마지막 날
+	var StartMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i-1]['HotelObj'].placeData.placeData.getPosition() })
+	resultArr[i].StartPoint = StartMarker
+	var newHome = new kakao.maps.Marker({ position : HomeMarker.getPosition() })
+	resultArr[i].EndPoint = newHome;
+	var tempHotelMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['HotelObj'].placeData.placeData.getPosition()})
+	dayActs.push({
+		'number' : dayActs.length+1,
+		'type' : 'hotel',
+		'marker' : tempHotelMarker
+	})
+}else{  // 평범한 날
+	resultArr[i].StartPoint = new kakao.maps.Marker({ position : addPlaceObjArr[i-1]['HotelObj'].placeData.placeData.getPosition() })
+	resultArr[i].EndPoint = new kakao.maps.Marker({ position : addPlaceObjArr[i]['HotelObj'].placeData.placeData.getPosition() })
+	var tempHotelMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['HotelObj'].placeData.placeData.getPosition() })
+	dayActs.push({
+		'number' : dayActs.length+1,
+		'type' : 'hotel',
+		'marker' : tempHotelMarker
+	})	
+}
+var tempHour = PlObjArr[i].EndTime.Hour - PlObjArr[i].StartTime.Hour;
+if (PlObjArr[i].StartTime.min > PlObjArr[i].EndTime.min) {
+	tempHour--;
+	min = PlObjArr[i].EndTime.min + (60 - PlObjArr[i].StartTime.min)
+} else {
+	min = PlObjArr[i].EndTime.min - PlObjArr[i].StartTime.min;
+}
+tempMin = tempHour * 60 + min;
+resultArr[i].time = tempMin;
+	var am = Math.floor(tempMin / 60) * 0.4;
+	var pm = Math.floor(tempMin / 60) * 0.6;
+	if(Number(String(am)[2]) >=5){ //소수점 1자리수 *.***,,,,,,,
+		am = Math.ceil(am)
+		pm = Math.floor(pm)
+	}else{
+		am = Math.floor(am)
+		pm = Math.ceil(pm)	
+	}
+	var tempBreakMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['FoodObj']['breakfast'].getPosition() })
+	dayActs.push({ // 아침
+			'number' : dayActs.length+1,
+			'type' : 'breakfast',
+			'marker' : tempBreakMarker
+	})
+	var AmActCount = 0;
+	var PmActCount = 0;
+	switch(actCount[i]){
+	case 2:
+		AmActCount = 1;
+		PmActCount = 1;
+		break;
+	case 3:
+		
+		AmActCount = 1;
+		PmActCount = 2;
+		break;
+	case 4:
+		
+		AmActCount = 2;
+		PmActCount = 2;
+		break;
+	case 5:
+		
+		AmActCount = 2;
+		PmActCount = 3;
+		break;
+	}
+	for(var i2 = 0; i2 < AmActCount; i2++){	
+		tempMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['ActivityObj'].placeDataArr[i2].getPosition() })
+		dayActs.push({
+			'number' : dayActs.length+1,           // 오전 일정
+			'type' : 'tour',
+			'marker' : tempMarker
+		})
+	}
+	tempMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['FoodObj']['lunch'].getPosition() })
+	dayActs.push({
+		'number' : dayActs.length+1,
+		'type' : 'lunch',							// 점심
+		'marker' : tempMarker
+	})
+	for(var i2 = 0; i2 < PmActCount; i2++){
+		tempMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['ActivityObj'].placeDataArr[i2 + AmActCount].getPosition() })
+		dayActs.push({
+			'number' : dayActs.length+1, 		// 오후 일정
+			'type' : 'tour',
+			'marker' : tempMarker
+		})
+	}
+	
+	tempMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['FoodObj']['dinner'].getPosition() })
+	dayActs.push({
+		'number' : dayActs.length+1,                // 저녁
+		'type' : 'dinner',
+		'marker' : tempMarker
+	})
+	if((i + 1) == addPlaceObjArr.length && (addPlaceObjArr[i]['HotelObj'].placeData != null)){
+		tempMarker = new kakao.maps.Marker({ position : addPlaceObjArr[i]['HotelObj'].placeData.placeData.getPosition() })
+		dayActs.push({
+			'number' : dayActs.length+1,                // 집가기전에 숙소 들리기
+			'type' : 'hotel',
+			'marker' : tempMarker
+		})
+	}
+resultArr[i].Acts = dayActs;
+		}
+		return resultArr;
+	}
+		
+		$(document).on('click','#downLoadBtn',function(){
+			
+			var Plan4Ajax = [];
+			for(var i = 0; i < SortedPlan.length; i++){
+				var tempJSON = {
+						'StartPoint' : null,
 						'Acts' : null,
-						'time' : null
+						'EndPoint' : null
 				}
+				
+				tempJSON.StartPoint = {
+						'x' : Math.round(SortedPlan[i].StartPoint.getPosition().La * (Math.pow(10, 6))) / (Math.pow(10, 6)),
+						'y' : Math.round(SortedPlan[i].StartPoint.getPosition().Ma * (Math.pow(10, 6))) / (Math.pow(10, 6))
+				}
+				
+				var tempActs = [];
+				
+					var testNum = 37.123456786
+				
+					for(var i2 = 0; i2 < SortedPlan[i].Acts.length; i2++){
+						tempActs.push({
+							'x' : Math.round(SortedPlan[i].Acts[i2].marker.getPosition().La * (Math.pow(10, 6))) / (Math.pow(10, 6)),
+							'y' : Math.round(SortedPlan[i].Acts[i2].marker.getPosition().Ma * (Math.pow(10, 6))) / (Math.pow(10, 6)),
+							'type' : SortedPlan[i].Acts[i2].type
+						})
+					}
+				
+					tempJSON.Acts = tempActs;
 
-				if(i == 0){ // 첫날
-					resultArr[i].StartPoint = HomeMarker;
-					if(PlObjArr.length != 1){ // 하루짜리 여행이 아님
-						resultArr[i].EndPoint = addPlaceObjArr[i]['HotelObj'].placeData
-					
-						dayActs.push({
-							'number' : dayActs.length+1,
-							'type' : 'hotel',
-							'marker' : addPlaceObjArr[i]['HotelObj'].placeData
-						})
-						
-					}else if(addPlaceObjArr[i]['HotelObj'].placeData == null){ // 하루짜리 여행이고 숙소가 없음
-						resultArr[i].EndPoint = HomeMarker;
-					
-					
-					}else{ // 하루짜리 여행이지만 숙소가 있음
-						resultArr[i].EndPoint = HomeMarker;
-						
-						dayActs.push({
-							'number' : dayActs.length+1,
-							'type' : 'hotel',
-							'marker' : addPlaceObjArr[i]['HotelObj'].placeData.placeData
-						})
-					}
-				}else if((i + 1) == PlObjArr.length){ // 마지막 날
-					resultArr[i].StartPoint = addPlaceObjArr[i-1]['HotelObj'].placeData.placeData
-					resultArr[i].EndPoint = HomeMarker;
-				
-					dayActs.push({
-						'number' : dayActs.length+1,
-						'type' : 'hotel',
-						'marker' : addPlaceObjArr[i]['HotelObj'].placeData.placeData
-					})
-				}else{  // 평범한 날
-					resultArr[i].StartPoint = addPlaceObjArr[i-1]['HotelObj'].placeData.placeData;
-					resultArr[i].EndPoint = addPlaceObjArr[i]['HotelObj'].placeData.placeData;
-					
-					dayActs.push({
-						'number' : dayActs.length+1,
-						'type' : 'hotel',
-						'marker' : addPlaceObjArr[i]['HotelObj'].placeData.placeData
-					})					
-					
+				tempJSON.EndPoint = {
+						'x' : Math.round(SortedPlan[i].EndPoint.getPosition().La * (Math.pow(10, 6))) / (Math.pow(10, 6)),
+						'y' : Math.round(SortedPlan[i].EndPoint.getPosition().Ma * (Math.pow(10, 6))) / (Math.pow(10, 6))
 				}
 				
-				
-				
-				var tempHour = PlObjArr[i].EndTime.Hour - PlObjArr[i].StartTime.Hour;
-				if (PlObjArr[i].StartTime.min > PlObjArr[i].EndTime.min) {
-					tempHour--;
-					min = PlObjArr[i].EndTime.min + (60 - PlObjArr[i].StartTime.min)
-				} else {
-					min = PlObjArr[i].EndTime.min - PlObjArr[i].StartTime.min;
-				}
-				
-				tempMin = tempHour * 60 + min;
-				
-				resultArr[i].time = tempMin;
-				
-				if(PlObjArr[i].StartTime.Hour < 11){
-					
-					var am = Math.floor(tempMin / 60) * 0.4;
-					var pm = Math.floor(tempMin / 60) * 0.6;
-					
-					if(Number(String(am)[2]) >=5){ //소수점 1자리수 *.***,,,,,,,
-						am = Math.ceil(am)
-						pm = Math.floor(pm)
-					}else{
-						am = Math.floor(am)
-						pm = Math.ceil(pm)	
-					}
-					
-					console.log(am)
-					console.log(pm)
-					
-					dayActs.push({
-							'number' : dayActs.length+1,
-							'type' : 'breakfast',
-							'marker' : addPlaceObjArr[i]['FoodObj']['breakfast']
-					})
-					console.log(actCount[i])
-					
-					var AmActCount = 0;
-					var PmActCount = 0;
-					
-					switch(actCount[i]){
-					case 2:
-						AmActCount = 1;
-						PmActCount = 1;
-						break;
-					case 3:
-						
-						AmActCount = 1;
-						PmActCount = 2;
-						break;
-					case 4:
-						
-						AmActCount = 2;
-						PmActCount = 2;
-						break;
-					case 5:
-						
-						AmActCount = 2;
-						PmActCount = 3;
-						break;
-					}
-					
-					for(var i2 = 0; i2 < AmActCount; i2++){
-						dayActs.push({
-							'number' : dayActs.length+1,           // 오전 일정
-							'type' : 'tour',
-							'marker' : addPlaceObjArr[i]['ActivityObj'].placeDataArr[i2]
-						})
-					}
-					
-					dayActs.push({
-						'number' : dayActs.length+1,
-						'type' : 'lunch',							// 점심
-						'marker' : addPlaceObjArr[i]['FoodObj']['lunch']
-					})
-
-					for(var i2 = 0; i2 < PmActCount; i2++){
-						dayActs.push({
-							'number' : dayActs.length+1, 		// 오후 일정
-							'type' : 'tour',
-							'marker' : addPlaceObjArr[i]['ActivityObj'].placeDataArr[i2 + AmActCount]
-						})
-					}
-					
-					dayActs.push({
-						'number' : dayActs.length+1,                // 저녁
-						'type' : 'dinner',
-						'marker' : addPlaceObjArr[i]['FoodObj']['dinner']
-					})
-					
-					console.log(AmActCount)
-					console.log(PmActCount)
-					
-				}
-				resultArr[i].Acts = dayActs;
+				Plan4Ajax.push(tempJSON)
 			}
 			
-			console.log(resultArr)
+			var tempSt = new Date(StartDay)
+			var tempEnd = new Date(EndDay)
 			
-			return resultArr;
+			$.ajax({
+				url : '/storeMap',
+				method : 'POST',
+				data : {
+					SortedPlan : JSON.stringify(Plan4Ajax),
+					userName : $("#userName").val(),
+					StartDate : String(tempSt.getFullYear() + "." + (tempSt.getMonth() + 1) + "." +String(tempSt.getDate())),
+					EndDate :  String(tempEnd.getFullYear() + "." + (tempEnd.getMonth() + 1)+ "." +String(tempEnd.getDate())),
+					LocalName :  $("#localName").text(),
+					HotelArr : HotelArr.join(","),
+					FoodArr : FoodArr.join(","),
+					ActivityArr : ActivityArr.join(","),
+					PlObjArrStr : JSON.stringify(PlObjArr)
+				},
+				dataType : 'json'
+			})
 			
-		}
+			location.replace("/MyPage");
+			console.log(PlObjArr);
+		})
+		
 		
 		function CheckPlan(){
 			for(var i = 0; i < addPlaceObjArr.length; i++){
@@ -1204,7 +1348,7 @@
 															+ getKoreanDay(tempDate
 																	.getDay())
 															+ "</div>"
-															+ "<div class='stT'>8:00<img class='clockImg start' src='/resources/img/clock.png'></div>"
+															+ "<div class='stT'>08:00<img class='clockImg start' src='/resources/img/clock.png'></div>"
 															+ "<div class='fnT'>20:00<img class='clockImg end' src='/resources/img/clock.png'></div>")
 
 									PlObjArr[i] = cre_plObject(8, 0, 20, 0);
@@ -1285,6 +1429,7 @@
 
 								var PwwId = $(".altering").parent().parent()
 										.attr("id").substring(3);
+								
 								var plObj = PlObjArr[PwwId]
 
 								var endH = plObj[SE[1]][HM[0]];
@@ -1383,6 +1528,7 @@
 							}
 						})
 
+
 		$(document).on('click', '#timeSetCover', function() {
 			
 			if(confirm("취소하시겠습니까?")){
@@ -1393,6 +1539,8 @@
 				$(".HtimeSetSel").removeClass("HtimeSetSel")
 				$(".MtimeSetSel").removeClass("MtimeSetSel")
 				$("#timeSet").removeClass("end start")
+				
+				$(".altering").removeClass("altering")
 	
 			}
 			
@@ -1408,7 +1556,7 @@
 					$(".HtimeSetSel").removeClass("HtimeSetSel")
 					$(".MtimeSetSel").removeClass("MtimeSetSel")
 					$("#timeSet").removeClass("end start")
-		
+					$(".altering").removeClass("altering")
 				}
 			}
 		})
@@ -1573,30 +1721,18 @@
 				var StartPointX;
 				var StartPointY;
 				
-				var geocoder = new kakao.maps.services.Geocoder();
-				
+				var geocoder = new kakao.maps.services.Geocoder()
 				geocoder.addressSearch(StartingPointstr, function(result, status) {
 					if (status == kakao.maps.services.Status.OK) {
-		
-						HomeMarker = new kakao.maps.Marker({
-							position : new kakao.maps.LatLng(result[0].y,result[0].x)
-						})
-						
+						HomeMarker = new kakao.maps.Marker({ position : new kakao.maps.LatLng(result[0].y,result[0].x) })
 						GMFA = getMeter4Arrive(result[0].x,result[0].y);
 						var carType = $("#traffic>select").val();
-						GMFA.then(data =>{
-							if(carType == '승용차'){
-								var L = (data/24300)
-							}else{
-								var L = (data/33100)
-							}
-							
-							
+						GMFA.then(function(data){
+							if(carType == '승용차'){ var L = (data/24300) }else{ var L = (data/33100) }
 							$("#gasoline").text("가솔린(휘발유) 기준 : " + CMSV1(Math.round(L * gasoline))+ "원")
 							$("#diesel").text("디젤(경유) 기준 : " + CMSV1(Math.round(L * diesel))+"원")
 							$("#LPG").text("LPG기준 : " + CMSV1(Math.round(L * LPG)) + "원")
-							$("#CNG").text( "CNG기준 : " + CMSV1(Math.round(L * CNG)) +  "원")
-						})
+							$("#CNG").text( "CNG기준 : " + CMSV1(Math.round(L * CNG)) +  "원") })
 					} else {
 						alert("주소를 확인해주세요")
 					}
@@ -1617,13 +1753,11 @@
 				$("#ActiveIndiv").text("활동비 : " + CMSV1(activityExpense) + "원 (최대 " + CMSV1(activityExpenseMax) + "원)")
 				var PlDayLen = PlObjArr.length;
 				
-				if(PlDayLen == 2) PlDayLen = 3;
-				
 				averActivity = Math.round(activityExpense / (PlDayLen - 1))
 
 				averFood = Math.round(foodExpense / (PlDayLen -1))
 
-				averHotel = Math.round(HotelExpense / (PlDayLen - 2))
+				averHotel = Math.round(HotelExpense / (PlDayLen - 1))
 
 				averSumExpense = averFood + averActivity + averHotel;
 				
@@ -1638,7 +1772,7 @@
 				
 				HotelArr.length = PlDayLen - 2;
 				FoodArr.length = PlDayLen - 2;
-				ActivityArr.length = PlDayLen - 3;
+				ActivityArr.length = PlDayLen - 2;
 				
 				$("#HotelDetailAver").text("1박 평균 금액 : " + CMSV1(averHotel) + "원")
 				$("#HotelDetailHeight").text("일일 최고 소비 금액 : " + CMSV1(averHotel) + "원")
@@ -1670,14 +1804,6 @@
 					HotelArr[i-1] = Math.round(averHotel);
 					FoodArr[i-1] = Math.round(averFood);
 					ActivityArr[i-1] = Math.round(averActivity);
-					
-					if(i == (PlObjArr.length-1) && PlObjArr.length != 2){
-						$("#DSW" + i + ">.SetDetail>.SetDetail-Hotel>.Hotel_Detail_input").val("0");
-						$("#DSW" + i + ">.SetDetail>.SetDetail-Hotel>.Hotel_Detail_input").attr("disabled",true)
-						$("#DSW" + i + ">.detailSetSum").text(CMSV1(averFood + averActivity)+ "원")
-						HotelArr[i-1] = 0;
-					}
-					
 					
 					tempDate.setDate(tempDate.getDate() + 1)
 				}
@@ -1899,7 +2025,7 @@
 				$(this).parent().css("margin-top","0px")
 				$(this).removeClass("statusDown")
 			}else{
-				
+
 				$(this).addClass("statusDown");
 				$(this).siblings(".ShowDetail").slideDown(50);
 				$(this).parent().css("margin-top","10px")
@@ -2450,76 +2576,49 @@
 
 		function getMeter4Arrive(X,Y){
 			const apiKey = "a4deef496ca0e06141a54eeea561a0d9";
-			
 			const startX = X;
 			const startY = Y;
 			const endX = $("#lng").val();
 			const endY = $("#lat").val();
-			
 			var origin = startX + "," + startY;
 			var destination = endX + "," + endY
-			
 			var Url = "https://apis-navi.kakaomobility.com/v1/directions"
 			var apiUrl = Url + "?origin="+origin + "&destination=" + destination
-			
 			var resultVal;
-			
-			
 			const result = fetch(apiUrl,{
 				method : 'GET',
-				headers : {
-					'Authorization' : 'KakaoAK 75bc99a09ba089741f053c9072142bd7'
-				}
-			})
-				.then(response =>{
-					if(!response.ok){
-						throw new Error("네트워크 오류 : " + response.status)
-					}
+				headers : { 'Authorization' : 'KakaoAK 75bc99a09ba089741f053c9072142bd7' }
+			}).then(function(response){
+					if(!response.ok){ throw new Error("네트워크 오류 : " + response.status) }
 					return response.json()
-				})
-				.then(data =>{
-					if(data.routes[0]['result_code'] != 0){
+				}).then(function(data){
+					if(data.routes[0]['result_code'] != 0){	
 						alert("길찾기 과정중 오류가 발생했습니다.\n 오류의 내용은 다음과 같습니다\n " + data.routes[0]['result_msg'])
-						return 0
+						return;
 					}else{
-						var summary = data.routes[0].summary;
-						return summary['distance'];	
-					}
+						return data.routes[0].summary['distance'];	}
 				})
-				
 				return result;
-					
-			
 		}
 	})
 
 	function goPopup() {
-		// 주소검색을 수행할 팝업 페이지를 호출합니다.
-		// 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://business.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
 		var pop = window.open("jusoPopup", "pop",
-				"width=570,height=420, scrollbars=yes, resizable=yes");
-
-		// 모바일 웹인 경우, 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://business.juso.go.kr/addrlink/addrMobileLinkUrl.do)를 호출하게 됩니다.
-		//var pop = window.open("/popup/jusoPopup.jsp","pop","scrollbars=yes, resizable=yes"); 
-	}
-
+		"width=570,height=420, scrollbars=yes, resizable=yes"); }
 	function jusoCallBack(roadFullAddr,siNm) {
-		// 팝업페이지에서 주소입력한 정보를 받아서, 현 페이지에 정보를 등록합니다.
 		$("#traffic>input").val(roadFullAddr);
-		$("#StartingPoint").html("출발지 : <p>" + siNm + "</p>")
-
-	}
+		$("#StartingPoint").html("출발지 : <p>" + siNm + "</p>"); }
 </script>
 <link href="<c:url value="/resources/css/Creating.css" />"
 	rel="stylesheet">
 </head>
-
+<input type="hidden" value="<security:authentication property="principal.Username" />" id="userName">
 
 <body>
+	<%@include file="includes/header.jsp"%>
 	<main>
 		<div id="cover">
 			<div id="modal">
-
 				<div id="tH2">여행 일자가 어떻게 되시나요?</div>
 				<div id="tP">
 					* 최대 10일까지 설정할 수 있으며, 과거는 <b>설정 불가능</b>합니다.
@@ -2615,8 +2714,8 @@
 						<p id="TravelTime">여행시간</p>
 						<div id="sumTime"></div>
 						<div id="notice">
-							날짜별로 일정 시작시간과 종료시간을 설정할 수 있습니다.<br> 기본값은 <b>오전 10시부터
-								오후10시까지 입니다</b>
+							날짜별로 일정 시작시간과 종료시간을 설정할 수 있습니다.<br> 기본값은 <b>오전 8시부터
+								오후8시까지 입니다</b>
 						</div>
 						<div id="TravelDays">
 							<div id="columns">
@@ -2805,18 +2904,21 @@
 									<div class="addFood">
 										<div class="addFoodTitle">식당</div>
 										<div class="addFoodBody">
+											<div class="brefastTitle FoodTitle">아침</div>
 											<div class="breakfast">
 												<div class="Plus">
 													<div class="stripe"></div>
 													<div class="rank"></div>
 												</div>
 											</div>
+											<div class="lunchTitle FoodTitle">점심</div>
 											<div class="lunch">
 												<div class="Plus">
 													<div class="stripe"></div>
 													<div class="rank"></div>
 												</div>
 											</div>
+											<div class="dinnerTitle FoodTitle">저녁</div>
 											<div class="dinner">
 												<div class="Plus">
 													<div class="stripe"></div>
@@ -2829,30 +2931,36 @@
 									<div class="addActivityPlace">
 										<div class="addActivityPlaceTitle">관광</div>
 										<div class="addActivityPlaceBody">
+											<div class="Act1Title ActTitle">첫번째 일정</div>
 											<div class="act1">
 												<div class="Plus">
 													<div class="stripe"></div>
 													<div class="rank"></div>
 												</div>
 											</div>
+											<div class="Act1Title ActTitle">두번째 일정</div>
 											<div class="act2">
 												<div class="Plus">
 													<div class="stripe"></div>
 													<div class="rank"></div>
 												</div>
 											</div>
+											<div class="Act1Title ActTitle">세번째 일정</div>
 											<div class="act3">
 												<div class="Plus">
 													<div class="stripe"></div>
 													<div class="rank"></div>
 												</div>
 											</div>
+											<div class="Act1Title ActTitle">네번째 일정</div>
 											<div class="act4">
 												<div class="Plus">
 													<div class="stripe"></div>
 													<div class="rank"></div>
 												</div>
 											</div>
+
+											<div class="Act1Title ActTitle">다섯번째 일정</div>
 											<div class="act5">
 												<div class="Plus">
 													<div class="stripe"></div>
@@ -2896,7 +3004,6 @@
 											viewBox="0 0 56.966 56.966">
 											<path
 												d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
-										<button class="CheckaddPlaceObjArr">확인</button>
 									</div>
 
 									<div class="HotelSearchResult"></div>
@@ -2913,8 +3020,7 @@
 											viewBox="0 0 56.966 56.966">
 											<path
 												d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
-										<button class="CheckaddPlaceObjArr">확인</button>
-
+									
 									</div>
 
 									<div class="FoodSearchResult"></div>
@@ -2932,7 +3038,6 @@
 											viewBox="0 0 56.966 56.966">
 											<path
 												d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
-										<button class="CheckaddPlaceObjArr">확인</button>
 									</div>
 
 									<div class="ActivitySearchResult"></div>
@@ -2961,11 +3066,20 @@
 		<div id="Map" style="height: 100vh; width: 100vw;"></div>
 		<input type="hidden" id="lng" value="${local.getLng() }"> <input
 			type="hidden" id="lat" value="${local.getLat() }">
-			
-		<div id="resultMap"></div>
+
+		<div id="resultMap" style="height : 100vh; width : 100vw;; display : none;"></div>
+		<div id="downLoadBtn">저장</div>
+		<div id="reset">처음부터</div>
+		<div id="checkList"></div>
 	</main>
 </body>
 <script>
+	$(document).on('click','div[id=reset]',function(){
+		if(confirm("정말 처음부터 하시겠습니까?")){
+			location.reload();
+		}
+	})
+
 	var mapContainer = document.getElementById('Map'); // 지도를 표시할 div 
 	var resultMapContainer = document.getElementById('resultMap')
 	var SearchCategoryCode = 'AD5'; // 검색 결과 필터
@@ -2996,14 +3110,6 @@
 	var addPlaceObjArr = [];
 	
 	
-	$(document).on('click','button[class=CheckaddPlaceObjArr]',function(){
-		console.log(addPlaceObjArr)
-		console.log(dayMarkers)
-		console.log(SearchCategoryCode)
-		console.log(showMarkers)
-		console.log(SHCID)
-	})
-	
 	function slideSVG(){
 		if($("#showRight").css("display") != 'none'){
 			$("#showRight").hide();
@@ -3012,7 +3118,7 @@
 		}else{
 			$("#showRight").show();
 			$(".slideSVG>path").attr("d","M38 15 l -15 15 l 15 15");
-			$("#addPlace").css("width","950px")
+			$("#addPlace").css("width","900px")
 		}
 	}
 	
@@ -3081,41 +3187,31 @@
 	let CenterLat = $("#lat").val();
 	mapOption = {
 		center : new kakao.maps.LatLng(CenterLat, CenterLng), // 지도의 중심좌표
-		level : 9
-	// 지도의 확대 레벨
-	};
-	
-	resultMapOption = {
-			center : new kakao.maps.LatLng(CenterLat, CenterLng),
-			level : 1	}
-	
-	
-	
-	var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_red.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-    imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
-    markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
+		level : 9 };
 	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-	var resultMap = new kakao.maps.Map(resultMapContainer, resultMapOption);
-	
-	
-	var markerPosition  = new kakao.maps.LatLng(CenterLat, CenterLng); 
-
-	// 마커를 생성합니다
+	var markerPosition  = new kakao.maps.LatLng(CenterLat, CenterLng);
 	var Centermarker = new kakao.maps.Marker({
 	    position: markerPosition
 	});
-	
 	Centermarker.setMap(map)
-	
 	var ps = new kakao.maps.services.Places();  
-
+	
+	
 	$(document).on('click','svg[class*=searchIcon]',function(){
 		
 		var keyword = $(this).siblings('input').val();
 		
 	    if (!keyword.replace(/^\s+|\s+$/g, '')) {
-	        alert('키워드를 입력해주세요!');
+	        switch(SearchCategoryCode){
+	        case 'AD5':
+	        	searchPlaces("호텔")
+	        	break;
+	        case 'FD6':
+	        	searchPlaces("식당")
+	        	break;
+	        case 'anything':
+	        	searchPlaces("관광")
+	        }
 	    }else{
 			searchPlaces(keyword);
 	    }
@@ -3126,7 +3222,16 @@
 			var keyword = $(this).val();
 			
 		    if (!keyword.replace(/^\s+|\s+$/g, '')) {
-		        alert('키워드를 입력해주세요!');
+		        switch(SearchCategoryCode){
+		        case 'AD5':
+		        	searchPlaces("호텔")
+		        	break;
+		        case 'FD6':
+		        	searchPlaces("식당")
+		        	break;
+		        case 'anything':
+		        	searchPlaces("관광")
+		        }
 		    }else{
 				searchPlaces(keyword);
 				SHCID = $(this).parent().parent().parent().attr("id").substring(3);
@@ -3253,22 +3358,16 @@
 		var eleStr;
 		
 		itemStr = "<span class='markerbg marker_" + (index+1) + "'></span>"
-					+ "<div class='placeName'><a href='" + data.place_url + "' target='_blank'>" + data.place_name + "</a></div>"
-					
+					+ "<div class='placeName'><a href='" + data.place_url + "' target='_blank'>" + data.place_name + "</a></div>"	
 					if(data.road_address_name){
 						itemStr += "<span class='jibun'>" + data.road_address_name + "</span>"
-					}else{
-						itemStr += "<span class='jibun'>" + data.address_name + "</span>"
-					}
+					}else{ itemStr += "<span class='jibun'>" + data.address_name + "</span>" }
 		itemStr += "<div class='phone'>" + data.phone + "</div>"
-		
 		itemStr += '<svg class="PlusSVG ' + SearchType + 'PlusSVG" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">'
 			 			+ '<path d="M0 12.5C0 8.30236 0 6.20354 0.768086 4.57956C1.55942 2.90642 2.90642 1.55942 4.57956 0.768086C6.20354 0 8.30236 0 12.5 0C16.6976 0 18.7965 0 20.4204 0.768086C22.0936 1.55942 23.4406 2.90642 24.2319 4.57956C25 6.20354 25 8.30236 25 12.5C25 16.6976 25 18.7965 24.2319 20.4204C23.4406 22.0936 22.0936 23.4406 20.4204 24.2319C18.7965 25 16.6976 25 12.5 25C8.30236 25 6.20354 25 4.57956 24.2319C2.90642 23.4406 1.55942 22.0936 0.768086 20.4204C0 18.7965 0 16.6976 0 12.5Z" fill="black" fill-opacity="0.2"/>'
 						+ '<path d="M16.25 11.5625H13.4375V8.75C13.4375 8.40488 13.1576 8.125 12.8125 8.125H12.1875C11.8424 8.125 11.5625 8.40488 11.5625 8.75V11.5625H8.75C8.40488 11.5625 8.125 11.8424 8.125 12.1875V12.8125C8.125 13.1576 8.40488 13.4375 8.75 13.4375H11.5625V16.25C11.5625 16.5951 11.8424 16.875 12.1875 16.875H12.8125C13.1576 16.875 13.4375 16.5951 13.4375 16.25V13.4375H16.25C16.5951 13.4375 16.875 13.1576 16.875 12.8125V12.1875C16.875 11.8424 16.5951 11.5625 16.25 11.5625Z" fill="white"/>'
 					+ '</svg>' 
-		
 		eleStr = "<div class='SearchItem'>" + itemStr + "</div>";
-		
 		targetDOM.append(eleStr)
 	
 	}
@@ -3282,11 +3381,8 @@
             offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
         },
         markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-        marker = new kakao.maps.Marker({
-            position: position, // 마커의 위치
-            image: markerImage 
-        });
-		
+        marker = new kakao.maps.Marker({ position: position, // 마커의 위치
+            image: markerImage });
 		marker.setMap(map)
 		var CategoryCodeKor;
 		switch (SearchCategoryCode){
@@ -3302,6 +3398,7 @@
 		
 		dayMarkers[SHCID -1][CategoryCodeKor].push(marker)
 		showMarkers.push(marker)
+		
 	}
 	
 </script>

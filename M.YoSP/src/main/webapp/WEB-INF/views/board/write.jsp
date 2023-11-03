@@ -21,9 +21,7 @@ forOb[0] = '';
 var formData = new FormData();
 	function readFile(file,num){
 		var reader = new FileReader();
-		reader.onload = function(e) {
-			$('.imgNum' + num).attr('src', e.target.result);
-		}
+		reader.onload = function(e){ $('.imgNum' + num).attr('src', e.target.result); }
 		reader.readAsDataURL(file);
 		forOb[num] = file;
 		console.log(forOb)
@@ -121,15 +119,14 @@ var formData = new FormData();
    			$("#uploadDiv").css("color","white")
    			var arr = jQuery.makeArray(e.dataTransfer.files);
    			arr.forEach(function(file){
-   				
    				var formatType = file.name.substring(file.name.lastIndexOf(".")+1);
    	   			console.log(formatType);
    	   			if(formatType == "jpg" || formatType == "png" || formatType == "gif"){
+   	   				readFile(file,count);
+   	   				count++;
    	   				$("#imgs").append("<div class='imgWrap' id='WrapId"+ count + "'>")
    	   				$("#WrapId" + count).append("<img class='output imgNum" + count + "'>")
    	   				$("#WrapId" + count).append("<div class='delImg'><button></div>")
-   	   				readFile(file,count);
-   	   				count++;
    	   			}
    			})
 			});

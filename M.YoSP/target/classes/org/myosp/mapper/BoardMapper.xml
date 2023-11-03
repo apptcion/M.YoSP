@@ -55,6 +55,10 @@
 	
 	</select>
 	
+	<select id="getAreaEng" parameterType="String" resultType="String">
+		select ENGLISHNAME from areaList where KOREANNAME = #{korName}
+	</select>
+	
 	<resultMap type="org.myosp.domain.LikeDTO" id="likeDTO">
 		<id property="Board_id" column="board_id" />
 		<result property="Member_id" column="member_id" />

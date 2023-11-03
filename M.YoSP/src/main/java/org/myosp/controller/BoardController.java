@@ -94,67 +94,42 @@ public class BoardController {
 		try {
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			CustomUser user = (CustomUser)principal;
-
 			userId = user.getMember().getUser_id();
-		}catch(Exception e) {
-			userId = 0;
-		}
-				
-		log.info("view Page");
-
+		}catch(Exception e) { userId = 0; }
 		Criteria cri = new Criteria(page, 12);
 		List<BoardDTO> list = dao.getListWithPaging(cri, "byTimeDesc", "etc","");
-		
 		model.addAttribute("id", id);
 		model.addAttribute("pageMaker",new PageDTO(cri, dao.Count("etc","")));
 		model.addAttribute("list", list);
 		model.addAttribute("page",page);
 		model.addAttribute("UserId",userId);
 		BoardDTO dto = dao.readOne(id);
-		
 		//조회수 로직
-
-		
-		
 		Cookie[] cookies = request.getCookies();
 		boolean foundIsVisit = false;
-		
 			for(Cookie cookie : cookies) {	
-				
 				if(cookie.getName().equals("isVisit")) {
 					foundIsVisit = true;
 					if(!cookie.getValue().contains("_" + dto.getBoard_id() + "_")){
 						cookie.setValue(cookie.getValue() + dto.getBoard_id() + "_");
 						cookie.setMaxAge(60 * 60 * 24);
 						response.addCookie(cookie);
-						dao.addView(dto);
-					}
-				}
-			}
+						dao.addView(dto); } } }
 			if(!foundIsVisit) {
 				Cookie NewCookie = new Cookie("isVisit","_" + dto.getBoard_id() + "_");
 				NewCookie.setMaxAge(60 * 60 * 24);
 				response.addCookie(NewCookie);
-				dao.addView(dto);
-			}
-			
+				dao.addView(dto); }
 		// 좋아요 눌러져있는지 여부
 		boolean isLike = dao.isLike(dto,Integer.toString(userId));
-		
 		model.addAttribute("board", dto);
 		model.addAttribute("isLike",isLike);
-		
-		
 		//댓글
 		List<CommentDTO> comments = dao.readComments(id);
 		model.addAttribute("comments",comments);
 		model.addAttribute("ComSize",comments.size());
-		
-		
 		List<BoardFileDTO> fileList = dao.readFiles(id);
-		
 		model.addAttribute("files", fileList);
-		
 		return "/board/view";
 	}
 

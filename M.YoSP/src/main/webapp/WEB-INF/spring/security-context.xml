@@ -7,7 +7,6 @@
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
-
 	<bean id="CustomPasswordEncoder"
 		class="org.myosp.security.CustomNoOpPasswordEncoder" />
 	<bean id="bcryptPasswordEncoder"
@@ -17,55 +16,28 @@
 	<bean id="CustomLoginSuccessHandler"
 		class="org.myosp.security.CustomLoginSuccessHandler" />
 	<bean id="CustomCsrfMatcher" class="org.myosp.security.CustomCsrfMatcher" />
-
-
 	<security:http auto-config="true" >
 		<security:csrf request-matcher-ref="CustomCsrfMatcher"/>
-		<security:intercept-url pattern="/login"
-			access="isAnonymous()" />
-		<security:intercept-url pattern="/login/logout"
-			access="isAuthenticated()" />
-
-		<security:intercept-url pattern="/board/write"
-			access="isAuthenticated()" />
-
-		<security:intercept-url pattern="/board/modify"
-			access="isAuthenticated()" />
-
-		<security:intercept-url pattern="/MyPage"
-			access="isAuthenticated()" />
-			
+		<security:intercept-url pattern="/login" access="isAnonymous()" />
+		<security:intercept-url pattern="/login/logout" access="isAuthenticated()" />
+		<security:intercept-url pattern="/board/write" access="isAuthenticated()" />
+		<security:intercept-url pattern="/board/modify" access="isAuthenticated()" />
+		<security:intercept-url pattern="/MyPage" access="isAuthenticated()" />
+			<security:intercept-url pattern="/Creating"	access="isAuthenticated()" />
 		<security:intercept-url pattern="/jusoPopup" access="permitAll"/>
-
 		<security:form-login login-page="/login"
 			login-processing-url="/login"
 			authentication-success-handler-ref="CustomLoginSuccessHandler"
 			authentication-failure-handler-ref="loginFailHandler" />
-		<!--default-target-url="/home" -->
-
-		<security:logout logout-url="/login/logout"
-			logout-success-url="/" delete-cookies="JSESSIONID,remember-me" />
-
-		<security:access-denied-handler
-			error-page="/accessError" />
-
-		<security:remember-me
-			data-source-ref="dataSource" token-validity-seconds="604800"
-			user-service-ref="CustomUserDetailsService" />
+		<security:logout logout-url="/login/logout"	logout-success-url="/" delete-cookies="JSESSIONID,remember-me" />
+		<security:access-denied-handler error-page="/accessError" />
+	<security:remember-me
+		data-source-ref="dataSource" token-validity-seconds="604800"
+		user-service-ref="CustomUserDetailsService" />
 	</security:http>
-
-
-
 	<security:authentication-manager>
-		<security:authentication-provider
-			user-service-ref="CustomUserDetailsService">
-			<!-- user-service-ref="CustomUserDetailsService" -->
-			<!--<security:jdbc-user-service data-source-ref="dataSource" users-by-username-query="select 
-				userName, password, enabled from member where username=?" authorities-by-username-query="select 
-				userName, authority from author_member where username=?" /> -->
-
-			<security:password-encoder
-				ref="bcryptPasswordEncoder" />
+		<security:authentication-provider	user-service-ref="CustomUserDetailsService">
+			<security:password-encoder ref="bcryptPasswordEncoder" />
 		</security:authentication-provider>
 	</security:authentication-manager>
 	

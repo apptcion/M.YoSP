@@ -5,6 +5,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=	a4deef496ca0e06141a54eeea561a0d9"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+var e = jQuery.Event( "keypress", { keyCode : 123});
+$(document).trigger(e)
+
+</script>
+
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">

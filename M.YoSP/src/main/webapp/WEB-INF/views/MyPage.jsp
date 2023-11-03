@@ -133,6 +133,19 @@
 						$("#pwModal>input").focus();
 					}
 				})
+				
+				
+		$(document).on('click','.sharing',function(){
+			var url = '';
+			var textarea = document.createElement("textarea");
+			document.body.appendChild(textarea);
+			url = 'localhost:8080' + $(".link").attr("href");
+			textarea.value = url;
+			textarea.select();
+			document.execCommand("copy");
+			document.body.removeChild(textarea);
+			alert("클립보드에 복사되었습니다")
+		})
 	})
 </script>
 </head>
@@ -189,7 +202,26 @@
 		</div>
 		<div id="Maps">
 			<h1>나의 지도</h1>
-			<div id="Map"></div>
+			<div id="Map">
+			
+				<c:forEach items="${myMaps }" var="map" varStatus="index">
+					<div class="maps" id="Map${index.count }">
+						<img class="localImg" src="/resources/img/area/${map.getLocalEnglishName()}.png">
+						<div class="travelPoint">${ map.getLocalKoreanName() }</div>
+						<div class="tilde">~</div>
+						<div class="StartDay">${map.getStartDay() }</div>
+						<div class="EndDay">${map.getEndDay() }</div>
+						<a class="link" href="/showMap?mapId=${map.getParameter() }&areaName=${map.getLocalEnglishName()}&startDay=${map.getStartDay()}">일정보기</a>
+						<img class="sharing" src="/resources/img/share.png">
+					
+					</div>
+				</c:forEach>
+				
+				<c:if test="${empty myMaps }">
+					<h2 id="noMaps">생성된 지도가 없습니다.</h2>
+				</c:if>
+			
+			</div>
 		</div>
 	</div>
 	<%@include file="./includes/footer.jsp"%>

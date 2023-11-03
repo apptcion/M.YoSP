@@ -121,6 +121,7 @@ main{
 }
 
 #ChDate{
+	width: 400px;
 	overflow: hidden !important;
 }
 
@@ -489,6 +490,7 @@ left: 10px;
 	overflow : hidden;
 	z-index: 11;
 	left: calc(50% - 200px);
+	cursor: pointer;
 	display : none;
 }
 
@@ -587,6 +589,7 @@ div[class*=timeSetSel]{
 }
 
 #Chcash{
+	display: none;
 	width: 400px !important;
 	/* height : 910px; */
 	/* overflow : auto; */
@@ -821,6 +824,7 @@ div[id*=DetailTitle]{
 	position : relative;
 	top : 50px;
 	height : auto;
+	min-height: 300px;
 	left: 20px;
 	width: calc(100% - 30px);
 }
@@ -883,12 +887,13 @@ div[id*=DetailTitle]{
 
 .detailSet-scroll{
 	position : relative;
-	top : -8px;
-	right : 20px;
+	/* top : -8px; */
+	left: 0px;
 	border-bottom: solid 12px rgb(225,225,225);
 	border-left: solid 9px white;
 	border-right: solid 9px white;
-	border-top: solid 9px white;
+	/* border-top: solid 9px white; */
+	height: 0px;
 }
 
 #originSetDetail{
@@ -926,11 +931,11 @@ input::-webkit-inner-spin-button {
 	justify-content : center;
 	height : 50px;
 	align-items : center;
-    background-color: rgb(204,220,188);
+	background-color: rgb(204,220,188);
 	font-weight : 200;
 	border-radius : 15px;
 	color : white;
-	top : 50px;
+	cursor: pointer;
 }
 
 
@@ -944,8 +949,9 @@ input::-webkit-inner-spin-button {
 	text-decoration : underline;
 }
 #addPlace{
+	display: none;
 	width: 900px;
-	display: flex;
+	/* display: flex; */
 	/* z-index: 10; */
 	overflow : hidden !important;
 }
@@ -1119,7 +1125,7 @@ input::-webkit-inner-spin-button {
 	}
 
 	.addFood{
-		height: 300px;
+		height: 370px;
 	}
 	
 	.addActivityPlace{
@@ -1459,7 +1465,7 @@ input::-webkit-inner-spin-button {
 	display : flex;
 	justify-content : center;
 	align-items : center;
-	width : 50px;
+	width: 0px;
 }
 
 #slideCircle{
@@ -1467,8 +1473,8 @@ input::-webkit-inner-spin-button {
 	height : 60px;
 	border-radius : 100%;
 	background-color: rgb(204,220,188);
-	position : relative;
-	right: 25px;
+	/* position : relative; */
+	/* right: 25px; */
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -1618,4 +1624,80 @@ div[class*=SearchResult]::-webkit-scrollbar-track{
 	position : relative;
 	top: -45px;
 	left: 230px;
+}
+
+.ActTitle{
+	position: relative;
+	left: 12px;
+	top : 6px;
+	font-size : 15px;
+	height: 20px;
+}
+
+.FoodTitle{
+	
+position: relative;
+	
+left: 12px;
+	
+top: 6px;
+	
+font-size: 15px;
+}
+
+#downLoadBtn{
+	position : absolute;
+	bottom : 35px;
+	right : 10px;
+	background-color :  black;
+	z-index : 1;
+	color : white;
+	width : 80px;
+	height : 60px;
+	border-radius : 15px;
+	display : none;
+	cursor : pointer;
+	justify-content : center;
+	align-items : center;
+	font-size : 16px;
+}
+
+
+#checkList{
+	position: absolute;
+	top: 100px;
+	z-index : 1;
+	display : flex;
+}
+
+.ShowDays{
+	width : 100px;
+	height : 40px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	position : relative;
+	border-radius : 12px;
+	box-shadow : 0 2px 8px 0 rgba(31,38,135,.2);
+	margin-left : 10px;
+	margin-right : 10px;
+}
+
+.noSelDay{
+	color : black;
+}
+
+.selDay{
+	background-color : black;
+	color : white;
+}
+
+#reset{
+	position : absolute;
+	bottom: 10px;
+	right: 17px;
+	z-index: 1;
+	font-size : 16px;
+	color : gray;
+	text-decoration : underline;
 }

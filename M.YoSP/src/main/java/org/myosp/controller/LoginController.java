@@ -89,7 +89,6 @@ public class LoginController {
 		@ResponseBody
 		public boolean sendMail(@RequestParam("id")String id, @RequestParam("email")String email,HttpServletRequest request) {
 			CreateRandKey CreateKey = new CreateRandKey();
-			
 			String key = CreateKey.getKey(6, false);
 			
 			boolean result = dao.sendMail(id, email,key);

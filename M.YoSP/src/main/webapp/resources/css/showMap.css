@@ -1,0 +1,310 @@
+    @charset "UTF-8";
+    body {
+        margin : 0px;
+    }
+    
+    #map{
+        position: absolute !important;
+        top : 0px;
+        right: 0px;
+        width: 100vw;
+        height  : 100vh;
+    }
+    
+    #showBudget{
+        position : absolute;
+        width: 467px;
+        /* left : 50px; */
+        height: 100vh;
+        z-index: 2;
+        background: white;
+    }
+
+#moneySum>p {
+    color: RGB(41, 180, 255);
+    font-weight: 200;
+    margin-left: 10px;
+}
+
+#moneyIndiv>ul {
+    color: rgb(100,100,100);
+    font-weight: 200;
+}
+
+.statusDown {
+    rotate: 180deg;
+}
+
+#result{
+    position : relative;
+    width : 400px;
+    left: 35px;
+    height : 100%;
+    overflow : auto;
+}
+
+#moneySum {
+    height: 100px;
+    left: 15px;
+    width: 96%;
+    font-size: 30px;
+    font-weight: 600;
+    position: relative;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+#moneyIndiv {
+    position: relative;
+    width: 75%;
+    left: 20px;
+    font-size: 19px;
+    height: 150px;
+}
+
+.DetailExpense {
+    position: relative;
+    border-bottom: solid 1px black;
+    font-size: 15px;
+    font-weight: 300;
+    left: 30px;
+    width: calc(100% - 50px);
+    min-height: 30px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+div[id*=DetailTitle] {
+    font-size: 1.125rem;
+    width: calc(100% - 18px);
+}
+
+.ShowDetail {
+    height: auto;
+    width: 100%;
+    margin-bottom: 15px;
+    margin-top: 5px;
+}
+
+.DetailAver, .DetailHeight, .DetailLow, .TrafficShowDetails {
+    position: relative;
+    left: 20px;
+    height: 25px;
+    top: 10px;
+    font-size: 0.87rem;
+}
+
+
+.scroll-btn {
+    border-bottom: solid 12px rgb(225,225,225);
+    border-left: solid 9px white;
+    border-right: solid 9px white;
+    border-top: solid 9px white;
+    /* width: 0px; */
+}
+
+#detailSet {
+    position: relative;
+    top: 50px;
+    height: auto;
+    min-height: 300px;
+    /* left: 20px; */
+    width: 395px;
+}
+
+
+
+#detailSet-header {
+    height: 30px;
+    background-color: #F8F9FA;
+    font-weight: 500;
+    font-size: 13px;
+    display: flex;
+    color: #9aa4ab;
+    width: 395px;
+}
+
+#detailSet-Date, #detailSet-Sum,#detailSet-Start, #detailSet-End {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#detailSet-Date {
+    width: 95px;
+}
+
+#detailSet-Sum {
+    width: 120px;
+}
+
+#detailSet-Start{
+	width: 75px;
+}
+
+#detailSet-End{
+	width : 75px;
+}
+
+.detailSetStart{
+	width: 75px;
+	display : flex;
+	justify-content : center;
+}
+
+.detailSetEnd{
+	width: 75px;
+	display : flex;
+	justify-content : center;
+	
+}
+
+#result::-webkit-scrollbar{
+	width : 13px;
+}
+
+#result::-webkit-scrollbar-thumb{
+	width : 5px;
+	border-radius : 20px;
+	background-color : rgb(200,230,200);
+	  background-clip: padding-box;
+    border: 3px solid transparent;
+}
+
+#result::-webkit-scrollbar-track{
+	width : 10px;
+	border-radius : 10px;
+}
+
+.detailSet-row {
+    display: flex;
+    height: auto;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.detailSetDate {
+    width: 95px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.detailSetSum {
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detailSet-scroll {
+    position: relative;
+    /* top: -8px; */
+    left: 5px;
+    border-bottom: solid 12px rgb(225,225,225);
+    border-left: solid 9px white;
+    border-right: solid 9px white;
+    /* border-top: solid 0px white; */
+    height: 0px;
+    background-color: rgba(255,255,255,0);
+}
+
+.SetDetail {
+    padding: 10px;
+    position: relative;
+    padding-left: 40px;
+    height: 80px;
+    width: calc(100% - 30px);
+    font-weight: 200;
+}
+
+#originSetDetail{
+	display : none;
+}
+
+.Hotel_Detail, .Food_Detail, .Activity_Detail{
+	position : relative;
+	top: -21px;
+	font-size: 15px;
+	left: 80px;
+	font-weight: 400;
+	width: fit-content;
+}
+
+div[class*=SetDetail-]{
+	height : 25px;
+}
+
+#dayList{
+	position : absolute;
+	right : 50px;
+	top: 150px;
+	z-index: 1;
+}
+
+.days{
+	width: 125px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px 0 rgba(31,38,135,.2);
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.sel{
+	background-color : black;
+	color : white;
+}
+
+#share{
+	position : relative;
+	top: 100px;
+	width: 140px;
+	height : 60px;
+	border-radius : 20px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	color : white;
+	background-color : rgb(203,224 ,202);
+	box-shadow : 0px 0px 10px 0px rgba(0,0,0,0.2);
+	left: calc(200px - 140px/2);
+	cursor : pointer;
+}
+
+#slideToLeft{
+	position: absolute;
+	height : 100%;
+	top: 0px;
+	left: 465px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	width: 0px;
+	z-index: 2;
+}
+
+#slideCircle{
+	width : 60px;
+	height : 60px;
+	border-radius : 100%;
+	background-color: rgb(204,220,188);
+	/* position : relative; */
+	/* right: 25px; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#slideCircle>svg{
+	width: 60px;
+	height: 60px;
+}

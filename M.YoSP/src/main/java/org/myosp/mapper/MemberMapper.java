@@ -1,11 +1,13 @@
 package org.myosp.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.myosp.domain.BoardDTO;
 import org.myosp.domain.MemberDTO;
+import org.myosp.domain.MyPageMapDTO;
 
 
 @Mapper
@@ -27,4 +29,8 @@ public interface MemberMapper {
 	public void resignAuthorMember(String userName);
 	
 	public void modifyEmail(Map<String,String> map);
-}
+	
+	public void registration(Map<String, String> mapRegister);
+	
+	public List<MyPageMapDTO> readMaps(String userName);
+	}

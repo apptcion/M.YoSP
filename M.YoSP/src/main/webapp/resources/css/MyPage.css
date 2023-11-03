@@ -25,6 +25,27 @@ body {
 	border: solid 1px black;
 }
 
+#Maps{
+	overflow : auto;
+}
+
+#Maps::-webkit-scrollbar{
+	width : 13px;
+}
+
+#Maps::-webkit-scrollbar-thumb{
+	width : 5px;
+	border-radius : 20px;
+	background-color : rgb(200,230,200);
+	  background-clip: padding-box;
+    border: 3px solid transparent;
+}
+
+#Maps::-webkit-scrollbar-track{
+	width : 10px;
+	border-radius : 10px;
+}
+
 #title {
 	position: absolute;
 	/* left : 70px; */
@@ -52,11 +73,16 @@ body {
 	top: 50px;
 	left: 300px;
 	height: 400px;
-	width: 1000px;
+	width: 400px;
+}
+
+#email{
+	width : fit-content;
 }
 
 #email>p {
 	color: #adb5bd;
+	width: fit-content;
 }
 
 #email>input {
@@ -80,12 +106,14 @@ body {
 }
 
 #password {
+	width: 300px;
 	position: relative;
 	top: 10px;
 }
 
 #password>#PwTitle {
 	color: #adb5bd;
+	width: fit-content;
 }
 
 #password>button {
@@ -115,10 +143,12 @@ body {
 #name {
 	position: relative;
 	top: 15px;
+	width: 400px;
 }
 
 #name>p {
 	color: #adb5bd;
+	width: fit-content;
 }
 
 #name>input {
@@ -326,4 +356,91 @@ body {
 #header {
 	border-bottom: solid 1px black;
 	box-shadow: 0px 1px 5px 1px black;
+}
+
+.maps{
+	margin-left : 30px;
+	margin-bottom: 40px;
+	height : 250px;
+	width : calc(100% - 70px);
+	box-shadow: 0 0 10px rgba(0,0,0,0.2);
+	border-radius : 10px;
+}
+
+.localImg{
+	object-fit : cover;
+	height : 200px;
+	width : 200px;
+	box-shadow: 0px 0px 5px 0px;
+	border-radius : 15px;
+	position : relative;
+	top : 20px;
+	left : 20px;
+}
+
+.travelPoint{
+	position : relative;
+	font-size: 1.5rem;
+	font-weight : 600;
+	top : -140px;
+	left : 240px;
+	width: fit-content;
+}
+
+.StartDay{
+	position : relative;
+	top : -130px;
+	left : 240px;
+	height : 20px;
+	font-size : 20px;
+	width: fit-content;
+}
+
+.tilde{
+	position : relative;
+	top : -105px;
+	font-size : 20px;
+	left : 340px;
+	width: fit-content;
+}
+
+.EndDay{
+	position : relative;
+	top : -150px;
+	left : 360px;
+	font-size : 20px;
+	width: fit-content;
+}
+
+.link{
+	color : white;
+	background-color: rgb(163,204,162);
+	text-decoration : none;
+	width : 100px;
+	height : 50px;
+	display : flex;
+	justify-content : center;
+	align-items : center;
+	position : relative;
+	top: -210px;
+	left : 500px;
+	border-radius : 20px;
+}
+
+#Maps>h1{
+	position : relative;
+	left : 50px;
+	width : fit-content;
+}
+
+.sharing{
+	position: relative;
+	width: 40px;
+	top: -340px;
+	left: 555px;
+}
+
+#noMaps{
+	position : relative;
+	left : 50px;
 }

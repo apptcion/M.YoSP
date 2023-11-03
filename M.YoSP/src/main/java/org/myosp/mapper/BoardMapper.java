@@ -57,4 +57,6 @@ public interface BoardMapper {
 		public List<BoardFileDTO> readFiles(int bno);
 		
 		public void deleteFile(BoardFileDTO file);
+		
+		public String getAreaEng(String korName);
 }
